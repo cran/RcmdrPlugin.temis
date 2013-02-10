@@ -1,0 +1,80 @@
+#   type        menu/item       operation/parent  label                              command/menu                activation            install?
+
+    menu        tmMenu          topMenu           ""                                 ""                          ""                    "" 
+    item        topMenu	        cascade           "Text mining"                      tmMenu                      ""                    ""
+
+    item        tmMenu          command           "Import corpus..."                 importCorpusDlg             ""                    ""
+
+    item        tmMenu          command           "Show current corpus"              inspectCorpus               "exists('corpus') && 'Corpus' %in% class(corpus)"                    ""
+
+### Dictionary menu ###
+    menu        dictMenu        tmMenu            ""                                 ""                          ""                    ""
+    item        tmMenu          cascade           "Terms dictionary"                 dictMenu                    ""                    ""
+
+    item        dictMenu        command           "Sorted alphabetically"            termsDictionaryAlpha        "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"          ""
+    item        dictMenu        command           "Sorted by number of occurrences"  termsDictionaryOcc          "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"          ""
+
+
+### Manage corpus menu ###
+    menu        corpusMenu      tmMenu            ""                                 ""                          ""                    ""
+    item        tmMenu          cascade           "Manage corpus"                    corpusMenu                    ""                    ""
+
+    # Subset sub-menu
+    menu        subsetMenu      corpusMenu        ""                                 ""                          ""                    ""
+    item        subsetMenu      command           "By terms..."                      subsetCorpusByTermsDlg      "exists('corpus') && 'Corpus' %in% class(corpus)"                    ""
+    item        subsetMenu      command           "By variable..."                   subsetCorpusByVarDlg        "exists('corpus') && 'Corpus' %in% class(corpus)"                    ""
+    item        subsetMenu      command           "Restore saved corpus"             restoreCorpus               "exists('origCorpus') && 'Corpus' %in% class(origCorpus)"                    ""
+
+    # Main items
+    item        corpusMenu      command           "Set corpus variables"             doSetCorpusVariables        "exists('corpus') && 'Corpus' %in% class(corpus) && activeDataSetP() && checkVariables()"          ""
+    item        corpusMenu      cascade           "Subset corpus"                    subsetMenu                    ""                    ""
+    item        corpusMenu      command           "Select or exclude terms..."       restrictTermsDlg            "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        corpusMenu      command           "Recode time variable..."          recodeTimeVarDlg            "exists('corpus') && 'Corpus' %in% class(corpus) && activeDataSetP() && checkVariables()"          ""
+
+
+## Distribution of documents menu ##
+    menu        docMenu         tmMenu            ""                                 ""                          ""                    ""
+    item        tmMenu          cascade           "Distribution of documents"        docMenu                     ""                    ""
+
+    item        docMenu         command           "One-way table of variable..."     varTableDlg                 "exists('corpus') && 'Corpus' %in% class(corpus)"                    ""
+    item        docMenu         command           "Two-way table of variables..."    varCrossTableDlg            "exists('corpus') && 'Corpus' %in% class(corpus)"                       ""
+    item        docMenu         command           "Temporal evolution..."            varTimeSeriesDlg            "exists('corpus') && 'Corpus' %in% class(corpus)"                       ""
+
+
+### Descriptive analysis of vocabulary menu ###
+    menu        vocMenu         tmMenu            ""                                 ""                          ""                    ""
+    item        tmMenu          cascade           "Descriptive analysis of vocabulary" vocMenu                    ""                    ""
+
+    item        vocMenu         command           "Vocabulary summary..."            vocabularyDlg               "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        vocMenu         command           "Dissimilarity table..."           dissimilarityTableDlg       "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        vocMenu         command           "Most frequent terms..."           freqTermsDlg                "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        vocMenu         command           "Terms specific of levels..."      specificTermsDlg            "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        vocMenu         command           "Analysis of chosen terms..."      termFreqDlg                 "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        vocMenu         command           "Terms co-occurring with chosen terms..." termCoocDlg          "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                    ""
+    item        vocMenu         command           "Temporal evolution of chosen terms..." termTimeSeriesDlg      "exists('dtm') && class(dtm) == 'DocumentTermMatrix'"                       ""
+
+
+### Correspondence analysis menu ###
+    menu        caMenu          tmMenu            ""                                 ""                          ""                    ""
+    item        caMenu          command           "Run analysis..."                  corpusCaDlg                 "exists('corpus') && 'Corpus' %in% class(corpus)"                       ""
+    item        caMenu          command           "Show analysis results..."         showCorpusCaDlg             "exists('corpusCa') && class(corpusCa) == 'ca'"                    ""
+    item        tmMenu	        cascade           "Correspondence analysis"          caMenu                      ""                    ""
+
+
+### Hierarchical clustering menu ###
+    menu        clustMenu       tmMenu            ""                                 ""                          ""                    ""
+    item        clustMenu       command           "Run clustering..."                corpusClustDlg              "exists('corpus') && 'Corpus' %in% class(corpus)"                       ""
+    item        clustMenu       command           "Create clusters..."               createClustersDlg           "exists('corpus') && 'Corpus' %in% class(corpus) && exists('corpusClust') && class(corpusClust) == 'hclust'"         ""
+    item        tmMenu	        cascade           "Hierarchical clustering"          clustMenu                   ""                    ""
+
+
+### Output menu ###
+    menu        outputMenu      tmMenu            ""                                 ""                          ""                    ""
+    item        outputMenu      command           "Copy last table to report"        copyTableToOutput           "exists('last.table') && exists(last.table)"                   ""
+    item        outputMenu      command           "Copy current plot to report"      copyPlotToOutput            "length(dev.list()) > 0"                   ""
+    item        outputMenu      command           "Draw black and white plots"       enableBlackAndWhite         "!isTRUE(options('bw.plots')[[1]])"                   ""
+    item        outputMenu      command           "Draw colored plots"               disableBlackAndWhite        "isTRUE(options('bw.plots')[[1]])"                   ""
+    item        outputMenu      command           "Open report file"                 openOutputFile              "exists('.HTML.file') && file.exists(.HTML.file)"                   ""
+    item        outputMenu      command           "Select a new report file..."      setOutputFile               ""                   ""
+    item        tmMenu	        cascade           "Export results to report"         outputMenu                  ""                   ""
+
