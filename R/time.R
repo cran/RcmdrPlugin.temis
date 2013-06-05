@@ -163,8 +163,9 @@ varTimeSeriesDlg <- function() {
         if(var == "")
             return()
 
-        levs <- unique(meta(corpus, var)[[1]])
-        for(level in levs) tkinsert(levelsBox, "end", level)
+        levs <- if(is.factor(meta(corpus, var)[[1]])) levels(droplevels(meta(corpus, var)[[1]]))
+                else sort(unique(meta(corpus, var)[[1]]))
+        for(level in as.character(levs[!is.na(levs)])) tkinsert(levelsBox, "end", level)
 
         tkselection.set(levelsBox, 0, "end")
     }
@@ -223,7 +224,7 @@ varTimeSeriesDlg <- function() {
 
         if(nchar(groupVar) == 0) {
             doItAndPrint(sprintf('tab <- table(as.character(strptime(meta(corpus, "%s")[[1]], "%s")))', timeVar, format))
-            doItAndPrint(sprintf('time <- as.POSIXct(strptime(names(tab), "%s"))', format))
+            doItAndPrint("time <- as.POSIXct(names(tab))")
             doItAndPrint("docSeries <- zoo(tab, order.by=time)")
         }
         else {
@@ -233,7 +234,7 @@ varTimeSeriesDlg <- function() {
             if(what == "percent")
                 doItAndPrint("tab <- prop.table(tab, 1)*100")
 
-            doItAndPrint(sprintf('time <- as.POSIXct(strptime(rownames(tab), "%s"))', format))
+            doItAndPrint("time <- as.POSIXct(rownames(tab))")
 
             if(length(groupLevs) < length(unique(meta(corpus, var)[[1]])))
                 doItAndPrint(sprintf('docSeries <- zoo(tab[,c("%s")], order.by=time)',
@@ -394,8 +395,9 @@ termTimeSeriesDlg <- function() {
         if(var == "")
             return()
 
-        levs <- unique(meta(corpus, var)[[1]])
-        for(level in levs) tkinsert(levelsBox, "end", level)
+        levs <- if(is.factor(meta(corpus, var)[[1]])) levels(droplevels(meta(corpus, var)[[1]]))
+                else sort(unique(meta(corpus, var)[[1]]))
+        for(level in as.character(levs[!is.na(levs)])) tkinsert(levelsBox, "end", level)
 
         tkselection.set(levelsBox, 0, "end")
     }
@@ -495,16 +497,16 @@ termTimeSeriesDlg <- function() {
 
             # Compute %
             if(what == "term.lev") {
-                doItAndPrint(sprintf('termSeries <- zoo(absTermFreqs/c(tapply(row_sums(dtm), time, sum)), order.by=as.POSIXct(strptime(rownames(absTermFreqs), "%s")))', format))
+                doItAndPrint("termSeries <- zoo(absTermFreqs/c(tapply(row_sums(dtm), time, sum)), order.by=as.POSIXct(rownames(absTermFreqs)))")
 
                 ylab <- .gettext("% of all terms")
             }
             else if (what == "lev.term") {
-                doItAndPrint(sprintf('termSeries <- zoo(prop.table(absTermFreqs, 2) * 100, order.by=as.POSIXct(strptime(rownames(absTermFreqs), "%s")))', format))
+                doItAndPrint("termSeries <- zoo(prop.table(absTermFreqs, 2) * 100, order.by=as.POSIXct(rownames(absTermFreqs)))")
                 ylab <- .gettext("% of occurrences")
             }
             else {
-                doItAndPrint(sprintf('termSeries <- zoo(absTermFreqs, order.by=as.POSIXct(strptime(rownames(absTermFreqs), "%s")))', format))
+                doItAndPrint("termSeries <- zoo(absTermFreqs, order.by=as.POSIXct(rownames(absTermFreqs)))")
                 ylab <- .gettext("Number of occurrences")
             }
 

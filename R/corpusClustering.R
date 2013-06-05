@@ -9,6 +9,24 @@ showCorpusClustering <- function(corpusSubClust, ndocs=10, nterms=20, p=0.1, min
 
     tkwm.title(window, .gettext("Hierarchical Clustering"))
 
+    tnterms <- attr(corpusSubClust, "nterms")
+    tndocs <- sum(sapply(corpusSubClust$lower, attr, "members"))
+
+    if(is.null(attr(corpusSubClust, "caDim"))) {
+        tkinsert(txt, "end", sprintf(.gettext("Hierarchical clustering of %i documents using %i terms (Ward's method with Chi-squared distance)."),
+                                     tndocs, tnterms),
+                 "body")
+    }
+    else {
+        tndim <- attr(corpusSubClust, "caDim")
+
+        tkinsert(txt, "end", sprintf(.gettext("Hierarchical clustering of %i documents using %i terms (Ward's method with Chi-squared distance based on the %i first dimensions of the correspondence analysis)."),
+                                     tndocs, tnterms, tndim),
+                 "body")
+    }
+
+    tkinsert(txt, "end", "\n\n", "heading")
+
     mark <- 0
 
     tkinsert(txt, "end", paste(.gettext("Clusters summary:"), "\n", sep=""), "heading")
@@ -245,6 +263,10 @@ corpusClustDlg <- function() {
                 return()
 
             doItAndPrint('corpusClust <- hclust(chisqDist, method="ward")')
+            doItAndPrint(sprintf('attr(corpusClust, "caDim") <- %s', dim))
+
+            doItAndPrint(sprintf('attr(corpusClust, "nterms") <- %s', nrow(corpusCa$colcoord)))
+
             doItAndPrint("rm(chisqDist)")
             gc()
         }
@@ -270,9 +292,14 @@ corpusClustDlg <- function() {
             }
 
             doItAndPrint('corpusClust <- hclust(chisqDist, method="ward")')
+
             # Used by createClustersDialog() and showCorpusClust() to recreate the dtm
             doItAndPrint(sprintf('attr(corpusClust, "sparsity") <- %s', sparsity))
+
+            doItAndPrint(sprintf('attr(corpusClust, "nterms") <- %s', ncol(clustDtm)))
+
             doItAndPrint("rm(clustDtm, chisqDist)")
+
             gc()
         }
         else {
@@ -283,26 +310,9 @@ corpusClustDlg <- function() {
                 return()
 
             doItAndPrint('corpusClust <- hclust(chisqDist, method="ward")')
+            doItAndPrint(sprintf('attr(corpusClust, "nterms") <- %s', ncol(dtm)))
             doItAndPrint("rm(chisqDist)")
             gc()
-        }
-
-        # Do not plot all leafs if there are too many of them (can even crash!)
-        if(length(corpusClust$labels) > 500) {
-            # If 500th is already at 0, cutting there won't have any effect,
-            # so take the last non-0 height in the 1:500 range
-            revList <- rev(corpusClust$height)[1:500]
-            height <- floor(tail(revList[revList > sqrt(.Machine$double.eps)], 1) * 1e4)/1e4
-            doItAndPrint(sprintf('plot(cut(as.dendrogram(corpusClust), h=%s)$upper, leaflab="none", ylab="%s", main="%s")',
-                                 height,
-                                 .gettext("Within-cluster variance"),
-                                 .gettext("Upper part of documents dendrogram")))
-        }
-        else {
-            doItAndPrint(sprintf('plot(as.dendrogram(corpusClust), nodePar=list(pch=NA, lab.cex=0.8), %sylab="%s", main="%s")',
-                                 if(length(corpus) > 20) 'leaflab="none", ' else "",
-                                 .gettext("Within-cluster variance"),
-                                 .gettext("Full documents dendrogram")))
         }
 
         # For the Create clusters item
@@ -323,11 +333,35 @@ corpusClustDlg <- function() {
     dialogSuffix(rows=6, columns=2)
 }
 
-createClustersDlg <- function() {
+createClustersDlg <- function(..., plot=TRUE) {
     if(!(exists("corpusClust") && class(corpusClust) == "hclust")) {
         Message(message=.gettext("Please run a hierarchical clustering on the corpus first."),
                 type="error")
         return()
+    }
+
+    if(plot) {
+        .setBusyCursor()
+
+        # Do not plot all leafs if there are too many of them (can even crash!)
+        if(length(corpusClust$labels) > 500) {
+            # If 500th is already at 0, cutting there won't have any effect,
+            # so take the last non-0 height in the 1:500 range
+            revList <- rev(corpusClust$height)[1:500]
+            height <- floor(tail(revList[revList > sqrt(.Machine$double.eps)], 1) * 1e4)/1e4
+            doItAndPrint(sprintf('plot(cut(as.dendrogram(corpusClust), h=%s)$upper, leaflab="none", ylab="%s", main="%s")',
+                                 height,
+                                 .gettext("Within-cluster variance"),
+                                 .gettext("Upper part of documents dendrogram")))
+        }
+        else {
+            doItAndPrint(sprintf('plot(as.dendrogram(corpusClust), nodePar=list(pch=NA, lab.cex=0.8), %sylab="%s", main="%s")',
+                                 if(length(corpus) > 20) 'leaflab="none", ' else "",
+                                 .gettext("Within-cluster variance"),
+                                 .gettext("Full documents dendrogram")))
+        }
+
+        .setIdleCursor()
     }
 
     initializeDialog(title=.gettext("Create Clusters"))
@@ -399,6 +433,11 @@ createClustersDlg <- function() {
         # Set by corpusClustDlg() and used by showCorpusClustering() to recreate dtm
         if(length(attr(corpusClust, "sparsity")) > 0)
             doItAndPrint(sprintf('attr(corpusSubClust, "sparsity") <- %s', attr(corpusClust, "sparsity")))
+
+        doItAndPrint(sprintf('attr(corpusSubClust, "nterms") <- %s', attr(corpusClust, "nterms")))
+
+        if(length(attr(corpusClust, "caDim")) > 0)
+            doItAndPrint(sprintf('attr(corpusSubClust, "caDim") <- %s', attr(corpusClust, "caDim")))
 
         doItAndPrint(sprintf('plot(corpusSubClust$upper, nodePar=list(pch=NA, lab.cex=0.8), ylab="%s", main="%s")',
                              .gettext("Within-cluster variance"),
