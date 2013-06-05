@@ -40,6 +40,9 @@
 
          The third source, \dQuote{Twitter search}, retrieves most recent tweets matching the search
          query and written in the specified language, up to the chosen maximum number of messages.
+         Please note that you need to register a custom application and fill in the needed information
+         to authenticate with the Twitter API (see \code{vignette("twitteR")} about OAuth authentication
+         and \url{https://dev.twitter.com/apps/new/} to register a new application).
          Due to limitations imposed by Twitter, only tweets published up to 6 or 9 days ago can be
          downloaded, and up to a maximum number of 1500 tweets. Search queries can notably include
          one or more terms that must be present together for a tweet to match the query, and/or of
@@ -74,11 +77,7 @@
          The dialog also provides a few processing options that will most likely be
          all run in order to get a meaningful set of terms from a text corpus.
          Among them, stopwords removal and stemming require you to select the
-         language used in the corpus: at the moment supported languages are
-         Danish (\sQuote{da}), Dutch (\sQuote{nl}), English (\sQuote{en}), Finnish (\sQuote{fi}),
-         French (\sQuote{fr}), German (\sQuote{de}), Hungarian (\sQuote{hu}), Italian (\sQuote{it}),
-         Norwegian (\sQuote{no}), Portuguese (\sQuote{pt}), Russian (\sQuote{ru}), Spanish (\sQuote{es}),
-         and Swedish (\sQuote{sv}) - to specifify via their ISO 639 two-letter code.
+         language used in the corpus.
 
          By default, plain text (usually .txt) and comma/tab-separated values files (.csv, .tsv, .dat...)
          are assumed to be in the native encoding, which is shown in the \dQuote{File encoding:} entry.

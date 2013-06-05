@@ -1,17 +1,15 @@
 Package: RcmdrPlugin.temis
 Type: Package
-Title: Graphical user interface providing an integrated text mining
-        solution
-Version: 0.6
-Date: 2013-02-10
+Title: Graphical Integrated Text Mining Solution
+Version: 0.6.1
+Date: 2013-06-05
 Authors@R: c(person("Milan", "Bouchet-Valat",
         email="nalimilan@club.fr", role=c("aut", "cre")),
         person("Gilles", "Bastin",
         email="gilles.bastin@sciencespo-grenoble.fr", role=c("aut")))
 Imports: Rcmdr (>= 1.9-3), tcltk, utils
 Depends: tm, slam, zoo, ca, R2HTML, lattice, latticeExtra, RColorBrewer
-Suggests: Snowball, RWeka, Rstem, ROpenOffice, RODBC,
-        tm.plugin.factiva, twitteR
+Suggests: SnowballC, ROpenOffice, RODBC, tm.plugin.factiva, twitteR
 Description: An Rcommander plug-in providing an integrated solution to
         perform a series of text mining tasks such as importing and
         cleaning a corpus, and analyses like terms and documents
@@ -21,8 +19,12 @@ Description: An Rcommander plug-in providing an integrated solution to
 License: GPL (>= 2)
 URL: https://r-forge.r-project.org/projects/r-temis/
 BugReports: https://r-forge.r-project.org/tracker/?group_id=1437
-Packaged: 2013-02-10 11:24:56 UTC; milan
 Author: Milan Bouchet-Valat [aut, cre], Gilles Bastin [aut]
 Maintainer: Milan Bouchet-Valat <nalimilan@club.fr>
 Repository: CRAN
-Date/Publication: 2013-02-10 15:59:13
+Repository/R-Forge/Project: r-temis
+Repository/R-Forge/Revision: 451
+Repository/R-Forge/DateTimeStamp: 2013-06-05 08:56:24
+Date/Publication: 2013-06-05 19:00:13
+Packaged: 2013-06-05 10:18:05 UTC; rforge
+NeedsCompilation: no

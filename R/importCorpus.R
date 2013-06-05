@@ -1,13 +1,24 @@
-.selectCorpusVariables <- function() {
+.selectCorpusVariables <- function(source) {
     # Let the user select processing options
     initializeDialog(title=.gettext("Select Variables to Import"))
 
 
     vars <- c(.gettext("No variables"), colnames(corpusVars))
+
+    if(source %in% c("factiva", "twitter"))
+        # Keep in sync with import functions
+        initialSelection <- which(vars %in% c(.gettext("Origin"), .gettext("Date"),
+                                              .gettext("Author"), .gettext("Section"),
+                                              .gettext("Time"), .gettext("Truncated"),
+                                              .gettext("StatusSource"), .gettext("Retweet"))) - 1
+    else
+        initialSelection <- seq.int(1, length(vars) - 1)
+
     varBox <- variableListBox(top, vars,
                               selectmode="multiple",
                               title=.gettext("Select the corpus variables that should be imported:"),
-                              initialSelection=seq.int(1, length(vars) - 1))
+                              initialSelection=initialSelection,
+                              listHeight=min(length(vars), 25))
 
     result <- tclVar()
 
@@ -53,8 +64,7 @@
 }
 
 # Run all processing steps and extract words list
-.processTexts <- function(options, lang, wordsOnly,
-                          useRstem=suppressWarnings(require("Rstem", quietly=TRUE))) {
+.processTexts <- function(options, lang, wordsOnly) {
         if(any(options))
             doItAndPrint("dtmCorpus <- corpus")
 
@@ -92,10 +102,11 @@
             doItAndPrint(paste("dtmCorpus <- tm_map(dtmCorpus, removeWords, stopwords(\"",
                                lang, "\"))", sep=""))
 
-        if(options["stemming"])
-            doItAndPrint(sprintf('dtmCorpus <- tm_map(dtmCorpus, %s, language="%s")',
-                                 if(useRstem) "stemDocumentRstem" else "stemDocument",
-                                 tm:::map_IETF_Snowball(lang)))
+        if(options["stemming"]) {
+            doItAndPrint("library(SnowballC)")
+            doItAndPrint(sprintf('dtmCorpus <- tm_map(dtmCorpus, stemDocumentSnowballC, language="%s")',
+                                 lang))
+        }
 }
 
 importCorpusDlg <- function() {
@@ -104,13 +115,13 @@ importCorpusDlg <- function() {
 
     setState <- function(...) {
         if(tclvalue(sourceVariable) %in% c("dir", "file")) {
-            tkconfigure(entryEnc, state="active")
+            tkconfigure(comboEnc, state="normal")
 
             if(tclvalue(tclEnc) == "UTF-8")
                 tclvalue(tclEnc) <- nativeEnc
         }
         else {
-            tkconfigure(entryEnc, state="disabled")
+            tkconfigure(comboEnc, state="disabled")
 
             if(tclvalue(tclEnc) == nativeEnc)
                 tclvalue(tclEnc) <- "UTF-8"
@@ -128,12 +139,21 @@ importCorpusDlg <- function() {
                  command=setState)
 
     # TRANSLATORS: replace 'en' with your language's ISO 639 two-letter code
-    tclLang <- tclVar(.gettext("en"))
-    entryLang <- ttkentry(top, width=20, textvariable=tclLang)
+    languages <- c(da="Dansk (da)", de="Deutsch (de)", en="English (en)", es="Espa\u00F1ol (es)",
+                   fi="Suomi (fi)", fr="Fran\u00E7ais (fr)", hu="Magyar (hu)", it="Italiano (it)",
+                   nl="Nederlands (nl)", no="Norsk (no)", pt="Portugu\u0EAs (pt)",
+                   ro="Rom\u00E2n\u0103 (ro)",
+                   ru="\u0440\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A (ru)",
+                   sv="Svenska (sv)", tr="T\u00FCrk\u00E7e (tr)")
+    tclLang <- tclVar(languages[.gettext("en")])
+    comboLang <- ttkcombobox(top, width=20, textvariable=tclLang, state="readonly", values=languages)
 
     nativeEnc <- sprintf(.gettext("native (%s)"), localeToCharset()[1])
     tclEnc <- tclVar(nativeEnc)
-    entryEnc <- ttkentry(top, width=20, textvariable=tclEnc)
+    # Do not use state="readonly" since it may be easier to type the encoding name by hand
+    # than choose it in the long list
+    comboEnc <- ttkcombobox(top, width=20, textvariable=tclEnc,
+                            values=c(nativeEnc, iconvlist()))
 
     checkBoxes(frame="processingFrame",
                boxes=c("lowercase", "punctuation", "digits", "stopwords", "stemming"),
@@ -144,14 +164,19 @@ importCorpusDlg <- function() {
                         .gettext("Apply stemming")),
                title=.gettext("Text processing:"))
 
-    chunksFrame <- tkframe(top)
     tclChunks <- tclVar(0)
     tclNParagraphs <- tclVar(1)
-    chunksButton <- tkcheckbutton(chunksFrame, variable=tclChunks,
-                                  text=.gettext("Split texts into smaller documents"))
-    chunksSlider <- tkscale(chunksFrame, from=1, to=20, showvalue=TRUE, variable=tclNParagraphs,
-		            resolution=1, orient="horizontal")
-    
+    chunksButton <- ttkcheckbutton(top, variable=tclChunks,
+                                   text=.gettext("Split texts into smaller documents"),
+                                    command=function() {
+                                        if(tclvalue(tclChunks) == 1)
+                                            tkconfigure(chunksSlider, state="active")
+                                        else
+                                            tkconfigure(chunksSlider, state="disabled")
+                                    })
+    chunksSlider <- tkscale(top, from=1, to=20, showvalue=TRUE, variable=tclNParagraphs,
+                            resolution=1, orient="horizontal", state="disabled")
+
 
     onOK <- function() {
         source <- tclvalue(sourceVariable)
@@ -162,31 +187,13 @@ importCorpusDlg <- function() {
         stopwords <- tclvalue(stopwordsVariable) == 1
         stemming <- tclvalue(stemmingVariable) == 1
 
-        lang <- tclvalue(tclLang)
-        stemLang <- tm:::map_IETF_Snowball(lang)
-
-
-        if(stemming) {
-            # Only use Rstem as a fallback, or when activated explicitly
-            haveRstem <- suppressWarnings(require("Rstem", quietly=TRUE))
-            haveSnowball <- suppressWarnings(require("Snowball", quietly=TRUE))
-            useRstem <- haveRstem && (getOption("Rtemis.stemmer", "Snowball") == "Rstem" ||
-                                      !haveSnowball)
-                         
-
-            if(is.na(stemLang) || stemLang == "porter" ||
-               (useRstem && !stemLang %in% Rstem::getStemLanguages())) {
-                Message(.gettext('Unsupported language code: please click the "Help" button to get a list of supported codes.'),
-                        "error")
-                return()
-            }
-        }
+        lang <- names(languages)[tclvalue(tclLang) == languages]
 
         enc <- tclvalue(tclEnc)
         if(enc == nativeEnc) enc <- ""
 
         if(enc != "" && !enc %in% iconvlist()) {
-            Message(.gettext('Unsupported encoding: use the iconvlist() function to get a list of supported encodings.'),
+            Message(.gettext('Unsupported encoding: please select an encoding from the list.'),
                     "error")
             return()
         }
@@ -196,17 +203,11 @@ importCorpusDlg <- function() {
         .setBusyCursor()
         on.exit(.setIdleCursor())
 
-
-        # If we do not close the dialog first, the CRAN mirror chooser will not respond
-	if(stemming && !useRstem &&
-           !.checkAndInstall("Snowball", .gettext("The Snowball package is needed to perform stemming.\nDo you want to install it?")))
-            return()
-
-        # Loading rJava with Java 7 currently changes the locale including LC_NUMERIC, which
-        # triggers bugs when generating commands (could be fixed) but also in the Tk file chooser,
-        # at least on Linux.
-        if(stemming && !useRstem && Sys.getlocale("LC_NUMERIC") != "C")
-            suppressWarnings(Sys.setlocale("LC_NUMERIC", "C"))
+	if(stemming) {
+            # If we do not close the dialog first, the CRAN mirror chooser will not respond
+	    if(!.checkAndInstall("SnowballC", .gettext("Package SnowballC is needed to perform stemming. Do you want to install it?\n\nThis requires a working Internet connection.")))
+                return()
+        }
 
         # Remove objects left from a previous analysis to avoid confusion
         # (we assume later existing objects match the current corpus)
@@ -236,7 +237,7 @@ importCorpusDlg <- function() {
 
         # If source-specific functions load variables, they create corpusVars; else, create an empty data frame
         if(exists("corpusVars")) {
-            if(!.selectCorpusVariables()) return()
+            if(!.selectCorpusVariables(source)) return()
         }
         else {
             # Because of a bug in Rcmdr, filling the first column with NAs prevents entering data in this columns:
@@ -257,7 +258,7 @@ importCorpusDlg <- function() {
         .processTexts(c(twitter=twitter, lowercase=lowercase, punctuation=punctuation,
                         digits=digits, stopwords=stopwords, stemming=stemming,
                         removeHashtags=res$removeHashtags, removeNames=res$removeNames),
-                      lang, FALSE, useRstem)
+                      lang, FALSE)
 
         if(twitter || lowercase || punctuation || digits || stopwords || stemming) {
             doItAndPrint("dtm <- DocumentTermMatrix(dtmCorpus, control=list(tolower=FALSE, wordLengths=c(2, Inf)))")
@@ -295,17 +296,21 @@ importCorpusDlg <- function() {
     }
 
     OKCancelHelp(helpSubject="importCorpusDlg")
-    tkgrid(sourceFrame, columnspan="2", sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Language of texts in the corpus:")), entryLang, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("File encoding:")), entryEnc, sticky="w", pady=6)
-    tkgrid(labelRcmdr(chunksFrame, text=.gettext("Text splitting:"), fg="blue"), sticky="ws")
-    tkgrid(chunksButton, columnspan="2", sticky="w", pady=6)
-    tkgrid(labelRcmdr(chunksFrame, text=.gettext("Size of new documents (in paragraphs):")),
-           chunksSlider, sticky="w", pady=6, padx=6)
-    tkgrid(chunksFrame, columnspan="2", sticky="w", pady=6)
-    tkgrid(processingFrame, columnspan="2", sticky="w", pady=6)
-    tkgrid(buttonsFrame, columnspan="2", sticky="w", pady=6)
-    dialogSuffix(rows=7, columns=2, focus=entryLang)
+    tkgrid(sourceFrame, columnspan=3, sticky="w", pady=6)
+    tkgrid(labelRcmdr(top, text=.gettext("Language of texts in the corpus:")), sticky="w", pady=6)
+    tkgrid(comboLang, sticky="ew", pady=6, row=1, column=1, columnspan=2)
+    tkgrid(labelRcmdr(top, text=.gettext("File encoding:")), sticky="w", pady=6)
+    tkgrid(comboEnc, sticky="ew", pady=6, row=2, column=1, columnspan=2)
+    tkgrid(labelRcmdr(top, text=.gettext("Text splitting:"), fg="blue"), sticky="ws", pady=c(12, 6))
+    tkgrid(chunksButton, sticky="w", pady=6, columnspan=3)
+    tkgrid(labelRcmdr(top, text=.gettext("Size of new documents:")),
+           chunksSlider, labelRcmdr(top, text=.gettext("paragraphs")), sticky="w", pady=6)
+    tkgrid(processingFrame, columnspan=3, sticky="w", pady=6)
+    tkgrid(buttonsFrame, columnspan=3, sticky="w", pady=6)
+    tkgrid.columnconfigure(top, 0, pad=12)
+    tkgrid.columnconfigure(top, 1, pad=12)
+    tkgrid.columnconfigure(top, 2, pad=12)
+    dialogSuffix(rows=7, columns=2, focus=comboLang)
 }
 
 # Choose a directory to load texts from
@@ -491,11 +496,18 @@ extractFactivaMetadata <- function(corpus) {
         vars[[tag]] <- unlist(var)
     }
 
+    # Keep in sync with .selectCorpusVariables()
     colnames(vars) <- c(.gettext("Origin"), .gettext("Date"), .gettext("Author"), .gettext("Section"))
 
-    tags <- c("Subject", "Coverage")
-    for(tag in tags) {
-        var <- lapply(corpus, meta, tag)
+    tags <- c("Subject", "Coverage", "Company", "Industry", "InfoCode", "InfoDesc")
+    meta <- sapply(corpus, function(x) LocalMetaData(x)[tags])
+    # Tags missing from all documents
+    meta <- meta[!is.na(rownames(meta)),]
+    # Tags missing from some documents
+    meta[] <- sapply(meta, function(x) if(is.null(x)) NA else x)
+
+    for(tag in rownames(meta)) {
+        var <- meta[tag,]
         levs <- unique(unlist(var))
         levs <- levs[!is.na(levs)]
 
@@ -574,9 +586,24 @@ importCorpusFromTwitter <- function(language=NA) {
 
     initializeDialog(title=.gettext("Import Corpus From Twitter"))
 
+    tclReqURL <- tclVar("https://api.twitter.com/oauth/request_token")
+    entryReqURL <- ttkentry(top, width=37, textvariable=tclReqURL)
+
+    tclAuthURL <- tclVar("https://api.twitter.com/oauth/authorize")
+    entryAuthURL <- ttkentry(top, width=37, textvariable=tclAuthURL)
+
+    tclAccessURL <- tclVar("https://api.twitter.com/oauth/access_token")
+    entryAccessURL <- ttkentry(top, width=37, textvariable=tclAccessURL)
+
+    tclConsumerKey <- tclVar("")
+    entryConsumerKey <- ttkentry(top, width=37, textvariable=tclConsumerKey)
+
+    tclConsumerSecret <- tclVar("")
+    entryConsumerSecret <- ttkentry(top, width=37, textvariable=tclConsumerSecret)
+
     # TRANSLATORS: replace 'en' with your language's ISO 639 two-letter code
     tclText <- tclVar("")
-    entryText <- ttkentry(top, width="12", textvariable=tclText)
+    entryText <- ttkentry(top, width=37, textvariable=tclText)
 
     tclNMess <- tclVar(100)
     tclNSlider <- tkscale(top, from=1, to=1500,
@@ -593,10 +620,20 @@ importCorpusFromTwitter <- function(language=NA) {
     result <- tclVar()
 
     onOK <- function() {
+        reqURL <- tclvalue(tclReqURL)
+        authURL <- tclvalue(tclAuthURL)
+        accessURL <- tclvalue(tclAccessURL)
+        consumerKey <- tclvalue(tclConsumerKey)
+        consumerSecret <- tclvalue(tclConsumerSecret)
         text <- tclvalue(tclText)
         nmess <- tclvalue(tclNMess)
         exclRetweets <- tclvalue(exclRetweetsVariable) == 1
 
+        if(reqURL == "" || authURL == "" || accessURL == "" ||
+           consumerKey == "" || consumerSecret == "") {
+            Message(.gettext("Please enter valid authentication settings."), type="error")
+            return(FALSE)
+        }
         if(text == "") {
             Message(.gettext("Please enter valid text to search for."), type="error")
             return(FALSE)
@@ -611,6 +648,18 @@ importCorpusFromTwitter <- function(language=NA) {
         tclvalue(result) <- "error"
 
         doItAndPrint("library(twitteR)")
+
+        doItAndPrint(sprintf('twitCred <- OAuthFactory$new(consumerKey="%s", consumerSecret="%s", requestURL="%s", accessURL="%s", authURL="%s")', consumerKey, consumerSecret, reqURL, accessURL, authURL))
+        doItAndPrint("twitCred$handshake()")
+
+        if(!isTRUE(twitCred$handshakeComplete)) {
+            Message(.gettext("TwitteR authentication failed. Please check the entered credentials or PIN code."),
+                    type="error")
+            return(FALSE)
+        }
+
+        doItAndPrint("registerTwitterOAuth(twitCred)")
+
         doItAndPrint(sprintf('messages <- searchTwitter("%s", %s, %s)', text, nmess, language))
 
         if(length(messages) == 0) {
@@ -645,6 +694,7 @@ importCorpusFromTwitter <- function(language=NA) {
         doItAndPrint('corpusVars <- corpusDataset[c("screenName", "created", "truncated", "statusSource")]')
         doItAndPrint("rm(corpusDataset)")
         doItAndPrint(sprintf('colnames(corpusVars) <- c("%s", "%s", "%s", "%s")',
+                             # Keep in sync with .selectCorpusVariables()
                              .gettext("Author"), .gettext("Time"), .gettext("Truncated"), .gettext("StatusSource")))
 
         doItAndPrint(sprintf('corpusVars[["%s"]] <- grepl("\\\\bRT\\\\b", corpus)', .gettext("Retweet")))
@@ -667,6 +717,17 @@ importCorpusFromTwitter <- function(language=NA) {
     }
 
     OKCancelHelp(helpSubject="importCorpusDlg")
+    tkgrid(labelRcmdr(top, text=.gettext("Note: Twitter requires you to register a custom application and fill in\nthe details below. See vignette(\"twitteR\") and https://dev.twitter.com/apps/new/.\nYou will need to switch manually to the R console and copy the PIN\ncode you get from the URL printed there.")), sticky="w", pady=6, columnspan=2)
+    tkgrid(labelRcmdr(top, text=.gettext("Request token URL:")),
+           entryReqURL, sticky="w", pady=6)
+    tkgrid(labelRcmdr(top, text=.gettext("Authorize URL:")),
+           entryAuthURL, sticky="w", pady=6)
+    tkgrid(labelRcmdr(top, text=.gettext("Access token URL:")),
+           entryAccessURL, sticky="w", pady=6)
+    tkgrid(labelRcmdr(top, text=.gettext("Consumer key:")),
+           entryConsumerKey, sticky="w", pady=6)
+    tkgrid(labelRcmdr(top, text=.gettext("Consumer secret:")),
+           entryConsumerSecret, sticky="w", pady=6)
     tkgrid(labelRcmdr(top, text=.gettext("Text to search for:")),
            entryText, sticky="w", pady=6)
     tkgrid(labelRcmdr(top, text=.gettext("Maximum number of tweets to download:")),
