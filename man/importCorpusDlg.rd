@@ -3,9 +3,13 @@
 \alias{importCorpusFromDir}
 \alias{importCorpusFromFile}
 \alias{importCorpusFromFactiva}
+\alias{importCorpusFromLexisNexis}
+\alias{importCorpusFromEuropresse}
+\alias{importCorpusFromAlceste}
 \alias{importCorpusFromTwitter}
+\alias{editDictionary}
 \alias{splitTexts}
-\alias{extractFactivaMetadata}
+\alias{extractMetadata}
 \title{Import a corpus and process it}
 \description{Import a corpus, process it and extract a document-term matrix.}
 \details{This dialog allows creating a \pkg{tm} corpus from various sources. Once the
@@ -21,24 +25,28 @@
          The second source, \dQuote{Spreadsheet file}, creates one document for each row
          of a file containg tabular data, typically an Excel (.xls) or Open Document
          Spreadsheet (.ods), comma-separated values (.csv) or tab-separated values (.tsv, .txt,
-         .dat) file. The first column is taken as the contents of the document, while the
+         .dat) file. One column must be specified as containing the text of the document, while the
          remaining columns are added as variables describing each document. For the CSV format,
          \dQuote{,} or \dQuote{;} is used as separator, whichever is the most frequent in the
          50 first lines of the file.
 
-         The third source, \dQuote{Factiva XML file}, loads articles exported from
-         the Dow Jones Factiva website in the \acronym{XML} or \acronym{HTML} formats (the former
-         being recommended if you can choose it). Various meta-data describing the articles are
-         automatically extracted. If the corpus is split into several .xml or .html files, you
-         can put them in the same directory and select them by holding the Ctrl key to concatenate
-         them into a single corpus. Please note that some rticles from Factiva are known to contain
-         invalid character that trigger an error when loading. If this problem happens to you,
-         please try to identify the problematic article, for example by removing half of the
-         documents and retrying, until only one document is left in the corpus; then, report
+         The third, fourth and fifth sources, \dQuote{Factiva XML or HTML file(s)},
+         \dQuote{LexisNexis HTML file(s)} and \dQuote{Europresse HTML file(s)}, load articles
+         exported from the corresponding website in the \acronym{XML} or \acronym{HTML} formats
+         (for Factiva, the former is recommended if you can choose it). Various meta-data variables
+         describing the articles are automatically extracted. If the corpus is split into several .xml
+         or .html files, you  can put them in the same directory and select them by holding the Ctrl
+         key to concatenate them into a single corpus. Please note that some articles from Factiva
+         are known to contain invalid character that trigger an error when loading. If this problem
+         happens to you, please try to identify the problematic article, for example by removing half
+         of the documents and retrying, until only one document is left in the corpus; then, report
          the problem to the Factiva Customer Service, or ask for help to the maintainers of the
          present package.
 
-         The third source, \dQuote{Twitter search}, retrieves most recent tweets matching the search
+         The sixth source, \dQuote{Alceste file(s)}, loads texts and variables from a single file
+         in the Alceste format, which uses asterisks to separate texts and code variables.
+
+         The seventh source, \dQuote{Twitter search}, retrieves most recent tweets matching the search
          query and written in the specified language, up to the chosen maximum number of messages.
          Please note that you need to register a custom application and fill in the needed information
          to authenticate with the Twitter API (see \code{vignette("twitteR")} about OAuth authentication
@@ -77,12 +85,17 @@
          The dialog also provides a few processing options that will most likely be
          all run in order to get a meaningful set of terms from a text corpus.
          Among them, stopwords removal and stemming require you to select the
-         language used in the corpus.
+         language used in the corpus. If you tick \dQuote{Edit stemming manually},
+         enabled processing steps will be applied to the terms before presenting you with
+         a list of all words originally found in the corpus, together with their stemmed forms.
+         Terms with an empty stemmed form will be excluded from the document-term matrix;
+         the \dQuote{Stopword} column is only presented as an indication, it is not taken into
+         account when deciding whether to keep a term.
 
-         By default, plain text (usually .txt) and comma/tab-separated values files (.csv, .tsv, .dat...)
-         are assumed to be in the native encoding, which is shown in the \dQuote{File encoding:} entry.
-         If you know this is not the case, you can change the value of this field to one of the encodings
-         returned by the \code{iconvlist()} function.
+         By default, the program tries to detect the encoding used by plain text (usually .txt)
+         and comma/tab-separated values files (.csv, .tsv, .dat...). If importation fails or
+         the imported texts contain strange characters, specify the encoding manually (a tooltip
+         gives suggestions based on the selected language).
 
          Once the corpus has been imported, its document-term matrix is extracted.
 }

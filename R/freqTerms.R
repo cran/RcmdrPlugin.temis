@@ -53,16 +53,16 @@ frequentTerms <- function(dtm, variable=NULL, n=25) {
 
 freqTermsDlg <- function() {
     if(!(exists("dtm") && class(dtm) == "DocumentTermMatrix")) {
-        Message(message=.gettext("Please import a corpus and create the document-term matrix first."),
+        .Message(message=.gettext("Please import a corpus and create the document-term matrix first."),
                 type="error")
         return()
     }
 
     initializeDialog(title=.gettext("Show Most Frequent Terms"))
     tclN <- tclVar(10)
-    sliderN <- tkscale(top, from=1, to=100,
-                       showvalue=TRUE, variable=tclN,
-	               resolution=1, orient="horizontal")
+    spinN <- tkwidget(top, type="spinbox", from=1, to=.Machine$integer.max,
+                      inc=1, textvariable=tclN,
+                      validate="all", validatecommand=.validate.uint)
 
     vars <- c(.gettext("None (whole corpus)"), .gettext("Document"), colnames(meta(corpus)))
     varBox <- variableListBox(top, vars,
@@ -75,8 +75,8 @@ freqTermsDlg <- function() {
 
         closeDialog()
 
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         if(var == .gettext("None (whole corpus)"))
             doItAndPrint(sprintf('freqTerms <- frequentTerms(dtm, NA, %i)', n))
@@ -98,9 +98,9 @@ freqTermsDlg <- function() {
     }
 
     OKCancelHelp(helpSubject="freqTermsDlg")
-    tkgrid(labelRcmdr(top, text=.gettext("Number of terms to show:")), sliderN,
+    tkgrid(labelRcmdr(top, text=.gettext("Number of terms to show:")), spinN,
            sticky="sw", pady=6)
-    tkgrid(getFrame(varBox), columnspan="2", sticky="w", pady=6)
-    tkgrid(buttonsFrame, columnspan="2", sticky="w", pady=6)
-    dialogSuffix(rows=3, columns=2)
+    tkgrid(getFrame(varBox), columnspan=2, sticky="w", pady=6)
+    tkgrid(buttonsFrame, columnspan=2, sticky="ew", pady=6)
+    dialogSuffix()
 }

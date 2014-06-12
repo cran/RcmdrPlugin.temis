@@ -24,7 +24,7 @@ corpusDissimilarity <- function(x, y) {
 dissimilarityTableDlg <- function() {
     nVars <- ncol(meta(corpus)[colnames(meta(corpus)) != "MetaID"])
     if(nVars == 0) {
-        Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
+        .Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
                 type="error")
         return()
     }
@@ -54,8 +54,8 @@ dissimilarityTableDlg <- function() {
         var2 <- getSelection(varBox2)
 
         closeDialog()
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         if(var1 == var2) {
             if(var1 == .gettext("Document")) {
@@ -105,7 +105,7 @@ dissimilarityTableDlg <- function() {
     OKCancelHelp(helpSubject="dissimilarityTableDlg")
     tkgrid(getFrame(varBox1), sticky="w", pady=6, columnspan=3)
     tkgrid(getFrame(varBox2), sticky="w", pady=6, columnspan=3)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=3)
-    dialogSuffix(rows=3, columns=3, focus=varBox1$listbox)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=3)
+    dialogSuffix(focus=varBox1$listbox)
 }
 

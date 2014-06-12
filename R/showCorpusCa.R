@@ -209,8 +209,8 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
                 mark <- mark + 1
                 tkinsert(listbox, "end", id)
 
-                origin <- meta(corpus[[id]], "Origin")
-                date <- meta(corpus[[id]], "DateTimeStamp")
+                origin <- meta(corpus[[id]], "origin")
+                date <- meta(corpus[[id]], "datetimestamp")
                 if(length(origin) > 0 && length(date) > 0)
                     tkinsert(txt, "end", paste(origin, " - ", date, "\n", sep=""), "details")
                 else if(length(origin) > 0)
@@ -311,8 +311,8 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
                 mark <- mark + 1
                 tkinsert(listbox, "end", id)
 
-                origin <- meta(corpus[[id]], "Origin")
-                date <- meta(corpus[[id]], "DateTimeStamp")
+                origin <- meta(corpus[[id]], "origin")
+                date <- meta(corpus[[id]], "datetimestamp")
                 if(length(origin) > 0 && length(date) > 0)
                     tkinsert(txt, "end", paste(origin, " - ", date, "\n", sep=""), "details")
                 else if(length(origin) > 0)
@@ -353,8 +353,8 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
 
 showCorpusCaDlg <- function() {
     if(!exists("corpusCa") || !class(corpusCa) == "ca") {
-        Message(message=.gettext("Please run a correspondence analysis on the corpus first."),
-                type="error")
+        .Message(message=.gettext("Please run a correspondence analysis on the corpus first."),
+                 type="error")
         return()
     }
 
@@ -433,12 +433,13 @@ showCorpusCaDlg <- function() {
            sticky="s")
     tclNDocs <- tclVar(25)
     tclNTerms <- tclVar(25)
-    docsSlider <- tkscale(nFrame, from=1, to=min(200, nrow(corpusCa$rowcoord)-length(corpusCa$rowsup)),
-                          showvalue=TRUE, variable=tclNDocs,
-		          resolution=1, orient="horizontal")
-    termsSlider <- tkscale(nFrame, from=1, to=min(200, nrow(corpusCa$colcoord)-length(corpusCa$colsup)),
-                           showvalue=TRUE, variable=tclNTerms,
-		           resolution=1, orient="horizontal")
+    spinDocs <- tkwidget(top, type="spinbox", from=1, to=nrow(corpusCa$rowcoord)-length(corpusCa$rowsup),
+                         inc=1, textvariable=tclNDocs,
+                         validate="all", validatecommand=.validate.uint)
+
+    spinTerms <- tkwidget(top, type="spinbox", from=1, to=nrow(corpusCa$colcoord)-length(corpusCa$colsup),
+                          inc=1, textvariable=tclNTerms,
+                          validate="all", validatecommand=.validate.uint)
 
     ctrDimVariable <- tclVar("xyDim")
     ctrDimFrame <- tkframe(top)
@@ -447,7 +448,7 @@ showCorpusCaDlg <- function() {
     ctrDim3 <- ttkradiobutton(ctrDimFrame, variable=ctrDimVariable, value="yDim", text=.gettext("Vertical axis"))
 
 
-    onShow <- function() {
+    onCustom <- function() {
         x <- tclvalue(tclXDim)
         y <- tclvalue(tclYDim)
         docLabels <- if(!actDocs) FALSE else tclvalue(docLabelsVariable) == 1
@@ -457,15 +458,24 @@ showCorpusCaDlg <- function() {
         termPoints <- tclvalue(termPointsVariable) == 1
         varPoints <- if(actDocs && length(corpusCa$rowsup) == 0) FALSE else tclvalue(varPointsVariable) == 1
         vars <- getSelection(varBox)
-        nDocs <- tclvalue(tclNDocs)
-        nTerms <- tclvalue(tclNTerms)
+        nDocs <- as.integer(tclvalue(tclNDocs))
+        nTerms <- as.integer(tclvalue(tclNTerms))
         ctrDim <- switch(tclvalue(ctrDimVariable), xyDim=paste("c(", x, ", ", y, ")", sep=""), xDim=x, yDim=y)
 
+        if(nDocs > nrow(corpusCa$rowcoord) - length(corpusCa$rowsup))
+            nDocs <- nrow(corpusCa$rowcoord) - length(corpusCa$rowsup)
+
+        if(nTerms > nrow(corpusCa$colcoord) - length(corpusCa$colsup))
+            nTerms <- nrow(corpusCa$colcoord) - length(corpusCa$colsup)
+
         if(!(docLabels || termLabels || varLabels || docPoints || termPoints || varPoints)) {
-            Message(.gettext("Please select something to plot."), "error")
+            .Message(.gettext("Please select something to plot."), "error", parent=top)
 
             return()
         }
+
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         doItAndPrint(sprintf("showCorpusCa(corpusCa, %s, %s, %s)", ctrDim, nDocs, nTerms))
 
@@ -494,7 +504,7 @@ showCorpusCaDlg <- function() {
 
             if(((docPoints || docLabels) && (varPoints || varLabels)) && docLabels != varLabels)
                 Message(.gettext("Plotting documents and variables at the same time currently forces labels to be drawn for both or none."),
-                        "note")
+                         "note")
 
             rowActivePoints<-if(docPoints) 16 else NA
             rowSupPoints<-if(varPoints) 1 else NA
@@ -545,25 +555,9 @@ showCorpusCaDlg <- function() {
         activateMenus()
     }
 
-    # Custom buttons, adapted from OKCancelHelp()
-    buttonsFrame <- tkframe(top, borderwidth=5)
-    plotButton <- buttonRcmdr(buttonsFrame, text=.gettext("Show"), foreground="darkgreen",
-                              command=onShow, default="active", borderwidth=3)
-    onClose <- function() {
-        closeDialog()
-        tkfocus(CommanderWindow())
-    }
-    closeButton <- buttonRcmdr(buttonsFrame, text=.gettext("Close"), foreground="red",
-                               command=onClose, borderwidth=3)
-    onHelp <- function() {
-        if (GrabFocus() && .Platform$OS.type != "windows") tkgrab.release(window)
-        print(help("showCorpusCaDlg"))
-    }
-    helpButton <- buttonRcmdr(buttonsFrame, text=gettextRcmdr("Help"), width="12",
-                              command=onHelp, borderwidth=3)
-    tkgrid(plotButton, labelRcmdr(buttonsFrame, text="  "),
-           closeButton, labelRcmdr(buttonsFrame, text="            "),
-           helpButton, sticky="w")
+    # Shut up R CMD check WARNING
+    onClose <- NULL
+    .customCloseHelp(helpSubject="showCorpusCaDlg", custom.button=.gettext("Show"))
 
     tkgrid(labelRcmdr(dimFrame, text=.gettext("Horizontal axis:")), xSlider, sticky="w")
     tkgrid(labelRcmdr(dimFrame, text=.gettext("Vertical axis:")), ySlider, sticky="w")
@@ -572,24 +566,23 @@ showCorpusCaDlg <- function() {
     if(!actDocs || length(corpusCa$rowsup) > 0)
         tkgrid(getFrame(varBox), columnspan=2, sticky="we", pady=6)
     if(actDocs)
-        tkgrid(labelRcmdr(nFrame, text=.gettext("Documents:")), docsSlider, sticky="w")
-    tkgrid(labelRcmdr(nFrame, text=.gettext("Terms:")), termsSlider, sticky="w")
+        tkgrid(labelRcmdr(nFrame, text=.gettext("Documents:")), spinDocs, sticky="w")
+    tkgrid(labelRcmdr(nFrame, text=.gettext("Terms:")), spinTerms, sticky="w")
     tkgrid(nFrame, sticky="w", pady=6, columnspan=2)
     tkgrid(labelRcmdr(ctrDimFrame, text=.gettext("Most contributive to:")), sticky="w", columnspan=2, pady=6)
     tkgrid(ctrDim1, ctrDim2, ctrDim3, sticky="w", pady=6)
     tkgrid(ctrDimFrame, sticky="w", pady=6, columnspan=2)
     tkgrid.columnconfigure(ctrDimFrame, "all", uniform="a")
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    nrows <- if(length(corpusCa$rowsup) == 0) 6 else 7
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
 
     # We don't use dialogSuffix() itself because the dialog should not close,
     # and yet not call tkwait.window(): the plot does not draw correctly on Mac OS if we do.
     # The grab has also been removed since it prevents the user from scrolling the CA text window.
     .Tcl("update idletasks")
     tkwm.resizable(top, 0, 0)
-    tkbind(top, "<Return>", onShow)
+    tkbind(top, "<Return>", onCustom)
     tkbind(top, "<Escape>", onClose)
-    if (getRcmdr("double.click") && (!preventDoubleClick)) tkbind(window, "<Double-ButtonPress-1>", onShow)
+    if (getRcmdr("double.click") && (!preventDoubleClick)) tkbind(window, "<Double-ButtonPress-1>", onCustom)
     tkwm.deiconify(top)
     tkfocus(top)
     if (getRcmdr("crisp.dialogs")) tclServiceMode(on=TRUE)

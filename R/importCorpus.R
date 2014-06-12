@@ -5,10 +5,10 @@
 
     vars <- c(.gettext("No variables"), colnames(corpusVars))
 
-    if(source %in% c("factiva", "twitter"))
+    if(source %in% c("factiva", "lexisnexis", "europresse", "twitter"))
         # Keep in sync with import functions
-        initialSelection <- which(vars %in% c(.gettext("Origin"), .gettext("Date"),
-                                              .gettext("Author"), .gettext("Section"),
+        initialSelection <- which(vars %in% c(.gettext("Origin"), .gettext("Date"), .gettext("Author"),
+                                              .gettext("Section"), .gettext("Type"),
                                               .gettext("Time"), .gettext("Truncated"),
                                               .gettext("StatusSource"), .gettext("Retweet"))) - 1
     else
@@ -57,56 +57,107 @@
 
     OKCancelHelp(helpSubject=importCorpusDlg)
     tkgrid(getFrame(varBox), sticky="nswe", pady=6)
-    tkgrid(buttonsFrame, sticky="w", pady=6)
-    dialogSuffix(rows=2, columns=1)
+    tkgrid(buttonsFrame, sticky="ew", pady=6)
+    dialogSuffix()
 
     return(tclvalue(result) == "success")
 }
 
+.langToEncs <- function(lang) {
+    switch(lang,
+           da="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           de="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           en="ASCII, ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           es="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           fi="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           fr="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           hu="ISO-8859-16, ISO-8859-2, Windows-1250, UTF-8, UTF-16",
+           it="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           nl="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           no="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           pt="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           ro="ISO-8859-16, ISO-8859-2, Windows-1250, UTF-8, UTF-16",
+           ru="KOI8-R, Windows-1251, ISO-8859-5, UTF-8, UTF-16",
+           sv="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
+           tr="ISO-8859-9, Windows-1254, UTF-8, UTF-16")
+}
+
 # Run all processing steps and extract words list
-.processTexts <- function(options, lang, wordsOnly) {
-        if(any(options))
-            doItAndPrint("dtmCorpus <- corpus")
+.processTexts <- function(options, lang) {
+        # Check that all texts contain valid characters
+        # tolower() is the first function to fail when conversion to lower case is enabled,
+        # but if it's not DocumentTermMatrix() calls termFrequencies(), which fails when calling nchar()
+        # Since we do not have access to utf8Valid() in R, call nchar() as a way to run a basic validation
+        # (a more rigorous check would be to call e.g. grep(), which uses valid_utf8() from PCRE).
+        if(inherits(try(for(i in seq(length(corpus))) nchar(corpus[[i]]), silent=TRUE), "try-error")) {
+            .Message(sprintf(.gettext("Invalid characters found in document %i. Please check the \"Encoding\" value defined in the import dialog. Most probable encodings for this language are: %s.\n\nIf necessary, use a text editor's \"Save As...\" function to save the corpus in a known encoding."), i, .langToEncs(lang)),
+                     type="error")
+             return(FALSE)
+        }
+
+        doItAndPrint("dtmCorpus <- corpus")
 
         if(options["twitter"])
-            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, function(x) gsub("http(s?)://[[:alnum:]/\\\\.\\\\-\\\\?=&#_;,]*|\\\\bRT\\\\b", "", x))')
+            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub("http(s?)://[[:alnum:]/\\\\.\\\\-\\\\?=&#_;,]*|\\\\bRT\\\\b", "", x)))')
         if(options["twitter"] && options["removeNames"])
-            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, function(x) gsub("@.+?\\\\b", "", x))')
+            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub("@.+?\\\\b", "", x)))')
         if(options["twitter"] && options["removeHashtags"])
-            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, function(x) gsub("#.+?\\\\b", "", x))')
+            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub("#.+?\\\\b", "", x)))')
 
         if(options["lowercase"])
-            doItAndPrint("dtmCorpus <- tm_map(dtmCorpus, tolower)")
+            doItAndPrint("dtmCorpus <- tm_map(dtmCorpus, content_transformer(tolower))")
 
         if(options["punctuation"]) {
             # The default tokenizer does not get rid of punctuation *and of line breaks!*, which
             # get concatenated with surrounding words
             # This also avoids French articles and dash-linked words from getting concatenated with their noun
-            doItAndPrint("dtmCorpus <- tm_map(dtmCorpus, function(x) gsub(\"([\'\U2019\\n\U202F\U2009]|[[:punct:]]|[[:space:]]|[[:cntrl:]])+\", \" \", x))")
+            doItAndPrint("dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub(\"([\'\U2019\\n\U202F\U2009]|[[:punct:]]|[[:space:]]|[[:cntrl:]])+\", \" \", x)))")
         }
 
         if(options["digits"])
             doItAndPrint("dtmCorpus <- tm_map(dtmCorpus, removeNumbers)")
 
-        if(options["stopwords"] || options["stemming"]) {
-            # Get list of words before stemming and stopwords removal
-            doItAndPrint("words <- col_sums(DocumentTermMatrix(dtmCorpus, control=list(tolower=FALSE, wordLengths=c(2, Inf))))")
-            gc()
-        }
+        return(TRUE)
+}
 
-        # Used when subsetting corpus, we do not need to recompute the full dtm
-        if(wordsOnly)
-            return()
+.buildDictionary <- function(stemming, customStemming, lang) {
+    if(stemming) {
+        doItAndPrint("library(SnowballC)")
+        doItAndPrint(sprintf('dictionary <- data.frame(row.names=colnames(dtm), "%s"=col_sums(dtm), "%s"=wordStem(colnames(dtm), "%s"), "%s"=ifelse(colnames(dtm) %%in%% stopwords("%s"), "%s", ""), stringsAsFactors=FALSE)',
+                             .gettext("Occurrences"), .gettext("Stemmed.Term"), lang, .gettext("Stopword"), lang, .gettext("Stopword")))
+    }
+    else if(customStemming){
+        doItAndPrint(sprintf('dictionary <- data.frame(row.names=colnames(dtm), "%s"=col_sums(dtm), "%s"=colnames(dtm), "%s"=ifelse(colnames(dtm) %%in%% stopwords("%s"), "%s", ""), stringsAsFactors=FALSE)',
+                             .gettext("Occurrences"), .gettext("Stemmed.Term"), .gettext("Stopword"), lang, .gettext("Stopword")))
+    }
+    else {
+        doItAndPrint(sprintf('dictionary <- data.frame(row.names=colnames(dtm), "%s"=col_sums(dtm), "%s"=ifelse(colnames(dtm) %%in%% stopwords("%s"), "%s", ""), stringsAsFactors=FALSE)',
+                             .gettext("Occurrences"), .gettext("Stopword"), lang, .gettext("Stopword")))
+    }
+}
 
-        if(options["stopwords"])
-            doItAndPrint(paste("dtmCorpus <- tm_map(dtmCorpus, removeWords, stopwords(\"",
-                               lang, "\"))", sep=""))
+.prepareDtm <- function(stopwords, stemming, customStemming, lang) {
+    if(customStemming) {
+        if(stopwords) doItAndPrint(sprintf('dictionary[Terms(dtm) %%in%% stopwords("%s"), "%s"] <- ""',
+                                           lang, .gettext("Stemmed.Term")))
 
-        if(options["stemming"]) {
-            doItAndPrint("library(SnowballC)")
-            doItAndPrint(sprintf('dtmCorpus <- tm_map(dtmCorpus, stemDocumentSnowballC, language="%s")',
-                                 lang))
-        }
+        doItAndPrint("dictionary <- editDictionary(dictionary)")
+        doItAndPrint(sprintf('dtm <- rollup(dtm, 2, dictionary[["%s"]])', .gettext("Stemmed.Term")))
+        doItAndPrint('dtm <- dtm[, Terms(dtm) != ""]')
+    }
+    else if(stemming && stopwords) {
+        doItAndPrint(sprintf('dtm <- dtm[, !colnames(dtm) %%in%% stopwords("%s")]', lang))
+        doItAndPrint("dtm <- rollup(dtm, 2, dictionary[colnames(dtm), 2])")
+    }
+    else if(stemming) {
+        doItAndPrint("dtm <- rollup(dtm, 2, dictionary[[2]])")
+    }
+    else if(stopwords) {
+        doItAndPrint(sprintf('dtm <- dtm[, !colnames(dtm) %%in%% stopwords("%s")]', lang))
+    }
+
+    doItAndPrint('attr(dtm, "dictionary") <- dictionary')
+    doItAndPrint("rm(dictionary)")
 }
 
 importCorpusDlg <- function() {
@@ -114,30 +165,41 @@ importCorpusDlg <- function() {
     initializeDialog(title=.gettext("Import Corpus"))
 
     setState <- function(...) {
-        if(tclvalue(sourceVariable) %in% c("dir", "file")) {
+        if(tclvalue(sourceVariable) %in% c("dir", "file", "alceste")) {
             tkconfigure(comboEnc, state="normal")
 
             if(tclvalue(tclEnc) == "UTF-8")
-                tclvalue(tclEnc) <- nativeEnc
+                tclvalue(tclEnc) <- autoEnc
         }
         else {
             tkconfigure(comboEnc, state="disabled")
 
-            if(tclvalue(tclEnc) == nativeEnc)
+            if(tclvalue(tclEnc) == autoEnc)
                 tclvalue(tclEnc) <- "UTF-8"
         }
     }
 
     radioButtons(name="source",
-                 buttons=c("dir", "file", "factiva", "twitter"),
+                 buttons=c("dir", "file", "factiva", "lexisnexis", "europresse", "alceste", "twitter"),
                  labels=c(.gettext("Directory containing plain text files"),
                           .gettext("Spreadsheet file (CSV, XLS, ODS...)"),
                           .gettext("Factiva XML or HTML file(s)"),
+                          .gettext("LexisNexis HTML file(s)"),
+                          .gettext("Europresse HTML file(s)"),
+                          .gettext("Alceste file(s)"),
                           .gettext("Twitter search")),
                  title=.gettext("Load corpus from:"),
                  right.buttons=FALSE,
                  command=setState)
 
+    autoEnc <- .gettext("detect automatically")
+    tclEnc <- tclVar(autoEnc)
+    # Do not use state="readonly" since it may be easier to type the encoding name by hand
+    # than choose it in the long list
+    comboEnc <- ttkcombobox(top, width=20, textvariable=tclEnc,
+                            values=c(autoEnc, iconvlist()))
+
+    # Keep in sync with .processTexts()
     # TRANSLATORS: replace 'en' with your language's ISO 639 two-letter code
     languages <- c(da="Dansk (da)", de="Deutsch (de)", en="English (en)", es="Espa\u00F1ol (es)",
                    fi="Suomi (fi)", fr="Fran\u00E7ais (fr)", hu="Magyar (hu)", it="Italiano (it)",
@@ -148,20 +210,26 @@ importCorpusDlg <- function() {
     tclLang <- tclVar(languages[.gettext("en")])
     comboLang <- ttkcombobox(top, width=20, textvariable=tclLang, state="readonly", values=languages)
 
-    nativeEnc <- sprintf(.gettext("native (%s)"), localeToCharset()[1])
-    tclEnc <- tclVar(nativeEnc)
-    # Do not use state="readonly" since it may be easier to type the encoding name by hand
-    # than choose it in the long list
-    comboEnc <- ttkcombobox(top, width=20, textvariable=tclEnc,
-                            values=c(nativeEnc, iconvlist()))
+    tk2tip(comboEnc, sprintf(.gettext("Most probable encodings for this language:\n%s"),
+                             .langToEncs(.gettext("en"))))
+    tkbind(comboLang, "<<ComboboxSelected>>", function() {
+        # On Windows when the current locale does not support characters in the language name,
+        # the value retrieved using tclvalue() contains invalid characters
+        # The only way to find the language is to extract the relevant two ASCII letters
+        rawLang <- tclvalue(tclLang)
+        lang <- substring(rawLang, nchar(rawLang) - 2, nchar(rawLang) - 1)
+        tk2tip(comboEnc, sprintf(.gettext("Most probable encodings for this language:\n%s"),
+                                 .langToEncs(lang)))
+    })
 
     checkBoxes(frame="processingFrame",
-               boxes=c("lowercase", "punctuation", "digits", "stopwords", "stemming"),
-               initialValues=c(1, 1, 1, 0, 1),
+               boxes=c("lowercase", "punctuation", "digits", "stopwords",
+                       "stemming", "customStemming"),
+               initialValues=c(1, 1, 1, 0, 1, 0),
                # Keep in sync with strings in initOutputFile()
                labels=c(.gettext("Ignore case"), .gettext("Remove punctuation"),
                         .gettext("Remove digits"), .gettext("Remove stopwords"),
-                        .gettext("Apply stemming")),
+                        .gettext("Apply stemming"), .gettext("Edit stemming manually")),
                title=.gettext("Text processing:"))
 
     tclChunks <- tclVar(0)
@@ -186,22 +254,27 @@ importCorpusDlg <- function() {
         digits <- tclvalue(digitsVariable) == 1
         stopwords <- tclvalue(stopwordsVariable) == 1
         stemming <- tclvalue(stemmingVariable) == 1
+        customStemming <- tclvalue(customStemmingVariable) == 1
 
-        lang <- names(languages)[tclvalue(tclLang) == languages]
+        # On Windows when the current locale does not support characters in the language name,
+        # the value retrieved using tclvalue() contains invalid characters
+        # The only way to find the language is to extract the relevant two ASCII letters
+        rawLang <- tclvalue(tclLang)
+        lang <- substring(rawLang, nchar(rawLang) - 2, nchar(rawLang) - 1)
 
         enc <- tclvalue(tclEnc)
-        if(enc == nativeEnc) enc <- ""
+        if(enc == autoEnc) enc <- ""
 
         if(enc != "" && !enc %in% iconvlist()) {
-            Message(.gettext('Unsupported encoding: please select an encoding from the list.'),
-                    "error")
+            .Message(.gettext('Unsupported encoding: please select an encoding from the list.'),
+                     "error", parent=top)
             return()
         }
 
         closeDialog()
 
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
 	if(stemming) {
             # If we do not close the dialog first, the CRAN mirror chooser will not respond
@@ -215,6 +288,20 @@ importCorpusDlg <- function() {
                      "termFreqs", "absTermFreqs", "varTermFreqs", "freqTerms", "specTerms", "docSeries",
                      ".last.table", ".HTML.file", "corpusClust", "corpusSubClust", "corpusCa", "plottingCa")
         if(any(sapply(objects, exists))) {
+            # Needed to avoid a warning about corpusVars not being available
+            # This should be removed once we can depend on the new version of Rcmdr accepting ActiveDataSet(NULL)
+            if(exists("corpusVars")) {
+                putRcmdr(".activeDataSet", NULL)
+		        Variables(NULL)
+		        Numeric(NULL)
+		        Factors(NULL)
+		        RcmdrTclSet("dataSetName", gettextRcmdr("<No active dataset>"))
+		        putRcmdr(".activeModel", NULL)
+		        RcmdrTclSet("modelName", gettextRcmdr("<No active model>"))
+		        tkconfigure(getRcmdr("dataSetLabel"), foreground="red")
+		        tkconfigure(getRcmdr("modelLabel"), foreground="red")
+            }
+
             doItAndPrint(paste("rm(", paste(objects[sapply(objects, exists)], collapse=", "), ")", sep=""))
             gc()
 
@@ -226,10 +313,10 @@ importCorpusDlg <- function() {
                       dir=importCorpusFromDir(lang, enc),
                       file=importCorpusFromFile(lang, enc),
                       factiva=importCorpusFromFactiva(lang),
+                      lexisnexis=importCorpusFromLexisNexis(lang),
+                      europresse=importCorpusFromEuropresse(lang),
+                      alceste=importCorpusFromAlceste(lang, enc),
                       twitter=importCorpusFromTwitter(lang))
-
-        # Needed because functions above set it to idle on exit
-        .setBusyCursor()
 
         # If loading failed, do not add errors to errors
         if(!(isTRUE(res) || is.list(res)) || length(corpus) == 0)
@@ -245,6 +332,10 @@ importCorpusDlg <- function() {
             doItAndPrint('corpusVars <- data.frame(var1=factor(rep("", length(corpus))), row.names=names(corpus))')
         }
 
+        # Needed because functions above set it to idle on exit
+        setBusyCursor()
+        on.exit(setIdleCursor())
+
         doItAndPrint('activeDataSet("corpusVars")')
         doItAndPrint("setCorpusVariables()")
 
@@ -255,18 +346,27 @@ importCorpusDlg <- function() {
         }
 
         # Process texts
-        .processTexts(c(twitter=twitter, lowercase=lowercase, punctuation=punctuation,
-                        digits=digits, stopwords=stopwords, stemming=stemming,
-                        removeHashtags=res$removeHashtags, removeNames=res$removeNames),
-                      lang, FALSE)
+        if(!.processTexts(c(twitter=twitter, lowercase=lowercase, punctuation=punctuation,
+                            digits=digits, stopwords=stopwords,
+                            stemming=stemming, customStemming=customStemming,
+                            removeHashtags=res$removeHashtags, removeNames=res$removeNames),
+                          lang))
+            return()
 
-        if(twitter || lowercase || punctuation || digits || stopwords || stemming) {
-            doItAndPrint("dtm <- DocumentTermMatrix(dtmCorpus, control=list(tolower=FALSE, wordLengths=c(2, Inf)))")
-            doItAndPrint("rm(dtmCorpus)")
+        doItAndPrint("dtm <- DocumentTermMatrix(dtmCorpus, control=list(tolower=FALSE, wordLengths=c(2, Inf)))")
+        doItAndPrint("rm(dtmCorpus)")
+
+        if(!exists("dtm") || is.null(dtm)) {
+            return()
         }
-        else {
-            doItAndPrint("dtm <- DocumentTermMatrix(corpus, control=list(tolower=FALSE, wordLengths=c(2, Inf)))")
+        else if(nrow(dtm) == 0 || ncol(dtm) == 0) {
+            doItAndPrint("dtm")
+            return()
         }
+
+        .buildDictionary(stemming, customStemming, lang)
+        .prepareDtm(stopwords, stemming, customStemming, lang)
+
         gc()
 
 
@@ -277,13 +377,9 @@ importCorpusDlg <- function() {
         # when splitting commands when more than one pair of quotes is present)
         justDoIt(sprintf('meta(corpus, type="corpus", tag="source") <- "%s"', res$source))
 
-        if(stopwords || stemming) {
-            doItAndPrint('attr(dtm, "words") <- words')
-            doItAndPrint("rm(words)")
-        }
-        doItAndPrint(sprintf('meta(corpus, type="corpus", tag="processing") <- attr(dtm, "processing") <- c(lowercase=%s, punctuation=%s, digits=%s, stopwords=%s, stemming=%s, twitter=%s, removeHashtags=%s, removeNames=%s)',
+        doItAndPrint(sprintf('meta(corpus, type="corpus", tag="processing") <- attr(dtm, "processing") <- c(lowercase=%s, punctuation=%s, digits=%s, stopwords=%s, stemming=%s, customStemming=%s, twitter=%s, removeHashtags=%s, removeNames=%s)',
                              lowercase, punctuation,
-                             digits, stopwords, stemming, twitter,
+                             digits, stopwords, stemming, customStemming, twitter,
                              ifelse(is.null(res$removeHashtags), NA, res$removeHashtags),
                              ifelse(is.null(res$removeNames), NA, res$removeNames)))
 
@@ -307,11 +403,11 @@ importCorpusDlg <- function() {
     tkgrid(labelRcmdr(top, text=.gettext("Size of new documents:")),
            chunksSlider, labelRcmdr(top, text=.gettext("paragraphs")), sticky="w", pady=6)
     tkgrid(processingFrame, columnspan=3, sticky="w", pady=6)
-    tkgrid(buttonsFrame, columnspan=3, sticky="w", pady=6)
+    tkgrid(buttonsFrame, columnspan=3, sticky="ew", pady=6)
     tkgrid.columnconfigure(top, 0, pad=12)
     tkgrid.columnconfigure(top, 1, pad=12)
     tkgrid.columnconfigure(top, 2, pad=12)
-    dialogSuffix(rows=7, columns=2, focus=comboLang)
+    dialogSuffix(focus=comboLang)
 }
 
 # Choose a directory to load texts from
@@ -320,21 +416,23 @@ importCorpusFromDir <- function(language=NA, encoding="") {
                                       parent=CommanderWindow()))
     if (dir == "") return(FALSE)
 
-    .setBusyCursor()
-    on.exit(.setIdleCursor())
+    setBusyCursor()
+    on.exit(setIdleCursor())
 
     if(!is.na(language))
         language <- paste("\"", language, "\"", sep="")
 
-    oldEnc <- getOption("encoding", "")
+    if(encoding == "") {
+        encs <- table(sapply(list.files(dir, full.names=TRUE),
+                             function(f) stri_enc_detect(readBin(f, "raw", 1024))[[1]]$Encoding[1]))
+        encoding <- names(encs)[order(encs, decreasing=TRUE)][1]
+    }
 
-    if(oldEnc != encoding)
-        doItAndPrint(sprintf('options(encoding="%s")', encoding))
+    if(is.null(encoding))
+        encoding <- ""
 
-    doItAndPrint(sprintf('corpus <- Corpus(DirSource("%s", encoding=""), readerControl=list(language=%s))', dir, language))
-
-    if(oldEnc != encoding)
-        doItAndPrint(sprintf('options(encoding="%s")', oldEnc))
+    doItAndPrint(sprintf('corpus <- Corpus(DirSource("%s", encoding="%s"), readerControl=list(language=%s))',
+                         dir, encoding, language))
 
     list(source=sprintf(.gettext("directory %s"), dir))
 }
@@ -356,8 +454,8 @@ importCorpusFromFile <- function(language=NA, encoding="") {
 
     if (file == "") return(FALSE)
 
-    .setBusyCursor()
-    on.exit(.setIdleCursor())
+    setBusyCursor()
+    on.exit(setIdleCursor())
 
     # Code adapted from Rcommander's data-menu.R file
     # The following function was contributed by Matthieu Lesnoff
@@ -372,6 +470,12 @@ importCorpusFromFile <- function(language=NA, encoding="") {
         excerpt <- readLines(file, 50)
         n1 <- sum(sapply(gregexpr(",", excerpt), length))
         n2 <- sum(sapply(gregexpr(";", excerpt), length))
+
+        if(encoding == "")
+            encoding <- stri_enc_detect(readBin(file, "raw", 1024))[[1]]$Encoding[1]
+
+        if(is.null(encoding))
+            encoding <- ""
 
         if(n1 > n2)
             doItAndPrint(sprintf('corpusDataset <- read.csv("%s", fileEncoding="%s")', file, encoding))
@@ -388,8 +492,8 @@ importCorpusFromFile <- function(language=NA, encoding="") {
     else if(ext == "ods") {
         # ROpenOffice is not available as binary, thus most likely to fail on Windows and Mac OS
         if(!"ROpenOffice" %in% rownames(available.packages(contrib.url("http://www.omegahat.org/R/")))) {
-	    Message(.gettext("Loading OpenDocument spreadsheets (.ods) is not supported on your system.\nYou should save your data set as a CSV file or as an Excel spreadsheet (.xls)."),
-                    type="error")
+	    .Message(.gettext("Loading OpenDocument spreadsheets (.ods) is not supported on your system.\nYou should save your data set as a CSV file or as an Excel spreadsheet (.xls)."),
+                 type="error")
             return(FALSE)
         }
 	else if(!require(ROpenOffice)) {
@@ -409,18 +513,20 @@ importCorpusFromFile <- function(language=NA, encoding="") {
     }
     else if(ext %in% c("xls", "xlsx", "mdb", "accdb")) {
         if(.Platform$OS.type != "windows") {
-	    Message(.gettext("Loading Excel and Access files is only supported on Windows.\nYou should save your data set as a CSV file or as an OpenDocument spreadsheet (.ods)."),
-                    type="error")
+	    .Message(.gettext("Loading Excel and Access files is only supported on Windows.\nYou should save your data set as a CSV file or as an OpenDocument spreadsheet (.ods)."),
+                 type="error")
             return(FALSE)
         }
 	else if(!.checkAndInstall("RODBC", .gettext("The RODBC package is needed to read Excel and Access files.\nDo you want to install it?"))) {
             return(FALSE)
         }
         else if(!any(grepl(ext, odbcDataSources()))) {
-	    Message(.gettext("No ODBC driver for this file type was found.\nYou probably need to install Excel or Access, or separate ODBC drivers."),
-                    type="error")
+	    .Message(.gettext("No ODBC driver for this file type was found.\nYou probably need to install Excel or Access, or separate ODBC drivers."),
+                 type="error")
             return(FALSE)
         }
+
+        doItAndPrint("library(RODBC)")
 
         channelStr <- switch(EXPR = ext,
         	             xls = "odbcConnectExcel",
@@ -450,7 +556,7 @@ importCorpusFromFile <- function(language=NA, encoding="") {
             fil <- tabdat
 
         if(fil == "") {
-            Message(.gettext("No table selected"), type="error")
+            .Message(.gettext("No table selected"), type="error")
             return(FALSE)
         }
 
@@ -463,7 +569,7 @@ importCorpusFromFile <- function(language=NA, encoding="") {
         doItAndPrint("odbcCloseAll()")
     }
     else {
-        Message(.gettext("File has unknown extension, assuming it is in the tab-separated values format."), "warning")
+        .Message(.gettext("File has unknown extension, assuming it is in the tab-separated values format."), "warning")
         doItAndPrint(paste("corpusDataset <- read.delim(\"", file, "\")", sep=""))
     }
 
@@ -471,37 +577,92 @@ importCorpusFromFile <- function(language=NA, encoding="") {
     if(is.null(corpusDataset))
         return(FALSE)
 
+    initializeDialog(title=.gettext("Select Text Variable"))
+    varBox <- variableListBox(top, names(corpusDataset),
+                              selectmode="single",
+                              initialSelection=0,
+                              title=.gettext("Select the variable containing the text of documents"))
+
+    var <- NULL
+
+    onOK <- function() {
+        var <<- getSelection(varBox)
+
+        closeDialog()
+        tkfocus(CommanderWindow())
+    }
+
+    onCancel <- function() {
+        closeDialog()
+        tkfocus(CommanderWindow())
+    }
+
+    OKCancelHelp(helpSubject=importCorpusDlg)
+    tkgrid(getFrame(varBox), sticky="nswe", pady=6)
+    tkgrid(buttonsFrame, sticky="ew", pady=6)
+    dialogSuffix()
+
+    if(is.null(var))
+        return(FALSE)
+
     if(!is.na(language))
         language <- paste("\"", language, "\"", sep="")
 
-    doItAndPrint(sprintf("corpus <- Corpus(DataframeSource(corpusDataset[1]), readerControl=list(language=%s))",
-                         language))
+    doItAndPrint(sprintf('corpus <- Corpus(DataframeSource(corpusDataset["%s"]), readerControl=list(language=%s))',
+                         var, language))
 
     if(ncol(corpusDataset) > 1)
-        doItAndPrint("corpusVars <- corpusDataset[-1]")
-
+        doItAndPrint(sprintf('corpusVars <- corpusDataset[!names(corpusDataset) == "%s"]', var))
 
     list(source=sprintf(.gettext("spreadsheet file %s"), file))
 }
 
 # Extract local per-document meta-data and return a data frame
-extractFactivaMetadata <- function(corpus) {
-    dates <- lapply(corpus, meta, "DateTimeStamp")
-    dates <- sapply(dates, function(x) if(length(x) > 0) as.character(x) else NA)
-    vars <- data.frame(Origin=NA, Date=dates, Author=NA, Section=NA)
+extractMetadata <- function(corpus, date=TRUE) {
+    if(date) {
+        dates <- lapply(corpus, meta, "datetimestamp")
+        dates <- sapply(dates, function(x) if(length(x) > 0) as.character(x) else NA)
+        vars <- data.frame(origin=rep(NA, length(corpus)),
+                           date=dates,
+                           author=rep(NA, length(corpus)),
+                           section=rep(NA, length(corpus)))
+    }
+    else {
+        vars <- data.frame(origin=rep(NA, length(corpus)),
+                           author=rep(NA, length(corpus)),
+                           section=rep(NA, length(corpus)))
+    }
 
-    tags <- c("Origin", "Author", "Section")
+    specialTags <- c("subject", "coverage", "company", "stocksymbol", "industry", "infocode", "infodesc")
+
+    tags <- setdiff(unique(unlist(lapply(corpus, function(x) names(meta(x))))),
+                    c("datetimestamp", "heading", "id", "language", specialTags))
     for(tag in tags) {
         var <- lapply(corpus, meta, tag)
-        var <- lapply(var, function(x) if(length(x) > 0) x else NA)
+        # paste() is here to prevent an error in case x contains more than one elemen
+        # This typically happens with Rights
+        var <- lapply(var, function(x) if(length(x) > 0) paste(x, collapse=" ") else NA)
         vars[[tag]] <- unlist(var)
     }
 
-    # Keep in sync with .selectCorpusVariables()
-    colnames(vars) <- c(.gettext("Origin"), .gettext("Date"), .gettext("Author"), .gettext("Section"))
+    # Keep in sync with importCorpusFromTwitter()
+    colnames(vars)[colnames(vars) == "origin"] <- .gettext("Origin")
+    colnames(vars)[colnames(vars) == "date"] <- .gettext("Date")
+    colnames(vars)[colnames(vars) == "author"] <- .gettext("Author")
+    colnames(vars)[colnames(vars) == "section"] <- .gettext("Section")
+    colnames(vars)[colnames(vars) == "type"] <- .gettext("Type")
+    colnames(vars)[colnames(vars) == "edition"] <- .gettext("Edition")
+    colnames(vars)[colnames(vars) == "wordcount"] <- .gettext("Word.Count")
+    colnames(vars)[colnames(vars) == "pages"] <- .gettext("Pages")
+    colnames(vars)[colnames(vars) == "publisher"] <- .gettext("Publisher")
+    colnames(vars)[colnames(vars) == "rights"] <- .gettext("Rights")
 
-    tags <- c("Subject", "Coverage", "Company", "Industry", "InfoCode", "InfoDesc")
-    meta <- sapply(corpus, function(x) LocalMetaData(x)[tags])
+    # Drop variables with only NAs, which can appear with sources that do not support them
+    vars <- vars[sapply(vars, function(x) sum(!is.na(x))) > 0]
+
+
+    # Tags that contain several values and have to be represented using dummies
+    meta <- sapply(corpus, function(x) meta(x)[specialTags])
     # Tags missing from all documents
     meta <- meta[!is.na(rownames(meta)),]
     # Tags missing from some documents
@@ -515,9 +676,9 @@ extractFactivaMetadata <- function(corpus) {
         if(length(levs) == 0)
             next
 
-        # We remove the identifier before ":"
+        # We remove the identifier before ":" and abbreviate the names since they can get out of control
         for(lev in levs)
-            vars[[make.names(gsub("^[[:alnum:]]+ : ", "", lev))]] <- sapply(var, function(x) lev %in% x)
+            vars[[make.names(substr(gsub("^[[:alnum:]]+ : ", "", lev), 1, 20))]] <- sapply(var, function(x) lev %in% x)
     }
 
     rownames(vars) <- names(corpus)
@@ -539,8 +700,10 @@ importCorpusFromFactiva <- function(language=NA) {
 
     if (filestr == "") return(FALSE)
 
-    .setBusyCursor()
-    on.exit(.setIdleCursor())
+    setBusyCursor()
+    on.exit(setIdleCursor())
+
+    doItAndPrint("library(tm.plugin.factiva)")
 
     # tkgetOpenFile() is terrible: if path contains a space, file paths are surrounded by {}
     # If no spaces are present, they are not, but in both cases the separator is a space
@@ -552,27 +715,256 @@ importCorpusFromFactiva <- function(language=NA) {
     if(!is.na(language))
         language <- paste("\"", language, "\"", sep="")
 
-    doItAndPrint(sprintf("corpus <- Corpus(FactivaSource(\"%s\"), readerControl=list(language=%s))",
-                         files[1], language))
-    lapply(files[-1], function(file) doItAndPrint(sprintf(
-        "corpus <- c(corpus, Corpus(FactivaSource(\"%s\"), readerControl=list(language=%s)), recursive=TRUE)",
-                                                          file, language)))
+    if(length(files) == 1) {
+        doItAndPrint(sprintf("corpus <- Corpus(FactivaSource(\"%s\"), readerControl=list(language=%s))",
+                             files[1], language))
 
-    if(!exists("corpus") || length(corpus) == 0) {
-        Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
-                type="error")
+		if(!exists("corpus") || length(corpus) == 0) {
+		    .Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+		             type="error")
 
-        return(FALSE)
+		    return(FALSE)
+		}
+    }
+    else {
+        doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
+        for(i in seq(length(files))) {
+            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(FactivaSource("%s"), readerControl=list(language=%s))',
+                                 i, files[i], language))
+
+			if(length(corpusList[[i]]) == 0) {
+				.Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+				         type="error")
+
+				return(FALSE)
+			}
+        }
+
+        doItAndPrint("corpus <- do.call(c, c(corpusList, list(recursive=TRUE)))")
+        doItAndPrint("rm(corpusList)")
+        gc()
     }
 
-    # Set document names from the IDs since it's not always done by sources (XMLSource...)
-    # We rely on this later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
+    # We rely on names/IDs later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
     # In rare cases, duplicated IDs can happen since Factiva plugin truncates them: ensure they are unique
-    doItAndPrint("names(corpus) <- make.unique(sapply(corpus, ID))")
+    doItAndPrint("names(corpus) <- make.unique(names(corpus))")
 
-    doItAndPrint("corpusVars <- extractFactivaMetadata(corpus)")
+    doItAndPrint("corpusVars <- extractMetadata(corpus)")
 
     list(source=sprintf(.ngettext(length(files), "Factiva file %s", "Factiva files %s"),
+                        paste(files, collapse=", ")))
+}
+
+# Choose a LexisNexis HTML file to load texts and variables from
+importCorpusFromLexisNexis <- function(language=NA) {
+    if(!.checkAndInstall("tm.plugin.lexisnexis",
+                         .gettext("The tm.plugin.lexisnexis package is needed to import corpora from Factiva files.\nDo you want to install it?")))
+        return(FALSE)
+
+    filestr <- tclvalue(tkgetOpenFile(filetypes=sprintf("{{%s} {.xml .htm .html .aspx .XML .HTM .HTML .ASPX}} {{%s} {*}}",
+                                                        .gettext("LexisNexis HTML files"),
+                                                        .gettext("All files")),
+                                      multiple=TRUE,
+                                      parent=CommanderWindow()))
+
+    if (filestr == "") return(FALSE)
+
+    setBusyCursor()
+    on.exit(setIdleCursor())
+
+    doItAndPrint("library(tm.plugin.lexisnexis)")
+
+    # tkgetOpenFile() is terrible: if path contains a space, file paths are surrounded by {}
+    # If no spaces are present, they are not, but in both cases the separator is a space
+    if(substr(filestr, 0, 1) == "{")
+        files <- gsub("\\{|\\}", "", strsplit(filestr, "\\} \\{")[[1]])
+    else
+        files <- strsplit(filestr, " ")[[1]]
+
+    if(!is.na(language))
+        language <- paste("\"", language, "\"", sep="")
+
+    if(length(files) == 1) {
+        doItAndPrint(sprintf("corpus <- Corpus(LexisNexisSource(\"%s\"), readerControl=list(language=%s))",
+                             files[1], language))
+
+		if(!exists("corpus") || length(corpus) == 0) {
+		    .Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+		             type="error")
+
+		    return(FALSE)
+		}
+    }
+    else {
+        doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
+        for(i in seq(length(files))) {
+            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(LexisNexisSource("%s"), readerControl=list(language=%s))',
+                                 i, files[i], language))
+
+			if(length(corpusList[[i]]) == 0) {
+				.Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+				         type="error")
+
+				return(FALSE)
+			}
+        }
+
+        doItAndPrint("corpus <- do.call(c, c(corpusList, list(recursive=TRUE)))")
+        doItAndPrint("rm(corpusList)")
+        gc()
+    }
+
+    # We rely names/IDs this later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
+    # In rare cases, duplicated IDs can happen since LexisNexis does not provide any identifier
+    # this is unlikely, though, since we include in the ID the document number in the corpus
+    doItAndPrint("names(corpus) <- make.unique(names(corpus))")
+
+    doItAndPrint("corpusVars <- extractMetadata(corpus)")
+
+    list(source=sprintf(.ngettext(length(files), "LexisNexis file %s", "LexisNexis files %s"),
+                        paste(files, collapse=", ")))
+}
+
+# Choose a Europresse HTML file to load texts and variables from
+importCorpusFromEuropresse <- function(language=NA) {
+    if(!.checkAndInstall("tm.plugin.europresse",
+                         .gettext("The tm.plugin.europresse package is needed to import corpora from Europresse files.\nDo you want to install it?")))
+        return(FALSE)
+
+    filestr <- tclvalue(tkgetOpenFile(filetypes=sprintf("{{%s} {.htm .html .aspx .HTM .HTML .ASPX}} {{%s} {*}}",
+                                                        .gettext("Europresse HTML files"),
+                                                        .gettext("All files")),
+                                      multiple=TRUE,
+                                      parent=CommanderWindow()))
+
+    if (filestr == "") return(FALSE)
+
+    setBusyCursor()
+    on.exit(setIdleCursor())
+
+    doItAndPrint("library(tm.plugin.europresse)")
+
+    # tkgetOpenFile() is terrible: if path contains a space, file paths are surrounded by {}
+    # If no spaces are present, they are not, but in both cases the separator is a space
+    if(substr(filestr, 0, 1) == "{")
+        files <- gsub("\\{|\\}", "", strsplit(filestr, "\\} \\{")[[1]])
+    else
+        files <- strsplit(filestr, " ")[[1]]
+
+    if(!is.na(language))
+        language <- paste("\"", language, "\"", sep="")
+
+    if(length(files) == 1) {
+        doItAndPrint(sprintf("corpus <- Corpus(EuropresseSource(\"%s\"), readerControl=list(language=%s))",
+                             files[1], language))
+
+		if(!exists("corpus") || length(corpus) == 0) {
+		    .Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+		             type="error")
+
+		    return(FALSE)
+		}
+    }
+    else {
+        doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
+        for(i in seq(length(files))) {
+            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(EuropresseSource("%s"), readerControl=list(language=%s))',
+                                 i, files[i], language))
+
+			if(length(corpusList[[i]]) == 0) {
+				.Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+				         type="error")
+
+				return(FALSE)
+			}
+        }
+
+        doItAndPrint("corpus <- do.call(c, c(corpusList, list(recursive=TRUE)))")
+        doItAndPrint("rm(corpusList)")
+        gc()
+    }
+
+    # We rely names/IDs this later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
+    # In rare cases, duplicated IDs can happen since Europresse plugin truncates them: ensure they are unique
+    doItAndPrint("names(corpus) <- make.unique(substr(names(corpus), 1, 20))")
+
+    doItAndPrint("corpusVars <- extractMetadata(corpus)")
+
+    list(source=sprintf(.ngettext(length(files), "Europresse file %s", "Europresse files %s"),
+                        paste(files, collapse=", ")))
+}
+
+
+# Choose an Alceste file to load texts and variables from
+importCorpusFromAlceste <- function(language=NA, encoding="") {
+    if(!.checkAndInstall("tm.plugin.alceste",
+                         .gettext("The tm.plugin.alceste package is needed to import corpora from Alceste files.\nDo you want to install it?")))
+        return(FALSE)
+
+    filestr <- tclvalue(tkgetOpenFile(filetypes=sprintf("{{%s} {.txt .TXT}} {{%s} {*}}",
+                                                        .gettext("Alceste files"),
+                                                        .gettext("All files")),
+                                      multiple=TRUE,
+                                      parent=CommanderWindow()))
+
+    if (filestr == "") return(FALSE)
+
+    setBusyCursor()
+    on.exit(setIdleCursor())
+
+    doItAndPrint("library(tm.plugin.alceste)")
+
+    # tkgetOpenFile() is terrible: if path contains a space, file paths are surrounded by {}
+    # If no spaces are present, they are not, but in both cases the separator is a space
+    if(substr(filestr, 0, 1) == "{")
+        files <- gsub("\\{|\\}", "", strsplit(filestr, "\\} \\{")[[1]])
+    else
+        files <- strsplit(filestr, " ")[[1]]
+
+    if(!is.na(language))
+        language <- paste("\"", language, "\"", sep="")
+
+    if(encoding == "")
+        encoding <- "auto"
+
+    if(length(files) == 1) {
+        doItAndPrint(sprintf('corpus <- Corpus(AlcesteSource("%s", "%s"), readerControl=list(language=%s))',
+                             files[1], encoding, language))
+
+		if(!exists("corpus") || length(corpus) == 0) {
+		    .Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+		             type="error")
+
+		    return(FALSE)
+		}
+    }
+    else {
+        doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
+        for(i in seq(length(files))) {
+            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(AlcesteSource("%s"), readerControl=list(language=%s))',
+                                 i, files[i], language))
+
+			if(length(corpusList[[i]]) == 0) {
+				.Message(.gettext("Reading the specified file failed. Are you sure this file is in the correct format?"),
+				         type="error")
+
+				return(FALSE)
+			}
+        }
+
+        doItAndPrint("corpus <- do.call(c, c(corpusList, list(recursive=TRUE)))")
+        doItAndPrint("rm(corpusList)")
+        gc()
+    }
+
+    # We rely on names/IDs later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
+    # Duplicated IDs can happen since they can be specified in the Alceste file, but also set automatically
+    # when missing
+    doItAndPrint("names(corpus) <- make.unique(names(corpus))")
+
+    doItAndPrint("corpusVars <- extractMetadata(corpus, date=FALSE)")
+
+    list(source=sprintf(.ngettext(length(files), "Alceste file %s", "Alceste files %s"),
                         paste(files, collapse=", ")))
 }
 
@@ -632,18 +1024,18 @@ importCorpusFromTwitter <- function(language=NA) {
 
         if(reqURL == "" || authURL == "" || accessURL == "" ||
            consumerKey == "" || consumerSecret == "") {
-            Message(.gettext("Please enter valid authentication settings."), type="error")
+            .Message(.gettext("Please enter valid authentication settings."), type="error", parent=top)
             return(FALSE)
         }
         if(text == "") {
-            Message(.gettext("Please enter valid text to search for."), type="error")
+            .Message(.gettext("Please enter valid text to search for."), type="error", parent=top)
             return(FALSE)
         }
 
         closeDialog()
 
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         # In case something goes wrong
         tclvalue(result) <- "error"
@@ -654,8 +1046,8 @@ importCorpusFromTwitter <- function(language=NA) {
         doItAndPrint("twitCred$handshake()")
 
         if(!isTRUE(twitCred$handshakeComplete)) {
-            Message(.gettext("TwitteR authentication failed. Please check the entered credentials or PIN code."),
-                    type="error")
+            .Message(.gettext("TwitteR authentication failed. Please check the entered credentials or PIN code."),
+                     type="error", parent=top)
             return(FALSE)
         }
 
@@ -664,8 +1056,8 @@ importCorpusFromTwitter <- function(language=NA) {
         doItAndPrint(sprintf('messages <- searchTwitter("%s", %s, %s)', text, nmess, language))
 
         if(length(messages) == 0) {
-            Message(sprintf(.gettext("No recent tweets match the specified search criteria in the chosen language (%s)."), language),
-                    type="error")
+            .Message(sprintf(.gettext("No recent tweets match the specified search criteria in the chosen language (%s)."), language),
+                     type="error", parent=top)
             return(FALSE)
         }
 
@@ -687,15 +1079,15 @@ importCorpusFromTwitter <- function(language=NA) {
         doItAndPrint("rm(messages)")
 
         if(!exists("corpus") || length(corpus) == 0) {
-            Message(.gettext("Retrieving messages from Twitter failed."),
-                    type="error")
+            .Message(.gettext("Retrieving messages from Twitter failed."),
+                     type="error", parent=top)
             return(FALSE)
         }
 
         doItAndPrint('corpusVars <- corpusDataset[c("screenName", "created", "truncated", "statusSource")]')
         doItAndPrint("rm(corpusDataset)")
         doItAndPrint(sprintf('colnames(corpusVars) <- c("%s", "%s", "%s", "%s")',
-                             # Keep in sync with .selectCorpusVariables()
+                             # Keep in sync with extractMetadata()
                              .gettext("Author"), .gettext("Time"), .gettext("Truncated"), .gettext("StatusSource")))
 
         doItAndPrint(sprintf('corpusVars[["%s"]] <- grepl("\\\\bRT\\\\b", corpus)', .gettext("Retweet")))
@@ -734,8 +1126,8 @@ importCorpusFromTwitter <- function(language=NA) {
     tkgrid(labelRcmdr(top, text=.gettext("Maximum number of tweets to download:")),
            tclNSlider, sticky="w", pady=6)
     tkgrid(optionsFrame, sticky="w", pady=6, columnspan=2)
-    tkgrid(buttonsFrame, columnspan=2, sticky="w", pady=6)
-    dialogSuffix(rows=3, columns=2, focus=entryText)
+    tkgrid(buttonsFrame, columnspan=2, sticky="ew", pady=6)
+    dialogSuffix(focus=entryText)
 
     if(tclvalue(result) == "success")
         return(list(source=sprintf(.gettext("Twitter search for %s"), tclvalue(tclText)),
@@ -755,8 +1147,9 @@ splitTexts <- function (corpus, chunksize, preserveMetadata=TRUE)
     origins <- list(length(corpus))
 
     for (k in seq_along(corpus)) {
-        chunks_k <- tapply(corpus[[k]], rep(seq(1, length(corpus[[k]])),
-                                            each=chunksize, length.out=length(corpus[[k]])), c)
+        chunks_k <- tapply(content(corpus[[k]]),
+                           rep(seq(1, length(content(corpus[[k]]))),
+                               each=chunksize, length.out=length(content(corpus[[k]]))), c)
 
         # Skeep empty chunks
         keep <- nchar(gsub("[\n[:space:][:punct:]]+", "", sapply(chunks_k, paste, collapse=""))) > 0
@@ -776,30 +1169,19 @@ splitTexts <- function (corpus, chunksize, preserveMetadata=TRUE)
 
     # Copy meta data from old documents
     if(preserveMetadata) {
-        DMetaData(newCorpus) <- DMetaData(corpus)[origins,, drop=FALSE]
-        docs <- list(length(newCorpus))
+        newCorpus$dmeta <- meta(corpus)[origins,, drop=FALSE]
 
         for(i in seq_along(corpus)) {
-            attrs <- attributes(corpus[[i]])
+            attrs <- meta(corpus[[i]])
 
             for(j in which(origins == i)) {
                 doc <- newCorpus[[j]]
-                attr(doc, "ID") <- names2[j]
-                attr(doc, "Document") <- names1[i]
-                attr(doc, "Author") <- attrs$Author
-                attr(doc, "DateTimeStamp") <- attrs$DateTimeStamp
-                attr(doc, "Description") <- attrs$Description
-                attr(doc, "Heading") <- attrs$Heading
-                attr(doc, "Language") <- attrs$Language
-                attr(doc, "LocalMetaData") <- attrs$LocalMetaData
-                attr(doc, "Origin") <- attrs$Origin
-                docs[[j]] <- doc
+                doc$meta <- attrs
+                meta(doc, "id") <- names2[j]
+                meta(doc, "document") <- names1[i]
+                newCorpus[[j]] <- doc
             }
         }
-
-        # [[<-.VCorpus is terribly slow: it is incredibly faster to work on a list of documents,
-        # and only assign them in one shot at the end
-        newCorpus[] <- docs
     }
 
     meta(newCorpus, .gettext("Doc ID")) <- names1[origins]

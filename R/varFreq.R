@@ -1,8 +1,8 @@
 varTableDlg <- function() {
     nVars <- ncol(meta(corpus)[colnames(meta(corpus)) != "MetaID"])
     if(nVars == 0) {
-        Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
-                type="error")
+        .Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
+                 type="error")
         return()
     }
 
@@ -84,20 +84,20 @@ varTableDlg <- function() {
     tkgrid(vertButton, sticky="w", columnspan=2)
     tkgrid(labelRcmdr(plotFrame, text=.gettext("Title:")), titleEntry, sticky="w")
     tkgrid(plotFrame, sticky="w", pady=6, columnspan=2)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    dialogSuffix(rows=8, columns=2, focus=varBox$listbox)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
+    dialogSuffix(focus=varBox$listbox)
 }
 
 varCrossTableDlg <- function() {
     nVars <- ncol(meta(corpus)[colnames(meta(corpus)) != "MetaID"])
     if(nVars == 0) {
-        Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
-                type="error")
+        .Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
+                 type="error")
         return()
     }
     else if(nVars == 1) {
-        Message(message=.gettext("Corpus has only one variable."),
-                type="error")
+        .Message(message=.gettext("Corpus has only one variable."),
+                 type="error")
         return()
     }
 
@@ -164,7 +164,7 @@ varCrossTableDlg <- function() {
 
         # An empty level leads to NAs when computing %
         if(stack && any(is.na(varFreqs))) {
-            Message(.gettext("Cannot plot stacked bars when the table has a null margin."), "error")
+            .Message(.gettext("Cannot plot stacked bars when the table has a null margin."), "error", parent=top)
             stack <- FALSE
         }
 
@@ -217,7 +217,7 @@ varCrossTableDlg <- function() {
     tkgrid(stackButton, sticky="w", columnspan=2)
     tkgrid(labelRcmdr(plotFrame, text=.gettext("Title:")), titleEntry, sticky="w")
     tkgrid(plotFrame, sticky="w", pady=6, columnspan=2)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    dialogSuffix(rows=7, columns=2, focus=varBox1$listbox)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
+    dialogSuffix(focus=varBox1$listbox)
 }
 

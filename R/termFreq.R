@@ -40,9 +40,7 @@ termFrequencies <- function(dtm, terms, variable=NULL, n=25, by.term=FALSE) {
 
         # As this is a discrete distribution, we need to subtract one
         # to include the value when switching sides
-        counts <- ifelse(sup, counts - 1, counts)
-
-        p.val <- phyper(counts, rs[l], tot - rs[l], cs)
+        p.val <- phyper(ifelse(sup, counts - 1, counts), rs[l], tot - rs[l], cs)
         t.val <- qnorm(p.val)
 
         p.val[sup] <- 1 - p.val[sup]
@@ -109,18 +107,18 @@ termFreqDlg <- function() {
         byTerm <- tclvalue(tclByTermVar) == 1
 
         if(length(termsList) == 0) {
-            Message(.gettext("Please enter at least one term."), "error")
+            .Message(.gettext("Please enter at least one term."), "error", parent=top)
 
             return()
         }
         else if(!all(termsList %in% colnames(dtm))) {
             wrongTerms <- termsList[!(termsList %in% colnames(dtm))]
-            Message(sprintf(.ngettext(length(wrongTerms),
+            .Message(sprintf(.ngettext(length(wrongTerms),
                                       "Term \'%s\' does not exist in the corpus.",
                                       "Terms \'%s\' do not exist in the corpus."),
                                       # TRANSLATORS: this should be opening quote, comma, closing quote
                                       paste(wrongTerms, collapse=.gettext("\', \'"))),
-                    "error")
+                     "error", parent=top)
 
             return()
         }
@@ -216,6 +214,6 @@ termFreqDlg <- function() {
     tkgrid(vertButton, sticky="w", columnspan=2)
     tkgrid(stackButton, sticky="w", columnspan=2)
     tkgrid(displayFrame, sticky="w", pady=6, columnspan=2)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    dialogSuffix(rows=5, columns=2, focus=entryTerms)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
+    dialogSuffix(focus=entryTerms)
 }

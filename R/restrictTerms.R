@@ -14,18 +14,18 @@ restrictTermsDlg <- function() {
         termsList <- strsplit(tclvalue(tclTerms), " ")[[1]]
 
         if(length(termsList) == 0) {
-            Message(.gettext("Please enter at least one term."), "error")
+            .Message(.gettext("Please enter at least one term."), "error", parent=top)
 
             return()
         }
         else if(!all(termsList %in% colnames(dtm))) {
             wrongTerms <- termsList[!termsList %in% colnames(dtm)]
-            Message(sprintf(.ngettext(length(wrongTerms),
+            .Message(sprintf(.ngettext(length(wrongTerms),
                                       "Term \'%s\' does not exist in the corpus.",
                                       "Terms \'%s\' do not exist in the corpus."),
                                       # TRANSLATORS: this should be opening quote, comma, closing quote
                             paste(wrongTerms, collapse=.gettext("\', \'"))),
-                    "error")
+                     "error", parent=top)
 
             return()
         }
@@ -49,6 +49,6 @@ restrictTermsDlg <- function() {
     tkgrid(labelRcmdr(top, text=.gettext("Terms (space-separated):")),
            columnspan=2, sticky="w")
     tkgrid(entryTerms, columnspan=2, sticky="w")
-    tkgrid(buttonsFrame, sticky="w", pady=6)
-    dialogSuffix(rows=3, columns=1, focus=entryTerms)
+    tkgrid(buttonsFrame, sticky="ew", pady=6)
+    dialogSuffix(focus=entryTerms)
 }

@@ -22,8 +22,8 @@ termChisqDist <- function(term, dtm, n=5, variable=NULL) {
 
 termCoocDlg <- function() {
     if(!(exists("dtm") && class(dtm) == "DocumentTermMatrix")) {
-        Message(message=.gettext("Please import a corpus and create the document-term matrix first."),
-                type="error")
+        .Message(message=.gettext("Please import a corpus and create the document-term matrix first."),
+                 type="error")
         return()
     }
 
@@ -33,9 +33,9 @@ termCoocDlg <- function() {
     entryTerms <- ttkentry(top,  width="35", textvariable=tclTerms)
 
     tclN <- tclVar(10)
-    sliderN <- tkscale(top, from=0, to=100,
-                       showvalue=TRUE, variable=tclN,
-	               resolution=1, orient="horizontal")
+    spinN <- tkwidget(top, type="spinbox", from=1, to=.Machine$integer.max,
+                      inc=1, textvariable=tclN,
+                      validate="all", validatecommand=.validate.uint)
 
     vars <- c(.gettext("None (whole corpus)"), colnames(meta(corpus)))
     varBox <- variableListBox(top, vars,
@@ -48,26 +48,26 @@ termCoocDlg <- function() {
         var <- getSelection(varBox)
 
         if(length(termsList) == 0) {
-            Message(gettext("Please enter at least one term."), "error")
+            .Message(gettext("Please enter at least one term."), "error", parent=top)
 
             return()
         }
         else if(!all(termsList %in% colnames(dtm))) {
             wrongTerms <- termsList[!(termsList %in% colnames(dtm))]
-            Message(sprintf(.ngettext(length(wrongTerms),
+            .Message(sprintf(.ngettext(length(wrongTerms),
                                       "Term \'%s\' does not exist in the corpus.",
                                       "Terms \'%s\' do not exist in the corpus."),
                                        # TRANSLATORS: this should be opening quote, comma, closing quote
                                        paste(wrongTerms, collapse=.gettext("\', \'"))),
-                    "error")
+                     "error", parent=top)
 
             return()
         }
 
         closeDialog()
 
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         if(var == .gettext("None (whole corpus)")) {
             if(length(termsList) == 1)
@@ -107,8 +107,8 @@ termCoocDlg <- function() {
     OKCancelHelp(helpSubject="termsCoocDlg")
     tkgrid(labelRcmdr(top, text=.gettext("Reference terms (space-separated):")), sticky="w")
     tkgrid(entryTerms, sticky="w", columnspan=2)
-    tkgrid(labelRcmdr(top, text=.gettext("Number of terms to show:")), sliderN, sticky="sw", pady=6)
-    tkgrid(getFrame(varBox), columnspan="2", sticky="w", pady=6)
-    tkgrid(buttonsFrame, columnspan=2, sticky="w", pady=6)
-    dialogSuffix(rows=5, columns=2, focus=entryTerms)
+    tkgrid(labelRcmdr(top, text=.gettext("Number of terms to show:")), spinN, sticky="sw", pady=6)
+    tkgrid(getFrame(varBox), columnspan=2, sticky="w", pady=6)
+    tkgrid(buttonsFrame, columnspan=2, sticky="ew", pady=6)
+    dialogSuffix(focus=entryTerms)
 }

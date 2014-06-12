@@ -1,5 +1,9 @@
-import(Rcmdr, stats, utils,
-       tm, slam, zoo, ca, R2HTML, lattice, latticeExtra, RColorBrewer)
-importFrom(tcltk, ttkcombobox)
+import(Rcmdr, stats, utils, methods,
+       tm, slam, zoo, ca, R2HTML, lattice, latticeExtra, NLP, RColorBrewer)
+importFrom(stringi, stri_enc_detect)
+importFrom(tcltk, addTclPath, ttkcombobox, tkgrid.propagate, tkwidget, tk_messageBox,
+           tkmenu, tkpopup, tkadd, tkwinfo, tktag.add, tkevent.generate)
+# We only need the Tcl package tablelist
+importFrom(tcltk2, tk2tablelist, tk2tip)
 
 exportPattern("^[^\\.]")

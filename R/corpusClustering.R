@@ -1,6 +1,6 @@
 showCorpusClustering <- function(corpusSubClust, ndocs=10, nterms=20, p=0.1, min.occ=5) {
-    .setBusyCursor()
-    on.exit(.setIdleCursor())
+    setBusyCursor()
+    on.exit(setIdleCursor())
 
     objects <- .getCorpusWindow()
     window <- objects$window
@@ -174,6 +174,8 @@ showCorpusClustering <- function(corpusSubClust, ndocs=10, nterms=20, p=0.1, min
 
     # Only raise the window when we're done, as filling it may take some time
     tkraise(window)
+
+    return()
 }
 
 corpusClustDlg <- function() {
@@ -184,14 +186,14 @@ corpusClustDlg <- function() {
     setState <- function(...) {
         if(tclvalue(tclType) == "full") {
             caState <- "disabled"
-            fullState <- "active"
+            fullState <- "normal"
         }
         else {
-            caState <- "active"
+            caState <- "normal"
             fullState <- "disabled"
         }
 
-        tkconfigure(sliderSparsity, state=fullState)
+        tkconfigure(spinSparsity, state=fullState)
         tkconfigure(sparsityLabel, state=fullState)
         tkconfigure(labelNDocs, state=fullState)
 
@@ -214,8 +216,8 @@ corpusClustDlg <- function() {
 
     tkconfigure(labelNDocs, width=max(nchar(labels)))
 
-    updateNDocs <- function(...) {
-        ndocs <- ceiling((1 - as.numeric(tclvalue(tclSparsity))/100) * nrow(dtm))
+    updateNDocs <- function(value) {
+        ndocs <- ceiling((1 - as.numeric(value)/100) * nrow(dtm))
 
         if(ndocs > 1)
             tkconfigure(labelNDocs, text=sprintf(labels[1], ndocs))
@@ -224,12 +226,13 @@ corpusClustDlg <- function() {
     }
 
     tclSparsity <- tclVar(100 - ceiling(1/nrow(dtm) * 100))
-    sliderSparsity <- tkscale(top, from=1, to=100,
-                              showvalue=TRUE, variable=tclSparsity,
-		              resolution=1, orient="horizontal",
-                              command=updateNDocs)
+    spinSparsity <- tkwidget(top, type="spinbox", from=0, to=100,
+                             inc=0.1, textvariable=tclSparsity,
+                             validate="all", validatecommand=function(P) .validate.unum(P, fun=updateNDocs))
+
     sparsityLabel <- labelRcmdr(top, text=.gettext("Remove terms missing from more than (% of documents):"))
-    updateNDocs()
+    updateNDocs(tclvalue(tclSparsity))
+
 
     tclDim <- tclVar(2)
     sliderDim <- tkscale(top, from=1, to=if(haveCa) corpusCa$nd else 5,
@@ -240,14 +243,19 @@ corpusClustDlg <- function() {
 
 
     onOK <- function() {
-        closeDialog()
-
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
-
         type <- tclvalue(tclType)
         sparsity <- as.numeric(tclvalue(tclSparsity))/100
         dim <- tclvalue(tclDim)
+
+        if(is.na(sparsity) || sparsity <= 0 || sparsity > 1) {
+            .Message(.gettext("Please specify a sparsity value between 0 (excluded) and 100%."), type="error")
+            return()
+        }
+
+        closeDialog()
+
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         # removeSparseTerms() does not accept 1
         if(type == "ca") {
@@ -274,11 +282,13 @@ corpusClustDlg <- function() {
             doItAndPrint(sprintf("clustDtm <- removeSparseTerms(dtm, %s)", sparsity))
 
             if(any(row_sums(clustDtm) == 0)) {
-                msg <- sprintf(.ngettext(sum(row_sums(clustDtm) == 0),
-                             "Document %s has been skipped because it does not include any occurrence of the terms retained in the final document-term matrix.\nIncrease the value of the 'sparsity' parameter to fix this warning.",
-                             "Documents %s have been skipped because they do not include any occurrence of the terms retained in the final document-term matrix.\nIncrease the value of the 'sparsity' parameter to fix this warning."),
-                             paste(rownames(clustDtm)[row_sums(clustDtm) == 0], collapse=", "))
-                Message(msg, type="warning")
+                Message(paste(.gettext("Documents skipped from hierarchical clustering:\n"),
+                              paste(rownames(clustDtm)[row_sums(clustDtm) == 0], collapse=", ")),
+                        type="note")
+
+		    .Message(sprintf(.gettext("%i documents have been skipped because they do not include any occurrence of the terms retained in the final document-term matrix. Their list is available in the \"Messages\" area.\n\nIncrease the value of the 'sparsity' parameter if you want to include them."),
+		                     sum(row_sums(clustDtm) == 0)),
+		             type="info")
 
                 doItAndPrint('clustDtm <- clustDtm[row_sums(clustDtm) > 0,]')
             }
@@ -325,23 +335,23 @@ corpusClustDlg <- function() {
 
     OKCancelHelp(helpSubject="corpusClustDlg")
     tkgrid(fullButton, sticky="sw")
-    tkgrid(sparsityLabel, sliderSparsity, sticky="sw", pady=c(0, 6), padx=c(24, 0))
+    tkgrid(sparsityLabel, spinSparsity, sticky="sw", pady=c(0, 6), padx=c(24, 0))
     tkgrid(labelNDocs, sticky="sw", pady=6, columnspan=2, padx=c(24, 0))
     tkgrid(caButton, sticky="sw", pady=c(12, 0))
     tkgrid(dimLabel, sliderDim, sticky="sw", pady=c(0, 6), padx=c(24, 0))
-    tkgrid(buttonsFrame, columnspan="2", sticky="w", pady=6)
-    dialogSuffix(rows=6, columns=2)
+    tkgrid(buttonsFrame, columnspan=2, sticky="ew", pady=6)
+    dialogSuffix()
 }
 
 createClustersDlg <- function(..., plot=TRUE) {
     if(!(exists("corpusClust") && class(corpusClust) == "hclust")) {
-        Message(message=.gettext("Please run a hierarchical clustering on the corpus first."),
+        .Message(message=.gettext("Please run a hierarchical clustering on the corpus first."),
                 type="error")
         return()
     }
 
     if(plot) {
-        .setBusyCursor()
+        setBusyCursor()
 
         # Do not plot all leafs if there are too many of them (can even crash!)
         if(length(corpusClust$labels) > 500) {
@@ -361,7 +371,7 @@ createClustersDlg <- function(..., plot=TRUE) {
                                  .gettext("Full documents dendrogram")))
         }
 
-        .setIdleCursor()
+        setIdleCursor()
     }
 
     initializeDialog(title=.gettext("Create Clusters"))
@@ -369,33 +379,33 @@ createClustersDlg <- function(..., plot=TRUE) {
     tclNClust <- tclVar(5)
     sliderNClust <- tkscale(top, from=2, to=min(15, length(corpusClust$order)),
                             showvalue=TRUE, variable=tclNClust,
-		            resolution=1, orient="horizontal")
+		                    resolution=1, orient="horizontal")
 
     tclNDocs <- tclVar(5)
-    sliderNDocs <- tkscale(top, from=0, to=20,
-                           showvalue=TRUE, variable=tclNDocs,
-		           resolution=1, orient="horizontal")
+    spinNDocs <- tkwidget(top, type="spinbox", from=1, to=length(corpus),
+                          inc=1, textvariable=tclNDocs,
+                          validate="all", validatecommand=.validate.uint)
 
     tclNTerms <- tclVar(20)
-    sliderNTerms <- tkscale(top, from=0, to=100,
-                            showvalue=TRUE, variable=tclNTerms,
-		            resolution=1, orient="horizontal")
+    spinNTerms <- tkwidget(top, type="spinbox", from=1, to=ncol(dtm),
+                           inc=1, textvariable=tclNTerms,
+                           validate="all", validatecommand=.validate.uint)
 
     tclP <- tclVar(10)
-    sliderP <- tkscale(top, from=1, to=100,
-                       showvalue=TRUE, variable=tclP,
-	               resolution=1, orient="horizontal")
+    spinP <- tkwidget(top, type="spinbox", from=0, to=100,
+                      inc=1, textvariable=tclP,
+                      validate="all", validatecommand=.validate.unum)
 
     tclOcc <- tclVar(2)
-    sliderOcc <- tkscale(top, from=1, to=100,
-                       showvalue=TRUE, variable=tclOcc,
-	               resolution=1, orient="horizontal")
+    spinOcc <- tkwidget(top, type="spinbox", from=1, to=.Machine$integer.max,
+                        inc=1, textvariable=tclOcc,
+                        validate="all", validatecommand=.validate.uint)
 
     onOK <- function() {
         closeDialog()
 
-        .setBusyCursor()
-        on.exit(.setIdleCursor())
+        setBusyCursor()
+        on.exit(setIdleCursor())
 
         nclust <- as.numeric(tclvalue(tclNClust))
         ndocs <- as.numeric(tclvalue(tclNDocs))
@@ -455,17 +465,17 @@ createClustersDlg <- function(..., plot=TRUE) {
            sticky="sw", pady=c(0, 6), padx=c(6, 0))
     tkgrid(.titleLabel(top, text=.gettext("Documents specific of clusters:")),
            sticky="sw", pady=c(24, 0))
-    tkgrid(labelRcmdr(top, text=.gettext("Maximum number of documents to show per cluster:")), sliderNDocs,
+    tkgrid(labelRcmdr(top, text=.gettext("Maximum number of documents to show per cluster:")), spinNDocs,
            sticky="sw", pady=c(0, 6), padx=c(6, 0))
     tkgrid(.titleLabel(top, text=.gettext("Terms specific of clusters:")),
            sticky="sw", pady=c(24, 0))
-    tkgrid(labelRcmdr(top, text=.gettext("Show terms with a probability below (%):")), sliderP,
+    tkgrid(labelRcmdr(top, text=.gettext("Show terms with a probability below (%):")), spinP,
            sticky="sw", pady=6, padx=c(6, 0))
-    tkgrid(labelRcmdr(top, text=.gettext("Only retain terms with a number of occurrences above:")), sliderOcc,
+    tkgrid(labelRcmdr(top, text=.gettext("Only retain terms with a number of occurrences above:")), spinOcc,
            sticky="sw", pady=6, padx=c(6, 0))
-    tkgrid(labelRcmdr(top, text=.gettext("Maximum number of terms to show per cluster:")), sliderNTerms,
+    tkgrid(labelRcmdr(top, text=.gettext("Maximum number of terms to show per cluster:")), spinNTerms,
            sticky="sw", pady=6, padx=c(6, 0))
-    tkgrid(buttonsFrame, columnspan="2", sticky="w", pady=6)
-    dialogSuffix(rows=8, columns=2)
+    tkgrid(buttonsFrame, columnspan=2, sticky="ew", pady=6)
+    dialogSuffix()
 }
 

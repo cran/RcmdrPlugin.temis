@@ -1,8 +1,8 @@
 recodeTimeVarDlg <- function() {
     nVars <- ncol(meta(corpus)[colnames(meta(corpus)) != "MetaID"])
     if(nVars == 0) {
-        Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
-                type="error")
+        .Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
+                 type="error")
         return()
     }
 
@@ -61,13 +61,13 @@ recodeTimeVarDlg <- function() {
         time <- meta(corpus, timeVar)[[1]]
         time <- strptime(unique(time[!is.na(time)]), inFormat)
         if(all(is.na(time))) {
-            Message(message=sprintf(.gettext("Incorrect input time format or variable: no values of \"%s\" could be converted to a time index."), timeVar),
-                    type="error")
+            .Message(message=sprintf(.gettext("Incorrect input time format or variable: no values of \"%s\" could be converted to a time index."), timeVar),
+                     type="error", parent=top)
             return()
         }
         else if(any(is.na(time))) {
-            Message(message=sprintf(.gettext("Some values of \"%s\" could not be converted to a time index and will be missing."), timeVar),
-                    type="warning")
+            .Message(message=sprintf(.gettext("Some values of \"%s\" could not be converted to a time index and will be missing."), timeVar),
+                     type="warning", parent=top)
         }
 
         closeDialog()
@@ -95,16 +95,16 @@ recodeTimeVarDlg <- function() {
     tkgrid(outFormatEntry, sticky="w", padx=c(6, 0), pady=c(0, 6), row=3, column=1)
     tkgrid(labelRcmdr(top, text=.gettext("Useful codes:\n%Y: year - %m: month number - %B: month name\n%W: week number starting on Mondays - %U: starting on Sundays\n%d: day number - %A: week day name\n%H: hour - %M: minute\n\nClick the  \"Help\" button for more codes.")),
            pady=6, sticky="ewns", columnspan=2)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    dialogSuffix(rows=6, columns=2, focus=timeVarBox$listbox)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
+    dialogSuffix(focus=timeVarBox$listbox)
 }
 
 
 varTimeSeriesDlg <- function() {
     nVars <- ncol(meta(corpus)[colnames(meta(corpus)) != "MetaID"])
     if(nVars == 0) {
-        Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
-                type="error")
+        .Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
+                 type="error")
         return()
     }
 
@@ -183,14 +183,14 @@ varTimeSeriesDlg <- function() {
     meanButton <- tkcheckbutton(top, text=.gettext("Apply rolling mean"), variable=tclMean)
 
     tclWindow <- tclVar(7)
-    sliderWindow <- tkscale(top, from=1, to=30,
-                            showvalue=TRUE, variable=tclWindow,
-	                    resolution=1, orient="horizontal")
+    spinWindow <- tkwidget(top, type="spinbox", from=1, to=.Machine$integer.max,
+                             inc=1, textvariable=tclWindow,
+                             validate="all", validatecommand=.validate.uint)
 
     tclTitle <- tclVar(.gettext("Temporal evolution of the corpus"))
     titleEntry <- ttkentry(top, width="30", textvariable=tclTitle)
 
-    onOK <- function() {
+    onCustom <- function() {
         timeVar <- getSelection(timeVarBox)
         groupVar <- c("", vars)[as.numeric(tkcurselection(varsBox))+1]
         what <- tclvalue(whatVariable)
@@ -199,8 +199,8 @@ varTimeSeriesDlg <- function() {
         title <- tclvalue(tclTitle)
 
         if(what == "percent" && nchar(groupVar) == 0) {
-            Message(message=.gettext("Plotting percents of documents with only one curve does not make sense: all points would be 100%."),
-                    type="error")
+            .Message(message=.gettext("Plotting percents of documents with only one curve does not make sense: all points would be 100%."),
+                     type="error", parent=top)
             return()
         }
 
@@ -213,13 +213,13 @@ varTimeSeriesDlg <- function() {
         time <- meta(corpus, timeVar)[[1]]
         time <- strptime(unique(time[!is.na(time)]), format)
         if(all(is.na(time))) {
-            Message(message=sprintf(.gettext("Incorrect time format or variable: no values of \"%s\" could be converted to a time index."), timeVar),
-                    type="error")
+            .Message(message=sprintf(.gettext("Incorrect time format or variable: no values of \"%s\" could be converted to a time index."), timeVar),
+                     type="error", parent=top)
             return()
         }
         else if(any(is.na(time))) {
-            Message(message=sprintf(.gettext("Some values of \"%s\" could not be converted to a time index and will be missing."), timeVar),
-                    type="warning")
+            .Message(message=sprintf(.gettext("Some values of \"%s\" could not be converted to a time index and will be missing."), timeVar),
+                     type="warning", parent=top)
         }
 
         if(nchar(groupVar) == 0) {
@@ -267,8 +267,8 @@ varTimeSeriesDlg <- function() {
 
         if(rollmean) {
             if(window >= NROW(docSeries))
-                Message(message=.gettext("Chosen roll mean window is longer than the range of the time variable, rolling mean was not applied."),
-                        type="warning")
+                .Message(message=.gettext("Chosen roll mean window is longer than the range of the time variable, rolling mean was not applied."),
+                        type="warning", parent=top)
             else
                 # For percents, the days with no observation get 0/0 == NaN, and we need to skip them
                 doItAndPrint(sprintf('docSeries <- rollapply(docSeries, %s, align="left", mean, na.rm=TRUE)', window))
@@ -280,7 +280,7 @@ varTimeSeriesDlg <- function() {
                                  paste(ylab, unit), title,
                                  if(NCOL(docSeries) > 1) 'TRUE' else "NULL"))
         else
-            Message(.gettext("Only one time point present, no plot can be drawn."), "warning")
+            .Message(.gettext("Only one time point present, no plot can be drawn."), "error", parent=top)
 
         doItAndPrint("rm(tab, time)")
 
@@ -292,24 +292,9 @@ varTimeSeriesDlg <- function() {
         tkfocus(CommanderWindow())
     }
 
-    buttonsFrame <- tkframe(top, borderwidth=5)
-    plotButton <- buttonRcmdr(buttonsFrame, text=.gettext("Draw plot"), foreground="darkgreen",
-                              command=onOK, default="active", borderwidth=3)
-    onClose <- function() {
-        closeDialog()
-        tkfocus(CommanderWindow())
-    }
-    closeButton <- buttonRcmdr(buttonsFrame, text=.gettext("Close"), foreground="red",
-                               command=onClose, borderwidth=3)
-    onHelp <- function() {
-        if (GrabFocus() && .Platform$OS.type != "windows") tkgrab.release(window)
-        print(help("varTimeSeriesDlg"))
-    }
-    helpButton <- buttonRcmdr(buttonsFrame, text=gettextRcmdr("Help"), width="12",
-                              command=onHelp, borderwidth=3)
-    tkgrid(plotButton, labelRcmdr(buttonsFrame, text="  "),
-           closeButton, labelRcmdr(buttonsFrame, text="            "),
-           helpButton, sticky="w")
+    # Shut up R CMD check WARNING
+    onClose <- NULL
+    .customCloseHelp(helpSubject="varTimeSeriesDlg", custom.button=.gettext("Draw plot"))
 
     tkgrid(getFrame(timeVarBox), sticky="ewns", padx=c(0, 6), pady=6, row=0, rowspan=3)
     tkgrid(labelRcmdr(top, text=.gettext("Time format:")), padx=c(6, 0), pady=c(6, 0), sticky="w", row=0, column=1)
@@ -326,20 +311,20 @@ varTimeSeriesDlg <- function() {
     tkgrid(.titleLabel(top, text=.gettext("Rolling mean:")),
            sticky="w", pady=c(6, 0))
     tkgrid(meanButton, sticky="w")
-    tkgrid(labelRcmdr(top, text=.gettext("Time window for mean (in time units):")), sliderWindow, sticky="w",
+    tkgrid(labelRcmdr(top, text=.gettext("Time window for mean (in time units):")), spinWindow, sticky="w",
            padx=6, pady=c(0, 6))
     tkgrid(.titleLabel(top, text=.gettext("Title:")),
            sticky="w", pady=c(6, 0))
     tkgrid(titleEntry, sticky="w", padx=6, pady=c(0, 6), columnspan=2)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    dialogSuffix(rows=13, columns=2, focus=timeVarBox$listbox, onCancel=onClose)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
+    dialogSuffix(focus=timeVarBox$listbox, onOK=onCustom, onCancel=onClose)
 }
 
 termTimeSeriesDlg <- function() {
     nVars <- ncol(meta(corpus)[colnames(meta(corpus)) != "MetaID"])
     if(nVars == 0) {
-        Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
-                type="error")
+        .Message(message=.gettext("No corpus variables have been set. Use Text mining->Manage corpus->Set corpus variables to add them."),
+                 type="error")
         return()
     }
 
@@ -422,14 +407,14 @@ termTimeSeriesDlg <- function() {
     meanButton <- tkcheckbutton(top, text=.gettext("Apply rolling mean"), variable=tclMean)
 
     tclWindow <- tclVar(7)
-    sliderWindow <- tkscale(top, from=1, to=30,
-                            showvalue=TRUE, variable=tclWindow,
-	                    resolution=1, orient="horizontal")
+    spinWindow <- tkwidget(top, type="spinbox", from=1, to=.Machine$integer.max,
+                             inc=1, textvariable=tclWindow,
+                             validate="all", validatecommand=.validate.uint)
 
     tclTitle <- tclVar(.gettext("Temporal evolution of occurrences"))
     titleEntry <- ttkentry(top, width="30", textvariable=tclTitle)
 
-    onOK <- function() {
+    onCustom <- function() {
         timeVar <- getSelection(timeVarBox)
         groupVar <- c("", vars)[as.numeric(tkcurselection(varsBox))+1]
         termsList <- strsplit(tclvalue(tclTerms), " ")[[1]]
@@ -439,28 +424,28 @@ termTimeSeriesDlg <- function() {
         title <- tclvalue(tclTitle)
 
         if(what == "lev.term" && nchar(groupVar) == 0) {
-            Message(message=.gettext("Plotting distribution of occurrences with only one curve does not make sense: all points would be 100%."),
-                    type="error")
+            .Message(message=.gettext("Plotting distribution of occurrences with only one curve does not make sense: all points would be 100%."),
+                     type="error", parent=top)
             return()
         }
 
         if(length(termsList) > 1 && nchar(groupVar) > 0) {
-            Message(message=.gettext("Only one term can be used when a grouping variable is selected."),
-                    type="error")
+            .Message(message=.gettext("Only one term can be used when a grouping variable is selected."),
+                     type="error", parent=top)
             return()
         }
 
         if(length(termsList) == 0) {
-            Message(.gettext("Please enter at least one term."), "error")
+            .Message(.gettext("Please enter at least one term."), "error", parent=top)
             return()
         }
         else if(!all(termsList %in% colnames(dtm))) {
             wrongTerms <- termsList[!(termsList %in% colnames(dtm))]
-            Message(sprintf(.ngettext(length(wrongTerms),
+            .Message(sprintf(.ngettext(length(wrongTerms),
                             "Term \'%s\' does not exist in the corpus.",
                             "Terms \'%s\' do not exist in the corpus."),
                             # TRANSLATORS: this should be opening quote, comma, closing quote
-                            paste(wrongTerms, collapse=.gettext("\', \'"))), type="error")
+                            paste(wrongTerms, collapse=.gettext("\', \'"))), type="error", parent=top)
             return()
         }
 
@@ -473,13 +458,13 @@ termTimeSeriesDlg <- function() {
         time <- meta(corpus, timeVar)[[1]]
         time <- strptime(unique(time[!is.na(time)]), format)
         if(all(is.na(time))) {
-            Message(message=sprintf(.gettext("Incorrect time format or variable: no values of \"%s\" could be converted to a time index."), timeVar),
-                    type="error")
+            .Message(message=sprintf(.gettext("Incorrect time format or variable: no values of \"%s\" could be converted to a time index."), timeVar),
+                     type="error", parent=top)
             return()
         }
         else if(any(is.na(time))) {
-            Message(message=sprintf(.gettext("Some values of \"%s\" could not be converted to a time index and will be missing."), timeVar),
-                    type="warning")
+            .Message(message=sprintf(.gettext("Some values of \"%s\" could not be converted to a time index and will be missing."), timeVar),
+                     type="warning", parent=top)
         }
 
         doItAndPrint(sprintf('time <- as.character(strptime(meta(corpus, "%s")[[1]], "%s"))', timeVar, format))
@@ -536,8 +521,8 @@ termTimeSeriesDlg <- function() {
 
         if(rollmean) {
             if(window >= NROW(termSeries))
-                Message(message=.gettext("Chosen roll mean window is longer than the range of the time variable, rolling mean was not applied."),
-                        type="warning")
+                .Message(message=.gettext("Chosen roll mean window is longer than the range of the time variable, rolling mean was not applied."),
+                         type="warning", parent=top)
             else
                 # For percents, the days with no observation get 0/0 == NaN, and we need to skip them
                 doItAndPrint(sprintf('termSeries <- rollapply(termSeries, %s, align="left", mean, na.rm=TRUE)', window))
@@ -549,7 +534,7 @@ termTimeSeriesDlg <- function() {
                                  paste(ylab, unit), title,
                                  if(NCOL(termSeries) > 1) 'TRUE' else "NULL"))
         else
-            Message(.gettext("Only one time point present, no plot can be drawn."), "warning")
+            .Message(.gettext("Only one time point present, no plot can be drawn."), "error", parent=top)
 
         doItAndPrint("rm(absTermFreqs, time)")
 
@@ -561,24 +546,9 @@ termTimeSeriesDlg <- function() {
         tkfocus(CommanderWindow())
     }
 
-    buttonsFrame <- tkframe(top, borderwidth=5)
-    plotButton <- buttonRcmdr(buttonsFrame, text=.gettext("Draw plot"), foreground="darkgreen",
-                              command=onOK, default="active", borderwidth=3)
-    onClose <- function() {
-        closeDialog()
-        tkfocus(CommanderWindow())
-    }
-    closeButton <- buttonRcmdr(buttonsFrame, text=.gettext("Close"), foreground="red",
-                               command=onClose, borderwidth=3)
-    onHelp <- function() {
-        if (GrabFocus() && .Platform$OS.type != "windows") tkgrab.release(window)
-        print(help("varTimeSeriesDlg"))
-    }
-    helpButton <- buttonRcmdr(buttonsFrame, text=gettextRcmdr("Help"), width="12",
-                              command=onHelp, borderwidth=3)
-    tkgrid(plotButton, labelRcmdr(buttonsFrame, text="  "),
-           closeButton, labelRcmdr(buttonsFrame, text="            "),
-           helpButton, sticky="w")
+    # Shut up R CMD check WARNING
+    onClose <- NULL
+    .customCloseHelp(helpSubject="varTimeSeriesDlg", custom.button=.gettext("Draw plot"))
 
     tkgrid(getFrame(timeVarBox), sticky="ewns", padx=c(0, 6), pady=6, row=0, rowspan=3)
     tkgrid(labelRcmdr(top, text=.gettext("Time format:")), padx=c(6, 0), pady=c(6, 0), sticky="w", row=0, column=1)
@@ -598,11 +568,11 @@ termTimeSeriesDlg <- function() {
     tkgrid(.titleLabel(top, text=.gettext("Rolling mean:")),
            sticky="w", pady=c(6, 0))
     tkgrid(meanButton, sticky="w")
-    tkgrid(labelRcmdr(top, text=.gettext("Time window for mean (in time units):")), sliderWindow, sticky="w",
+    tkgrid(labelRcmdr(top, text=.gettext("Time window for mean (in time units):")), spinWindow, sticky="w",
            padx=6, pady=c(0, 6))
     tkgrid(.titleLabel(top, text=.gettext("Title:")),
            sticky="w", pady=c(6, 0))
     tkgrid(titleEntry, sticky="w", padx=6, pady=c(0, 6), columnspan=2)
-    tkgrid(buttonsFrame, sticky="w", pady=6, columnspan=2)
-    dialogSuffix(rows=15, columns=2, focus=timeVarBox$listbox, onCancel=onClose)
+    tkgrid(buttonsFrame, sticky="ew", pady=6, columnspan=2)
+    dialogSuffix(focus=timeVarBox$listbox, onOK=onCustom, onCancel=onClose)
 }
