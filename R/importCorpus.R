@@ -426,7 +426,7 @@ importCorpusFromDir <- function(language=NA, encoding="") {
 
     if(encoding == "") {
         encs <- table(sapply(list.files(dir, full.names=TRUE),
-                             function(f) stri_enc_detect(readBin(f, "raw", 1024))[[1]]$Encoding[1]))
+                             function(f) stri_enc_detect(readBin(f, "raw", 50000))[[1]]$Encoding[1]))
         encoding <- names(encs)[order(encs, decreasing=TRUE)][1]
     }
 
@@ -462,7 +462,7 @@ importCorpusFromFile <- function(language=NA, encoding="") {
     # Code adapted from Rcommander's data-menu.R file
     # The following function was contributed by Matthieu Lesnoff
     # (added with small changes by J. Fox, 20 July 06 & 30 July 08)
-    # Licensed under GNU GPL (version ≥ 2) 
+    # Licensed under GNU GPL (version >= 2)
     sop <- match(".", rev(strsplit(file, NULL)[[1]]))[1]
     ext <- tolower(substring(file, nchar(file) - sop + 2, nchar(file)))
 
@@ -498,19 +498,17 @@ importCorpusFromFile <- function(language=NA, encoding="") {
                  type="error")
             return(FALSE)
         }
-	else if(!require(ROpenOffice)) {
+	    else if(!requireNamespace("ROpenOffice")) {
             response <- tkmessageBox(message=.gettext("Loading OpenDocument spreadsheets (.ods) requires the ROpenOffice package.\nDo you want to install it?"),
                                      icon="question", type="yesno")
 
-            if (tclvalue(response) == "yes") {
-	        install.packages("ROpenOffice", repos="http://www.omegahat.org/R", type="source")
-                library("ROpenOffice")
-            }
-            else {
+            if (tclvalue(response) == "yes")
+	            install.packages("ROpenOffice", repos="http://www.omegahat.org/R", type="source")
+            else
                 return(FALSE)
-            }
         }
 
+        doItAndPrint("library(ROpenOffice)")
         doItAndPrint(paste("corpusDataset <- read.ods(\"", file, "\")", sep=""))
     }
     else if(ext %in% c("xls", "xlsx", "mdb", "accdb")) {
@@ -1141,7 +1139,7 @@ importCorpusFromTwitter <- function(language=NA) {
 
 # Adapted version of tm's makeChunks() remembering which chunk comes from which document,
 # preserving corpus meta-data, and skipping empty chunks.
-# Copyright Ingo Feinerer, Licence: GPL (≥ 2).
+# Copyright Ingo Feinerer, Licence: GPL (>= 2).
 # http://tm.r-forge.r-project.org/
 splitTexts <- function (corpus, chunksize, preserveMetadata=TRUE) 
 {
