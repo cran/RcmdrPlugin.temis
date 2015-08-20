@@ -1,8 +1,8 @@
 Package: RcmdrPlugin.temis
 Type: Package
 Title: Graphical Integrated Text Mining Solution
-Version: 0.7.3
-Date: 2015-01-23
+Version: 0.7.4
+Date: 2015-08-19
 Authors@R: c(person("Milan", "Bouchet-Valat", email="nalimilan@club.fr", role=c("aut", "cre")),
              person("Gilles", "Bastin", email="gilles.bastin@sciencespo-grenoble.fr", role=c("aut")))
 Imports: Rcmdr (>= 2.1-1), tcltk, tcltk2, utils, ca, R2HTML (>= 2.3.0),
@@ -22,10 +22,10 @@ Description: An R Commander plug-in providing an integrated solution to perform
 License: GPL (>= 2)
 URL: https://r-forge.r-project.org/projects/r-temis/
 BugReports: https://r-forge.r-project.org/tracker/?group_id=1437
-Packaged: 2015-01-23 11:24:57 UTC; milan
+NeedsCompilation: no
+Packaged: 2015-08-19 20:11:44 UTC; milan
 Author: Milan Bouchet-Valat [aut, cre],
   Gilles Bastin [aut]
 Maintainer: Milan Bouchet-Valat <nalimilan@club.fr>
-NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2015-01-23 12:42:40
+Date/Publication: 2015-08-20 00:20:29

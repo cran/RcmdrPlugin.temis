@@ -231,7 +231,7 @@ corpusClustDlg <- function() {
                              validate="all", validatecommand=function(P) .validate.unum(P, fun=updateNDocs))
 
     sparsityLabel <- labelRcmdr(top, text=.gettext("Remove terms missing from more than (% of documents):"))
-    updateNDocs(tclvalue(tclSparsity))
+    updateNDocs(100 - ceiling(1/nrow(dtm) * 100))
 
 
     tclDim <- tclVar(2)
