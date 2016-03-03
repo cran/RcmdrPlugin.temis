@@ -1,0 +1,2237 @@
+# RcmdrPlugin.temis Slovenian translation.
+# Copyright (C) 2015 Matjaž Jeran (checking of specific Slovenian terms by Primož Jakopin)
+# This file is distributed under the same license as the RcmdrPlugin.temis package.
+#
+# Merge with .pot from the package base dir with:
+# msgmerge -U po/R-sl.po po/R-RcmdrPlugin.temis.pot
+#
+# Compile from the package base dir with:
+# msgfmt -c --statistics -o inst/po/sl/LC_MESSAGES/R-RcmdrPlugin.temis.mo po/R-sl.po
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: RcmdrPlugin.temis 0.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-01 16:00+0200\n"
+"PO-Revision-Date: 2015-12-25 21:49+0100\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"X-Generator: Lokalize 2.0\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+
+# # MENUS: added by hand
+msgid "Text mining"
+msgstr "Rudarjenje besedil"
+
+msgid "Import corpus..."
+msgstr "Uvozi korpus..."
+
+msgid "Show current corpus"
+msgstr "Pokaži trenutni korpus"
+
+msgid "Terms dictionary"
+msgstr "Slovar pojmov"
+
+msgid "Sorted alphabetically"
+msgstr "Urejeno po abecedi"
+
+msgid "Sorted by number of occurrences"
+msgstr "Urejeno po številu pojavov"
+
+msgid "Manage corpus"
+msgstr "Upravljaj korpus"
+
+msgid "Set corpus variables"
+msgstr "Postavi spremenljivke korpusa"
+
+msgid "Recode time variable..."
+msgstr "Prekodiraj časovne spremenljivke..."
+
+msgid "Subset corpus"
+msgstr "Podmnožica korpusa"
+
+msgid "By terms..."
+msgstr "Po pojmih..."
+
+msgid "By variable..."
+msgstr "Po spremenljivki..."
+
+msgid "Restore saved corpus"
+msgstr "Obnovi shranjen korpus"
+
+msgid "Select or exclude terms..."
+msgstr "Izberi ali izloči pojme..."
+
+msgid "Distribution of documents"
+msgstr "Distribucija dokumentov"
+
+msgid "One-way table of variable..."
+msgstr "Enosmerna tabela spremenljivke..."
+
+msgid "Two-way table of variables..."
+msgstr "Dvosmerna tabela spremenljivk..."
+
+msgid "Temporal evolution..."
+msgstr "Začasna evolucija..."
+
+msgid "Descriptive analysis of vocabulary"
+msgstr "Opisna analiza besednjaka"
+
+msgid "Dissimilarity table..."
+msgstr "Tabela različnosti..."
+
+msgid "Vocabulary summary..."
+msgstr "Izvleček besednjaka..."
+
+msgid "Most frequent terms..."
+msgstr "Najpogostejši pojmi..."
+
+msgid "Terms specific of levels..."
+msgstr "Pojmi in njihove ravni..."
+
+msgid "Analysis of chosen terms..."
+msgstr "Analiza izbranih pojmov..."
+
+msgid "Terms co-occurring with chosen terms..."
+msgstr "Pojmi, ki se skupaj pojavljajo z izbranimi pojmi..."
+
+msgid "Temporal evolution of chosen terms..."
+msgstr "Začasna evolucija izbranih pojmov..."
+
+#: R/corpusCa.R:189 R/corpusCa.R:206
+msgid "Correspondence analysis"
+msgstr "Korespondenčna analiza"
+
+msgid "Run analysis..."
+msgstr "Analiza pojavov..."
+
+msgid "Show analysis results..."
+msgstr "Prikaži rezultate analize..."
+
+msgid "Hierarchical clustering"
+msgstr "Hierarhično grupiranje"
+
+msgid "Run clustering..."
+msgstr "Pojavno grupiranje..."
+
+msgid "Create clusters..."
+msgstr "Tvori grupe..."
+
+msgid "Copy last table to report"
+msgstr "Kopiraj zadnjo tabelo v poročilo"
+
+msgid "Copy current plot to report"
+msgstr "Kopiraj trenutni graf v poročilo"
+
+msgid "Draw black and white plots"
+msgstr "Nariši črno-bele grafikone"
+
+msgid "Draw colored plots"
+msgstr "Nariši barvne grafikone"
+
+msgid "Open report file"
+msgstr "Odpri datoteko poročila"
+
+msgid "Select a new report file..."
+msgstr "Izberi novo datoteko poročila..."
+
+msgid "Export results to report"
+msgstr "Izvozi rezultate v poročilo"
+
+# # END OF MENUS
+#: R/common.R:108 R/common.R:91 R/common.R:104
+msgid "Package required"
+msgstr "Zahtevan je paket"
+
+#: R/common.R:121 R/common.R:104 R/common.R:117
+msgid "Package not available"
+msgstr "Paketa ni na voljo"
+
+#: R/common.R:122 R/common.R:105 R/common.R:118
+#, c-format
+msgid ""
+"Package %s is not available. Please check your Internet connection, restart "
+"R and try again."
+msgstr ""
+"Paketa %s ni na voljo. Prosim preverite povezavo s spletom, še enkrat "
+"poženite R in poskusite znova."
+
+#: R/common.R:130 R/common.R:113 R/common.R:126
+msgid "Could not load package"
+msgstr "Nisem mogel naložiti paketa"
+
+#: R/common.R:131 R/common.R:114 R/common.R:127
+#, c-format
+msgid "Package %s could not be loaded. See errors in the \"Messages\" area."
+msgstr "Paketa %s se ni dalo naložiti. Preverite napake v področju 'Sporočil'."
+
+#: R/corpusCa.R:6
+msgid "All items of 'variables' should be meta-data variables of the corpus."
+msgstr ""
+"Vsi predmeti med 'spremenljivkami' morajo biti meta-data spremenljivke "
+"korpusa."
+
+#: R/corpusCa.R:21 R/corpusClustering.R:278 R/corpusCa.R:36
+#: R/corpusClustering.R:289
+msgid ""
+"%i documents have been skipped because they do not include any occurrence of "
+"the terms retained in the final document-term matrix. Their list is "
+"available in the \"Messages\" area.\n"
+"\n"
+"Increase the value of the 'sparsity' parameter if you want to include them."
+msgstr ""
+"%i dokumentov smo preskočili, ker ne vsebujejo nobenega pojava pojmov, ki so "
+"omenjeni v "
+"tabeli končnega dokumenta. Njihov seznam je v področju \"Sporočil\"\n"
+"\n"
+"Povečajte vrednost parametra 'redkost', če jih želite vključiti."
+
+#: R/corpusCa.R:21 R/corpusCa.R:32
+msgid "Documents skipped from correspondence analysis:\n"
+msgstr "Dokumenti, ki smo jih preskočili v korespondenčni analizi:\n"
+
+#: R/corpusClustering.R:278 R/corpusClustering.R:285
+msgid "Documents skipped from hierarchical clustering:\n"
+msgstr "Dokumenti, ki smo jih preskočili pri hierarhičnem grupiranju:\n"
+
+#: R/corpusCa.R:31 R/corpusCa.R:26
+msgid ""
+"Please increase the value of the 'sparsity' parameter so that at least two "
+"documents and two terms are retained."
+msgstr ""
+"Prosim povečajte vrednost parametra 'redkost' tako, da bosta ostala vsaj dva "
+"dokumenta in dva pojma."
+
+#: R/corpusCa.R:86 R/corpusCa.R:91
+msgid ""
+"Please select active variables so that at least two levels are present in "
+"the retained documents."
+msgstr ""
+"Prosim izberite aktivne spremenljivke tako, da bosta vsaj dve ravni prisotni "
+"v preostalih dokumentih."
+
+#: R/corpusCa.R:91 R/corpusCa.R:96
+#, c-format
+msgid ""
+"Running correspondence analysis using %i documents, %i terms and %i "
+"variables."
+msgstr ""
+"V teku je korespondenčna analiza z %i dokumenti, %i pojmov in %i spremenljivk."
+
+#: R/corpusCa.R:96 R/corpusCa.R:101
+#, c-format
+msgid ""
+"Variable(s) %s have been skipped since it contains only missing values for "
+"retained documents."
+msgstr ""
+"Spremenljivke %s smo preskočili, ker vsebujejo samo manjkajoče vrednosti za "
+"preostale dokumente."
+
+#: R/corpusCa.R:101 R/corpusCa.R:107
+#, c-format
+msgid ""
+"Some levels of variable(s) %s have been skipped since they contain only "
+"missing values for retained documents."
+msgstr ""
+"Nekaj ravni spremenljivk %s smo preskočili, ker vsebujejo samo manjkajoče "
+"vrednosti za preostale dokumente."
+
+#: R/corpusCa.R:130 R/corpusCa.R:143
+msgid "Run Correspondence Analysis"
+msgstr "Izvedi korespondenčno analizo"
+
+#: R/corpusCa.R:134 R/corpusClustering.R:212 R/corpusCa.R:147
+#: R/corpusClustering.R:214
+#, c-format
+msgid ""
+"(Terms present in at least %s documents will be retained in the analysis.)"
+msgstr "(Pojmi prisotni v vsaj %s dokumentih bodo ohranjeni v analizi.)"
+
+#: R/corpusCa.R:135 R/corpusClustering.R:213 R/corpusCa.R:148
+#: R/corpusClustering.R:215
+msgid "(All terms will be retained in the analysis.)"
+msgstr "(Vsi pojmi bodo ohranjeni v analizi.)"
+
+#: R/corpusCa.R:148 R/corpusCa.R:182 R/corpusCa.R:161 R/corpusCa.R:199
+msgid "None (run analysis on full matrix)"
+msgstr "Noben (analizo izvedi na polni matriki)"
+
+#: R/corpusCa.R:151 R/corpusCa.R:164
+msgid "Aggregate document-term matrix by variables:"
+msgstr "Agregiraj matriko dokumentov in pojmov po spremenljivkah:"
+
+#: R/corpusCa.R:179 R/dissimilarity.R:27 R/subsetCorpus.R:4 R/time.R:4
+#: R/time.R:106 R/time.R:338 R/varFreq.R:4 R/varFreq.R:94 R/time.R:341
+#: R/corpusCa.R:196 R/subsetCorpus.R:60 R/time.R:326
+msgid ""
+"No corpus variables have been set. Use Text mining->Manage corpus->Set "
+"corpus variables to add them."
+msgstr ""
+"Nobena korpusna spremenljivka še ni določena. Uporabite: Rudarjenje besedil"
+"-> Postavi spremenljivke korpusa, da bi jih dodali."
+
+#: R/corpusCa.R:203 R/corpusClustering.R:231 R/corpusCa.R:218
+#: R/corpusClustering.R:233
+msgid "Remove terms missing from more than (% of documents):"
+msgstr "Odstrani pojme, ki manjkajo iz več kot (% dokumentov):"
+
+#: R/corpusCa.R:206 R/corpusCa.R:221
+msgid "Number of dimensions to retain:"
+msgstr "Število dimenzij, ki naj se ohranijo:"
+
+#: R/corpusClustering.R:10
+msgid "Hierarchical Clustering"
+msgstr "Hierarhično grupiranje"
+
+#: R/corpusClustering.R:16
+#, c-format
+msgid ""
+"Hierarchical clustering of %i documents using %i terms (Ward's method with "
+"Chi-squared distance)."
+msgstr ""
+"Hierarhično grupiranje %i dokumentov z %i pojmov (Wardova metoda z "
+"hi-kvadratno razdaljo)."
+
+#: R/corpusClustering.R:23
+#, c-format
+msgid ""
+"Hierarchical clustering of %i documents using %i terms (Ward's method with "
+"Chi-squared distance based on the %i first dimensions of the correspondence "
+"analysis)."
+msgstr ""
+"Hierarhično grupiranje %i dokumentov z %i pojmov (Wardova metoda z hi-kvadrat "
+"razdaljo, ki je določena z %i začetnimi dimenzijami korespondenčne analize)."
+
+#: R/corpusClustering.R:32
+msgid "Clusters summary:"
+msgstr "Izvleček grup:"
+
+#: R/corpusClustering.R:34
+msgid "Clusters summary"
+msgstr "Izvleček grup"
+
+#: R/corpusClustering.R:38 R/corpusClustering.R:42 R/corpusClustering.R:46
+#: R/corpusClustering.R:47 R/corpusClustering.R:150 R/corpusClustering.R:154
+#: R/corpusClustering.R:168 R/corpusClustering.R:416 R/corpusClustering.R:419
+#: R/corpusClustering.R:425 R/corpusClustering.R:426 R/corpusClustering.R:429
+#: R/corpusClustering.R:430 R/setCorpusVariables.R:35 R/corpusClustering.R:435
+#: R/corpusClustering.R:436 R/corpusClustering.R:439 R/corpusClustering.R:440
+msgid "Cluster"
+msgstr "Grupa"
+
+#: R/corpusClustering.R:40 R/time.R:277 R/varFreq.R:53 R/varFreq.R:162
+msgid "Number of documents"
+msgstr "Število dokumentov"
+
+#: R/corpusClustering.R:40 R/time.R:277 R/varFreq.R:49 R/varFreq.R:154
+#: R/varFreq.R:158
+msgid "% of documents"
+msgstr "% dokumentov"
+
+#: R/corpusClustering.R:40 R/corpusClustering.R:354 R/corpusClustering.R:360
+#: R/corpusClustering.R:443 R/corpusClustering.R:364 R/corpusClustering.R:370
+#: R/corpusClustering.R:453
+msgid "Within-cluster variance"
+msgstr "Varianca znotraj grupe"
+
+#: R/corpusClustering.R:65
+#, c-format
+msgid "Terms specific of cluster %i:"
+msgstr "Pojmi specifični za grupo %i:"
+
+#: R/corpusClustering.R:68
+#, c-format
+msgid "Cluster %i:"
+msgstr "Grupa %i:"
+
+#: R/corpusClustering.R:89
+#, c-format
+msgid "Documents specific of cluster %i:"
+msgstr "Dokumenti, specifični za grupo %i:"
+
+#: R/corpusClustering.R:93
+msgid "Chi2 dist. to centroid"
+msgstr "Hi-kvadrat razdalja do centroida"
+
+#: R/corpusClustering.R:127
+msgid "Distribution of variables among clusters:"
+msgstr "Distribucija spremenljivk med grupami:"
+
+#: R/corpusClustering.R:129 R/varFreq.R:117
+msgid "Row %"
+msgstr "Vrstica %"
+
+#: R/corpusClustering.R:130 R/showCorpusCa.R:381 R/showCorpusCa.R:387
+#: R/showCorpusCa.R:407 R/showCorpusCa.R:413 R/showCorpusCa.R:382
+#: R/showCorpusCa.R:388 R/showCorpusCa.R:408 R/showCorpusCa.R:414
+msgid "Variables"
+msgstr "Spremenljivke"
+
+#: R/corpusClustering.R:167
+msgid "Corpus"
+msgstr "Korpus"
+
+#: R/corpusClustering.R:180 R/corpusClustering.R:182
+msgid "Run Hierarchical Clustering"
+msgstr "Izvedi hierarhično grupiranje"
+
+#: R/corpusClustering.R:204 R/corpusClustering.R:206
+msgid "Use full document-term matrix"
+msgstr "Uporabi celotno matriko dokumentov in pojmov"
+
+#: R/corpusClustering.R:207 R/corpusClustering.R:209
+msgid "Use dimensions of correspondence analysis"
+msgstr "Uporabi dimenzije korespondenčne analize"
+
+#: R/corpusClustering.R:239 R/corpusClustering.R:242
+msgid "Retain dimensions from 1 to:"
+msgstr "Ohrani dimenzije od 1 do:"
+
+#: R/corpusClustering.R:338 R/corpusClustering.R:348
+msgid "Please run a hierarchical clustering on the corpus first."
+msgstr "Prosim najprej uporabite hierarhično grupiranje na korpusu."
+
+#: R/corpusClustering.R:355 R/corpusClustering.R:365
+msgid "Upper part of documents dendrogram"
+msgstr "Zgornji del dendrograma dokumenta"
+
+#: R/corpusClustering.R:361 R/corpusClustering.R:371
+msgid "Full documents dendrogram"
+msgstr "Dendrogram celotnega dokumenta"
+
+#: R/corpusClustering.R:367 R/corpusClustering.R:377
+msgid "Create Clusters"
+msgstr "Tvori grupe"
+
+#: R/corpusClustering.R:444 R/corpusClustering.R:454
+msgid "Clusters dendrogram"
+msgstr "Dendrogram grup"
+
+#: R/corpusClustering.R:452 R/corpusClustering.R:462
+msgid "Clusters creation:"
+msgstr "Tvorba grup:"
+
+#: R/corpusClustering.R:454 R/corpusClustering.R:464
+msgid "Number of clusters to retain:"
+msgstr "Število grup, ki naj se ohranijo:"
+
+#: R/corpusClustering.R:456 R/corpusClustering.R:466
+msgid "Documents specific of clusters:"
+msgstr "Dokumenti, ki so specifični za grupe:"
+
+#: R/corpusClustering.R:458 R/corpusClustering.R:468
+msgid "Maximum number of documents to show per cluster:"
+msgstr "Največje število prikazanih dokumentov v grupi:"
+
+#: R/corpusClustering.R:460 R/corpusClustering.R:470
+msgid "Terms specific of clusters:"
+msgstr "Pojmi specifični za grupe:"
+
+#: R/corpusClustering.R:462 R/specificTerms.R:126 R/corpusClustering.R:472
+msgid "Show terms with a probability below (%):"
+msgstr "Pokaži pojme z verjetnostjo pod (%):"
+
+#: R/corpusClustering.R:464 R/specificTerms.R:128 R/corpusClustering.R:474
+msgid "Only retain terms with a number of occurrences above:"
+msgstr "Ohrani samo pojme s številom pojavov nad:"
+
+#: R/corpusClustering.R:466 R/corpusClustering.R:476
+msgid "Maximum number of terms to show per cluster:"
+msgstr "Največje število prikaza pojmov v grupi:"
+
+#: R/dictionary.R:4
+msgid "Terms dictionary sorted alphabetically"
+msgstr "Slovar pojmov urejen po abecedi"
+
+#: R/dictionary.R:14
+msgid "Terms dictionary sorted by number of occurrences"
+msgstr "Slovar pojmov urejen po številu pojavov"
+
+#: R/dictionary.R:41 R/dictionary.R:57 R/dictionary.R:43 R/importCorpus.R:97
+#: R/importCorpus.R:101 R/importCorpus.R:105 R/tablelist.R:453
+#: R/tablelist.R:454 R/tablelist.R:463 R/importCorpus.R:126
+#: R/importCorpus.R:130 R/importCorpus.R:134 R/tablelist.R:420
+#: R/tablelist.R:421 R/tablelist.R:430
+msgid "Stopword"
+msgstr "Nepomembna beseda"
+
+#: R/dictionary.R:42 R/dictionary.R:61 R/dictionary.R:41 R/dictionary.R:43
+#: R/dictionary.R:56 R/dictionary.R:57
+msgid "Removed"
+msgstr "Odstranjeno"
+
+#: R/dictionary.R:44 R/dictionary.R:63 R/importCorpus.R:97
+#: R/importCorpus.R:101 R/importCorpus.R:105 R/tablelist.R:453
+#: R/tablelist.R:454 R/tablelist.R:463 R/importCorpus.R:126
+#: R/importCorpus.R:130 R/importCorpus.R:134 R/tablelist.R:420
+#: R/tablelist.R:421 R/tablelist.R:430
+msgid "Occurrences"
+msgstr "Pojavov"
+
+#: R/dictionary.R:44 R/dictionary.R:64
+msgid "Stopword?"
+msgstr "Nepomembna beseda?"
+
+#: R/dictionary.R:44 R/dictionary.R:64
+msgid "Removed?"
+msgstr "Odstranjena?"
+
+#: R/dictionary.R:63
+msgid "Stemmed term"
+msgstr "Korenjen pojem"
+
+#: R/dictionary.R:63 R/dictionary.R:43
+msgid "Stemmed occ."
+msgstr "Koren. pojavov"
+
+#: R/dissimilarity.R:3
+msgid "x and y must be simple_triplet_matrix objects"
+msgstr "x in y morata z matriko tvoriti preprosto trojko"
+
+#: R/dissimilarity.R:6
+msgid "x and y must have two dimensions"
+msgstr "x in y morata imeti dve dimenziji"
+
+#: R/dissimilarity.R:9
+msgid "x and y must have the same column marginals"
+msgstr "x in y morata imeti enake robne stolpce"
+
+#: R/dissimilarity.R:32
+msgid "Documents/Variables Dissimilarity"
+msgstr "Različnost dokumentov in spremenljivk"
+
+#: R/dissimilarity.R:34 R/dissimilarity.R:61 R/dissimilarity.R:71
+#: R/dissimilarity.R:76 R/dissimilarity.R:89 R/dissimilarity.R:91
+#: R/dissimilarity.R:93 R/freqTerms.R:67 R/freqTerms.R:83 R/specificTerms.R:67
+#: R/specificTerms.R:93 R/specificTerms.R:103 R/specificTerms.R:112
+#: R/termFreq.R:71 R/termFreq.R:137 R/termFreq.R:148 R/vocabulary.R:123
+#: R/vocabulary.R:151 R/vocabulary.R:216 R/termFreq.R:69 R/termFreq.R:135
+#: R/termFreq.R:146 R/vocabulary.R:204 R/vocabulary.R:223
+msgid "Document"
+msgstr "Dokument"
+
+#: R/dissimilarity.R:36 R/varFreq.R:108
+msgid "Row variable:"
+msgstr "Vrstična spremenljivka:"
+
+#: R/dissimilarity.R:40 R/varFreq.R:112
+msgid "Column variable:"
+msgstr "Stolpična spremenljivka:"
+
+#: R/dissimilarity.R:90
+msgid "Documents dissimilarity table"
+msgstr "Tabela različnosti dokumenta"
+
+#: R/dissimilarity.R:92
+#, c-format
+msgid "Documents by %s dissimilarity table"
+msgstr "Dokumenti po %s tabeli različnosti"
+
+#: R/dissimilarity.R:94
+#, c-format
+msgid "%s by documents dissimilarity table"
+msgstr "%s po tabeli različnosti dokumentov"
+
+#: R/dissimilarity.R:96
+#, c-format
+msgid "%s by %s dissimilarity table"
+msgstr "%s po %s tabeli različnosti"
+
+#: R/freqTerms.R:5
+msgid "Global freq."
+msgstr "Globalna frek."
+
+#: R/freqTerms.R:5 R/freqTerms.R:46 R/specificTerms.R:50 R/termFreq.R:12
+#: R/termFreq.R:53 R/termFreq.R:51
+msgid "Global %"
+msgstr "Globalni %"
+
+#: R/freqTerms.R:10 R/specificTerms.R:3 R/termFreq.R:17
+msgid "Please provide a variable with at least two levels."
+msgstr "Prosim podajte spremenljivko z vsaj dvema ravnema."
+
+#: R/freqTerms.R:46 R/specificTerms.R:50 R/termFreq.R:53 R/termFreq.R:173
+#: R/termFreq.R:51 R/termFreq.R:171
+msgid "% Term/Level"
+msgstr "% Pojem/Raven"
+
+#: R/freqTerms.R:46 R/specificTerms.R:50 R/termFreq.R:53 R/termFreq.R:173
+#: R/termFreq.R:51 R/termFreq.R:171
+msgid "% Level/Term"
+msgstr "% Raven/Pojem"
+
+#: R/freqTerms.R:47 R/specificTerms.R:51 R/termFreq.R:54 R/termFreq.R:173
+#: R/termFreq.R:52 R/termFreq.R:171
+msgid "Level"
+msgstr "Raven"
+
+#: R/freqTerms.R:47 R/specificTerms.R:51 R/termFreq.R:12 R/termFreq.R:54
+#: R/termFreq.R:52
+msgid "Global"
+msgstr "Globalni"
+
+#: R/freqTerms.R:48 R/specificTerms.R:52 R/termFreq.R:55 R/termFreq.R:53
+msgid "t value"
+msgstr "vrednost t"
+
+#: R/freqTerms.R:48 R/specificTerms.R:52 R/termFreq.R:55 R/termFreq.R:53
+msgid "Prob."
+msgstr "Verj."
+
+#: R/freqTerms.R:56 R/specificTerms.R:60 R/termCooc.R:25
+msgid "Please import a corpus and create the document-term matrix first."
+msgstr ""
+"Prosimo uvozite korpus in najprej tvorite matriko dokumentov in pojmov."
+
+#: R/freqTerms.R:61
+msgid "Show Most Frequent Terms"
+msgstr "Prikaži najbolj pogoste pojme"
+
+#: R/freqTerms.R:67 R/freqTerms.R:81 R/freqTerms.R:89 R/termCooc.R:40
+#: R/termCooc.R:72 R/termCooc.R:94 R/termFreq.R:134 R/termFreq.R:145
+#: R/termFreq.R:132 R/termFreq.R:143
+msgid "None (whole corpus)"
+msgstr "Noben (cel korpus)"
+
+#: R/freqTerms.R:69 R/termCooc.R:42
+msgid "Report results by variable:"
+msgstr "Poročaj rezultate po spremenljivki:"
+
+#: R/freqTerms.R:90
+msgid "Most frequent terms in the corpus"
+msgstr "Najbolj pogosti pojmi korpusa"
+
+#: R/freqTerms.R:92
+#, c-format
+msgid "Most frequent terms by %s"
+msgstr "Najbolj pogosti pojmi po %s"
+
+#: R/freqTerms.R:101 R/termCooc.R:110
+msgid "Number of terms to show:"
+msgstr "Število prikazanih pojmov:"
+
+#: R/importCorpus.R:3
+msgid "Select Variables to Import"
+msgstr "Izberi spremenljivke za uvoz"
+
+#: R/importCorpus.R:6 R/importCorpus.R:23 R/importCorpus.R:32
+#: R/importCorpus.R:34 R/importCorpus.R:43
+msgid "No variables"
+msgstr "Ni spremenljivk"
+
+#: R/importCorpus.R:9 R/importCorpus.R:19
+msgid "Select the corpus variables that should be imported:"
+msgstr "Izberite spremenljivke korpusa, ki naj bodo uvožene:"
+
+#: R/importCorpus.R:103 R/importCorpus.R:135 R/importCorpus.R:164
+msgid "Import Corpus"
+msgstr "Uvozi korpus"
+
+#: R/importCorpus.R:122 R/importCorpus.R:154 R/importCorpus.R:183
+msgid "Directory containing plain text files"
+msgstr "Mapa, ki vsebuje enostavne besedilne datoteke"
+
+#: R/importCorpus.R:123 R/importCorpus.R:155 R/importCorpus.R:184
+msgid "Spreadsheet file (CSV, XLS, ODS...)"
+msgstr "Preglednice (CSV, XLS, ODS...) "
+
+#: R/importCorpus.R:124 R/importCorpus.R:156 R/importCorpus.R:185
+msgid "Factiva XML or HTML file(s)"
+msgstr "Factiva XML ali datoteke HTML"
+
+#: R/importCorpus.R:125 R/importCorpus.R:160 R/importCorpus.R:189
+msgid "Twitter search"
+msgstr "Iskanje po Twitterju"
+
+#: R/importCorpus.R:126 R/importCorpus.R:161 R/importCorpus.R:190
+msgid "Load corpus from:"
+msgstr "Naloži korpus iz:"
+
+#: R/importCorpus.R:137 R/importCorpus.R:172 R/importCorpus.R:209
+#: R/importCorpus.R:213
+msgid "en"
+msgstr "en"
+
+#: R/importCorpus.R:194
+msgid "detect automatically"
+msgstr "avtomatično zaznaj"
+
+#: R/importCorpus.R:151 R/output.R:61 R/importCorpus.R:187
+#: R/importCorpus.R:229
+msgid "Ignore case"
+msgstr "Ne oziraj se na velike ali male črke"
+
+#: R/importCorpus.R:151 R/output.R:61 R/importCorpus.R:187
+#: R/importCorpus.R:229
+msgid "Remove punctuation"
+msgstr "Odstrani ločila"
+
+#: R/importCorpus.R:152 R/output.R:62 R/importCorpus.R:188
+#: R/importCorpus.R:230
+msgid "Remove digits"
+msgstr "Odstrani številke"
+
+#: R/importCorpus.R:152 R/output.R:62 R/importCorpus.R:188
+#: R/importCorpus.R:230
+msgid "Remove stopwords"
+msgstr "Odstrani nepomembne besede"
+
+#: R/importCorpus.R:153 R/output.R:63 R/importCorpus.R:189
+#: R/importCorpus.R:231
+msgid "Apply stemming"
+msgstr "Uporabi korenjenje"
+
+#: R/importCorpus.R:154 R/importCorpus.R:190 R/importCorpus.R:232
+msgid "Text processing:"
+msgstr "Obdelava besedil:"
+
+#: R/importCorpus.R:159 R/importCorpus.R:195 R/importCorpus.R:237
+msgid "Split texts into smaller documents"
+msgstr "Razdeli besedila v manjše dokumente"
+
+#: R/importCorpus.R:197 R/importCorpus.R:234 R/importCorpus.R:280
+msgid ""
+"Package SnowballC is needed to perform stemming. Do you want to install it?\n"
+"\n"
+"This requires a working Internet connection."
+msgstr ""
+"Za korenjenje je potreben paket SnowballC. Ali ga želite namestiti?\n"
+"\n"
+"Zahtevan je neposreden dostop do interneta."
+
+#: R/importCorpus.R:289 R/importCorpus.R:337 R/importCorpus.R:395
+msgid "Language of texts in the corpus:"
+msgstr "Jezik besedil v korpusu:"
+
+#: R/importCorpus.R:291 R/importCorpus.R:339 R/importCorpus.R:397
+msgid "File encoding:"
+msgstr "Kodiranje datoteke:"
+
+#: R/importCorpus.R:293 R/importCorpus.R:341 R/importCorpus.R:399
+msgid "Text splitting:"
+msgstr "Razstavljanje besedil:"
+
+#: R/importCorpus.R:295 R/importCorpus.R:344 R/importCorpus.R:402
+msgid "Size of new documents:"
+msgstr "Velikost novih dokumentov:"
+
+#: R/importCorpus.R:296 R/importCorpus.R:345 R/importCorpus.R:403
+msgid "paragraphs"
+msgstr "odstavki"
+
+#: R/importCorpus.R:327 R/importCorpus.R:376 R/importCorpus.R:436
+#, c-format
+msgid "directory %s"
+msgstr "mapa %s"
+
+#: R/importCorpus.R:333 R/importCorpus.R:382 R/importCorpus.R:442
+msgid "All supported types"
+msgstr "Vse podprte zvrsti"
+
+#: R/importCorpus.R:334 R/importCorpus.R:383 R/tablelist.R:475
+#: R/importCorpus.R:443 R/tablelist.R:389 R/tablelist.R:442
+msgid "Comma-separated values (CSV) file"
+msgstr "Datoteka podatkov ločenih z vejico (CSV)"
+
+#: R/importCorpus.R:335 R/importCorpus.R:384 R/importCorpus.R:444
+msgid "Tab-separated values (TSV) file"
+msgstr "Datoteka podatkov ločenih s tabulatorjem (TSV)"
+
+#: R/importCorpus.R:336 R/importCorpus.R:385 R/importCorpus.R:445
+msgid "dBase file"
+msgstr "datoteka dBase"
+
+#: R/importCorpus.R:337 R/importCorpus.R:386 R/importCorpus.R:446
+msgid "Open Document Spreadsheet file"
+msgstr "Preglednica odprtih dokumentov"
+
+#: R/importCorpus.R:338 R/importCorpus.R:387 R/importCorpus.R:447
+msgid "Excel file"
+msgstr "Datoteka Excel"
+
+#: R/importCorpus.R:339 R/importCorpus.R:388 R/importCorpus.R:448
+msgid "Excel 2007 file"
+msgstr "Datoteka Excel 2007"
+
+#: R/importCorpus.R:340 R/importCorpus.R:389 R/importCorpus.R:449
+msgid "Access database"
+msgstr "Podatkovna baza Access"
+
+#: R/importCorpus.R:341 R/importCorpus.R:390 R/importCorpus.R:450
+msgid "Access 2007 database"
+msgstr "Podatkovna baza Access 2007"
+
+#: R/importCorpus.R:342 R/importCorpus.R:517 R/importCorpus.R:391
+#: R/importCorpus.R:577 R/importCorpus.R:645 R/importCorpus.R:714
+#: R/importCorpus.R:783 R/importCorpus.R:451 R/importCorpus.R:694
+#: R/importCorpus.R:761 R/importCorpus.R:829 R/importCorpus.R:897
+msgid "All files"
+msgstr "Vse datoteke"
+
+#: R/importCorpus.R:379 R/importCorpus.R:428 R/importCorpus.R:494
+msgid ""
+"Loading OpenDocument spreadsheets (.ods) is not supported on your system.\n"
+"You should save your data set as a CSV file or as an Excel spreadsheet (."
+"xls)."
+msgstr ""
+"Nalaganje preglednic odprtih formatov (.ods) na vašem sistemu ni možno.\n"
+"Shranite vaše zbirke podatkov kot CSV ali kot Excelovo preglednico (.xls)."
+
+#: R/importCorpus.R:384 R/importCorpus.R:433 R/importCorpus.R:499
+msgid ""
+"Loading OpenDocument spreadsheets (.ods) requires the ROpenOffice package.\n"
+"Do you want to install it?"
+msgstr ""
+"Nalaganje preglednic odprtih dokumentov (.ods) zahteva paket ROpenOffice.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:400 R/importCorpus.R:449 R/importCorpus.R:515
+msgid ""
+"Loading Excel and Access files is only supported on Windows.\n"
+"You should save your data set as a CSV file or as an OpenDocument "
+"spreadsheet (.ods)."
+msgstr ""
+"Nalaganje datotek Excel in Access je možno samo na sistemih Windows.\n"
+"Shranite vaše podatke kot CSV ali kot preglednico odprtega dokumenta (.ods)."
+
+#: R/importCorpus.R:404 R/importCorpus.R:453 R/importCorpus.R:519
+msgid ""
+"The RODBC package is needed to read Excel and Access files.\n"
+"Do you want to install it?"
+msgstr ""
+"Za branje datotek Excel oz. Access je potreben paket RODBC.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:408 R/importCorpus.R:457 R/importCorpus.R:523
+msgid ""
+"No ODBC driver for this file type was found.\n"
+"You probably need to install Excel or Access, or separate ODBC drivers."
+msgstr ""
+"Ne najdem gonilnika ODBC za to zvrst.\nVerjetno morate namestiti Excel ali "
+"Access ali gonilnik ODBC."
+
+#: R/importCorpus.R:436 R/importCorpus.R:485 R/importCorpus.R:551
+msgid "Select one table"
+msgstr "Izberite eno tabelo"
+
+#: R/importCorpus.R:441 R/importCorpus.R:490 R/importCorpus.R:556
+msgid "No table selected"
+msgstr "Nobene tabele ni izbrane"
+
+#: R/importCorpus.R:454 R/importCorpus.R:503 R/importCorpus.R:569
+msgid ""
+"File has unknown extension, assuming it is in the tab-separated values "
+"format."
+msgstr ""
+"Datoteka ima neznan podaljšek, predpostavljam da je v formatu vsebin ločenih "
+"s "
+"tabulatorjem."
+
+#: R/importCorpus.R:472 R/importCorpus.R:521 R/importCorpus.R:614
+#, c-format
+msgid "spreadsheet file %s"
+msgstr "preglednica %s"
+
+#: R/importCorpus.R:488 R/importCorpus.R:10 R/importCorpus.R:538
+#: R/importCorpus.R:646
+msgid "Origin"
+msgstr "Izvor"
+
+#: R/importCorpus.R:488 R/time.R:13 R/time.R:37 R/time.R:115 R/time.R:147
+#: R/time.R:347 R/time.R:379 R/importCorpus.R:10 R/importCorpus.R:538
+#: R/time.R:350 R/time.R:382 R/importCorpus.R:647 R/time.R:335 R/time.R:367
+msgid "Date"
+msgstr "Datum"
+
+#: R/importCorpus.R:488 R/importCorpus.R:679 R/importCorpus.R:10
+#: R/importCorpus.R:538 R/importCorpus.R:964 R/importCorpus.R:648
+#: R/importCorpus.R:1080
+msgid "Author"
+msgstr "Avtor"
+
+#: R/importCorpus.R:488 R/importCorpus.R:11 R/importCorpus.R:539
+#: R/importCorpus.R:649
+msgid "Section"
+msgstr "Sekcija"
+
+#: R/importCorpus.R:651
+msgid "Edition"
+msgstr "Izdaja"
+
+#: R/importCorpus.R:652
+msgid "Word.Count"
+msgstr "Število besed"
+
+#: R/importCorpus.R:653
+msgid "Pages"
+msgstr "Strani"
+
+#: R/importCorpus.R:654
+msgid "Publisher"
+msgstr "Izdajatelj"
+
+#: R/importCorpus.R:655
+msgid "Rights"
+msgstr "Pravice"
+
+#: R/importCorpus.R:512 R/importCorpus.R:572 R/importCorpus.R:689
+msgid ""
+"The tm.plugin.factiva package is needed to import corpora from Factiva "
+"files.\n"
+"Do you want to install it?"
+msgstr ""
+"Za uvažanje korpusov iz Factive je potreben paket tm.plugin.factiva.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:516 R/importCorpus.R:576 R/importCorpus.R:693
+msgid "Factiva XML and HTML files"
+msgstr "Datoteke Factiva XML in HTML"
+
+#: R/importCorpus.R:543 R/importCorpus.R:601 R/importCorpus.R:614
+#: R/importCorpus.R:669 R/importCorpus.R:682 R/importCorpus.R:738
+#: R/importCorpus.R:751 R/importCorpus.R:807 R/importCorpus.R:820
+#: R/importCorpus.R:718 R/importCorpus.R:731 R/importCorpus.R:785
+#: R/importCorpus.R:798 R/importCorpus.R:853 R/importCorpus.R:866
+#: R/importCorpus.R:924 R/importCorpus.R:937
+msgid ""
+"Reading the specified file failed. Are you sure this file is in the correct "
+"format?"
+msgstr ""
+"Branje izbrane datoteke je spodletelo. Ali ste prepričani, da je v pravem "
+"formatu?"
+
+#: R/importCorpus.R:556 R/importCorpus.R:633 R/importCorpus.R:749
+#, c-format
+msgid "Factiva file %s"
+msgid_plural "Factiva files %s"
+msgstr[0] "Datoteka Factiva %s"
+msgstr[1] "Datoteki Factiva %s"
+msgstr[2] "Datoteke Factiva %s"
+msgstr[3] "Datoteke Factiva %s"
+
+#: R/importCorpus.R:563 R/importCorpus.R:847 R/importCorpus.R:963
+msgid ""
+"The twitteR package is needed to import corpora from Twitter.\n"
+"Do you want to install it?"
+msgstr ""
+"Za uvoz korpusov iz Twitterja je potreben paket twitteR.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:569 R/importCorpus.R:853 R/importCorpus.R:969
+msgid "Import Corpus From Twitter"
+msgstr "Uvoz korpusa iz Twitterja"
+
+#: R/importCorpus.R:598 R/importCorpus.R:882 R/importCorpus.R:998
+msgid "Remove user names"
+msgstr "Odstrani uporabniška imena"
+
+#: R/importCorpus.R:598 R/importCorpus.R:882 R/importCorpus.R:998
+msgid "Remove hashtags"
+msgstr "Odstrani značke"
+
+#: R/importCorpus.R:599 R/importCorpus.R:883 R/importCorpus.R:999
+msgid "Exclude retweets"
+msgstr "Izloči ponovne čivke"
+
+#: R/importCorpus.R:600 R/importCorpus.R:884 R/importCorpus.R:1000
+msgid "Options:"
+msgstr "Možnosti:"
+
+#: R/importCorpus.R:616 R/importCorpus.R:900 R/importCorpus.R:1016
+msgid "Please enter valid authentication settings."
+msgstr "Prosim vnesite veljavne nastavitve avtentikacije."
+
+#: R/importCorpus.R:620 R/importCorpus.R:904 R/importCorpus.R:1020
+msgid "Please enter valid text to search for."
+msgstr "Prosim vnesite veljavno besedilo, ki ga iščete."
+
+#: R/importCorpus.R:638 R/importCorpus.R:922 R/importCorpus.R:1038
+msgid ""
+"TwitteR authentication failed. Please check the entered credentials or PIN "
+"code."
+msgstr ""
+"Avtentikacija na Twitterju je spodletela. Prosim preverite vnesene podatke "
+"oz. PIN kode."
+
+#: R/importCorpus.R:648 R/importCorpus.R:932 R/importCorpus.R:1048
+#, c-format
+msgid ""
+"No recent tweets match the specified search criteria in the chosen language "
+"(%s)."
+msgstr ""
+"Ni nobenih nedavnih čivkov, ki bi ustrezali postavljenim kriterijem v "
+"izbranem jeziku "
+"(%s)."
+
+#: R/importCorpus.R:671 R/importCorpus.R:955 R/importCorpus.R:1071
+msgid "Retrieving messages from Twitter failed."
+msgstr "Pobiranje sporočil s Twitterja je spodletelo."
+
+#: R/importCorpus.R:679 R/time.R:14 R/time.R:116 R/time.R:151 R/time.R:348
+#: R/time.R:383 R/importCorpus.R:12 R/importCorpus.R:964 R/time.R:351
+#: R/time.R:386 R/importCorpus.R:1080 R/time.R:336 R/time.R:371
+msgid "Time"
+msgstr "Čas"
+
+#: R/importCorpus.R:679 R/importCorpus.R:12 R/importCorpus.R:964
+#: R/importCorpus.R:1080
+msgid "Truncated"
+msgstr "Krnjeno"
+
+#: R/importCorpus.R:679 R/importCorpus.R:13 R/importCorpus.R:964
+#: R/importCorpus.R:1080
+msgid "StatusSource"
+msgstr "Status vira"
+
+#: R/importCorpus.R:681 R/importCorpus.R:684 R/importCorpus.R:685
+#: R/importCorpus.R:13 R/importCorpus.R:966 R/importCorpus.R:969
+#: R/importCorpus.R:970 R/importCorpus.R:1082 R/importCorpus.R:1085
+#: R/importCorpus.R:1086
+msgid "Retweet"
+msgstr "Ponovni čivk"
+
+#: R/importCorpus.R:701 R/importCorpus.R:986 R/importCorpus.R:1102
+msgid ""
+"Note: Twitter requires you to register a custom application and fill in\n"
+"the details below. See vignette(\"twitteR\") and https://dev.twitter.com/"
+"apps/new/.\n"
+"You will need to switch manually to the R console and copy the PIN\n"
+"code you get from the URL printed there."
+msgstr ""
+"Pazite: Twitter zahteva registracijo v aplikacijo in vnos podrobnosti "
+"spodaj.\n"
+"Oglejte si vignette(\"twitteR\") in https://dev.twitter.com/apps/new/.\n"
+"Ročno boste morali preklopiti v R konzolo in vnesti PIC kodo,\n"
+"ki jo dobite na tam navedenem spletnem naslovu."
+
+#: R/importCorpus.R:702 R/importCorpus.R:987 R/importCorpus.R:1103
+msgid "Request token URL:"
+msgstr "Zahtevek za obisk spletnega naslova:"
+
+#: R/importCorpus.R:704 R/importCorpus.R:989 R/importCorpus.R:1105
+msgid "Authorize URL:"
+msgstr "Spletni naslov za avtorizacijo:"
+
+#: R/importCorpus.R:706 R/importCorpus.R:991 R/importCorpus.R:1107
+msgid "Access token URL:"
+msgstr "Spletni naslov za dostop:"
+
+#: R/importCorpus.R:708 R/importCorpus.R:993 R/importCorpus.R:1109
+msgid "Consumer key:"
+msgstr "Ključ uporabnika:"
+
+#: R/importCorpus.R:710 R/importCorpus.R:995 R/importCorpus.R:1111
+msgid "Consumer secret:"
+msgstr "Skrivnost uporabnika:"
+
+#: R/importCorpus.R:712 R/importCorpus.R:997 R/importCorpus.R:1113
+msgid "Text to search for:"
+msgstr "Iskano besedilo:"
+
+#: R/importCorpus.R:714 R/importCorpus.R:999 R/importCorpus.R:1115
+msgid "Maximum number of tweets to download:"
+msgstr "Največje število naloženih čivkov:"
+
+#: R/importCorpus.R:721 R/importCorpus.R:1006 R/importCorpus.R:1122
+#, c-format
+msgid "Twitter search for %s"
+msgstr "Iskanje po Twitterju za %s"
+
+#: R/importCorpus.R:785 R/setCorpusVariables.R:35 R/setCorpusVariables.R:55
+#: R/setCorpusVariables.R:60 R/importCorpus.R:1070 R/importCorpus.R:1176
+msgid "Doc ID"
+msgstr "ID dokumenta"
+
+#: R/importCorpus.R:786 R/setCorpusVariables.R:26 R/setCorpusVariables.R:35
+#: R/setCorpusVariables.R:46 R/setCorpusVariables.R:59
+#: R/setCorpusVariables.R:60 R/importCorpus.R:1071 R/importCorpus.R:1177
+msgid "Doc N"
+msgstr "Doc N"
+
+#: R/inspectCorpus.R:10
+msgid "Current Corpus"
+msgstr "Trenutni korpus"
+
+#: R/inspectCorpus.R:20
+#, c-format
+msgid "Current corpus contains %i documents and %i terms."
+msgstr "Trenutni korpus vsebuje %i dokumentov in %i pojmov."
+
+#: R/output.R:7
+msgid "Select a file to save results"
+msgstr "Izberite datoteko za shranjevanje rezultatov"
+
+#: R/output.R:9
+msgid "HTML file"
+msgstr "Datoteka HTML"
+
+#: R/output.R:19
+msgid "."
+msgstr "."
+
+#: R/output.R:31
+msgid "Text Mining Analysis Results"
+msgstr "Rezultati rudarjenja besedil"
+
+#: R/output.R:51
+#, c-format
+msgid "Corpus imported on %s. Language: %s."
+msgstr "Uvožen korpus na %s. Jezik: %s."
+
+#: R/output.R:55
+#, c-format
+msgid "Source: %s."
+msgstr "Izvor: %s."
+
+#: R/output.R:56
+#, c-format
+msgid "%i documents and %i terms."
+msgstr "%i dokumentov in %i pojmov."
+
+#: R/output.R:58
+msgid "Processing options:"
+msgstr "Možnosti obdelave:"
+
+#: R/output.R:64
+msgid ": "
+msgstr ":"
+
+#: R/output.R:66
+msgid "enabled"
+msgstr "omogočeno"
+
+#: R/output.R:66
+msgid "disabled"
+msgstr "onemogočeno"
+
+#: R/output.R:72
+msgid "No report file has been created yet."
+msgstr "Zaenkrat še ni ustvarjenega nobenega poročila."
+
+#: R/output.R:76
+msgid "Report file does not exist (it was probably removed)."
+msgstr "Datoteka s poročilom ne obstaja (verjetno je bila odstranjena)."
+
+#: R/output.R:92
+msgid "No table has been built yet. Please create a table first."
+msgstr "Tabela še ni bila izdelana. Prosim najprej ustvarite tabelo."
+
+#: R/output.R:129 R/output.R:131
+msgid "No plot has been drawn yet. Please create a plot first."
+msgstr "Nobenega grafa ne ni bilo izdelanega. Prosimo najprej ustvarite graf."
+
+#: R/output.R:140 R/output.R:146 R/output.R:142 R/output.R:148
+msgid " - plot %Y-%m-%d %H-%M"
+msgstr " - plot %Y-%m-%d %H-%M"
+
+#: R/output.R:210 R/output.R:214
+msgid "No items."
+msgstr "Ni postavk."
+
+#: R/output.R:256 R/output.R:260
+msgid "Value"
+msgstr "Vrednost"
+
+#: R/output.R:256 R/output.R:260
+msgid "%"
+msgstr "%"
+
+#: R/output.R:256 R/output.R:260
+msgid "Cum. %"
+msgstr "Kum. %"
+
+#: R/output.R:257 R/output.R:261
+msgid "Axes inertias (eigenvalues):"
+msgstr "Lastne vrednosti:"
+
+#: R/output.R:263 R/output.R:267
+msgid "Total:"
+msgstr "Skupaj:"
+
+#: R/output.R:273 R/output.R:277
+msgid "Mass"
+msgstr "Masa"
+
+#: R/output.R:273 R/output.R:274 R/output.R:277 R/output.R:278
+msgid "Quality"
+msgstr "Kakovost"
+
+#: R/output.R:273 R/output.R:277
+msgid "Inertia"
+msgstr "Vztrajnost"
+
+#: R/output.R:274 R/output.R:278
+msgid "Coord"
+msgstr "Koordinate"
+
+#: R/output.R:274 R/output.R:278
+msgid "Contr"
+msgstr "Kontrast"
+
+#: R/output.R:277 R/output.R:281
+msgid "Documents and variables:"
+msgstr "Dokumenti in spremenljivke:"
+
+#: R/output.R:280 R/showCorpusCa.R:574 R/output.R:284 R/showCorpusCa.R:579
+#: R/showCorpusCa.R:570
+msgid "Terms:"
+msgstr "Pojmi:"
+
+#: R/restrictTerms.R:2
+msgid "Select or Exclude Terms"
+msgstr "Izberi ali izvrzi pojme"
+
+#: R/restrictTerms.R:6
+msgid "Retain only these terms"
+msgstr "Ohrani samo te pojme"
+
+#: R/restrictTerms.R:7
+msgid "Exclude these terms"
+msgstr "Izvrzi te pojme"
+
+#: R/restrictTerms.R:17 R/subsetCorpus.R:142 R/termCooc.R:51 R/termFreq.R:112
+#: R/time.R:451 R/subsetCorpus.R:158 R/termFreq.R:110 R/time.R:454
+#: R/subsetCorpus.R:166 R/time.R:439
+msgid "Please enter at least one term."
+msgstr "Prosim vnesite vsaj en pojem."
+
+#: R/restrictTerms.R:24 R/subsetCorpus.R:149 R/termCooc.R:58 R/termFreq.R:5
+#: R/termFreq.R:119 R/time.R:457 R/subsetCorpus.R:165 R/termFreq.R:117
+#: R/time.R:460 R/subsetCorpus.R:173 R/time.R:445
+#, c-format
+msgid "Term '%s' does not exist in the corpus."
+msgid_plural "Terms '%s' do not exist in the corpus."
+msgstr[0] "Pojem %s ne obstaja v korpusu."
+msgstr[1] "Pojma %s ne obstajata v korpusu."
+msgstr[2] "Pojmi %s ne obstajajo v korpusu."
+msgstr[3] "Pojmi %s ne obstajajo v korpusu."
+
+#: R/restrictTerms.R:27 R/subsetCorpus.R:152 R/termCooc.R:61 R/termFreq.R:7
+#: R/termFreq.R:122 R/time.R:460 R/subsetCorpus.R:168 R/termFreq.R:120
+#: R/time.R:463 R/subsetCorpus.R:176 R/time.R:448
+msgid "', '"
+msgstr "', '"
+
+#: R/restrictTerms.R:49
+msgid "Terms (space-separated):"
+msgstr "Pojmi (ločeni s presledki)"
+
+#: R/setCorpusVariables.R:5
+msgid "Please import a corpus first."
+msgstr "Prosim najprej uvozite korpus."
+
+#: R/setCorpusVariables.R:11
+msgid "Please create or import a data set first."
+msgstr "Prosim najprej ustvarite ali uvozite množico podatkov."
+
+#: R/setCorpusVariables.R:17
+msgid "Please create at least one variable (column)."
+msgstr "Prosim tvorite vsaj eno spremenljivko (stolpec)."
+
+#: R/setCorpusVariables.R:28
+#, c-format
+msgid "Active data set must contain exactly %d rows."
+msgstr "Aktivna zbirka podatkov mora vsebovati natanko %d vrstic."
+
+#: R/showCorpusCa.R:60
+msgid "Correspondence Analysis"
+msgstr "Korespondenčna analiza"
+
+#: R/showCorpusCa.R:70
+#, c-format
+msgid ""
+"Correspondence analysis of %i documents, %i terms and %i supplementary "
+"variables."
+msgstr ""
+"Korespondenčna analiza %i dokumentov, %i pojmov in %i dodatnih spremenljivk."
+
+#: R/showCorpusCa.R:80
+#, c-format
+msgid ""
+"Correspondence analysis of %i active variable(s) (aggregating %i documents), "
+"%i terms and %i supplementary variable(s)."
+msgstr ""
+"Korespondenčna analiza %i aktivnih spremenljivk (agregiranih %i dokumentov), "
+"%i pojmov in %i dodatnih spremenljivk."
+
+#: R/showCorpusCa.R:89
+msgid "Position"
+msgstr "Pozicija"
+
+#: R/showCorpusCa.R:89
+msgid "Contribution (%)"
+msgstr "Prispevek (%)"
+
+#: R/showCorpusCa.R:89
+msgid "Quality (%)"
+msgstr "Kakovost (%)"
+
+#: R/showCorpusCa.R:91
+msgid "Axes summary:"
+msgstr "Izvleček osi:"
+
+#: R/showCorpusCa.R:93
+msgid "Axes summary"
+msgstr "Izvleček osi"
+
+#: R/showCorpusCa.R:100
+msgid "Inertia (%)"
+msgstr "Vztrajnost (%)"
+
+#: R/showCorpusCa.R:100
+msgid "Cumulated inertia (%)"
+msgstr "Akumulirana vztrajnost (%)"
+
+#: R/showCorpusCa.R:102
+msgid "Axis"
+msgstr "Os"
+
+#: R/showCorpusCa.R:127
+#, c-format
+msgid "Most contributive terms on negative side of axis %i:"
+msgstr "Pojmi, ki najbolj prispevajo k negativni strani osi %i:"
+
+#: R/showCorpusCa.R:130
+#, c-format
+msgid "Axis %i - Negative Side:"
+msgstr "Os %i - negativna stran:"
+
+#: R/showCorpusCa.R:137 R/showCorpusCa.R:241
+#, c-format
+msgid "None among the %i most contributive terms."
+msgstr "Nobenega med %i pojmi, ki najbolj prispevajo."
+
+#: R/showCorpusCa.R:154
+#, c-format
+msgid "Active levels on negative side of axis %i:"
+msgstr "Aktivne ravni na negativni strani osi %i:"
+
+#: R/showCorpusCa.R:166
+#, c-format
+msgid "Most extreme documents on negative side of axis %i:"
+msgstr "Najbolj ekstremni dokumenti na negativni strani osi %i:"
+
+#: R/showCorpusCa.R:181
+#, c-format
+msgid "Most contributive documents on negative side of axis %i:"
+msgstr "Dokumenti z najpomembnejšimi prispevki na negativni strani osi %i:"
+
+#: R/showCorpusCa.R:195 R/showCorpusCa.R:297
+#, c-format
+msgid "None among the %i most contributive documents."
+msgstr "Nobenega ni med %i dokumenti z največjimi prispevki."
+
+#: R/showCorpusCa.R:230
+#, c-format
+msgid "Most contributive terms on positive side of axis %i:"
+msgstr "Pojmi, ki najbolj prispevajo na pozitivni strani osi %i:"
+
+#: R/showCorpusCa.R:233
+#, c-format
+msgid "Axis %i - Positive Side:"
+msgstr "Os %i - Pozitivna stran:"
+
+#: R/showCorpusCa.R:257
+#, c-format
+msgid "Active levels on positive side of axis %i:"
+msgstr "Aktivne ravni na pozitivni strani osi %i:"
+
+#: R/showCorpusCa.R:268
+#, c-format
+msgid "Most extreme documents on positive side of axis %i:"
+msgstr "Najbolj ekstremni dokumenti na pozitivni strani osi %i:"
+
+#: R/showCorpusCa.R:283
+#, c-format
+msgid "Most contributive documents on positive side of axis %i:"
+msgstr "Dokumenti z največjim prispevkom na pozitivni strani osi %i:"
+
+#: R/showCorpusCa.R:335
+#, c-format
+msgid "Situation of supplementary variables on axis %i:"
+msgstr "Situacija z dodatnimi spremenljivkami na osi %i:"
+
+#: R/showCorpusCa.R:337
+#, c-format
+msgid "Axis %i - Variables"
+msgstr "Os %i - Spremenljivke"
+
+#: R/showCorpusCa.R:356
+msgid "Please run a correspondence analysis on the corpus first."
+msgstr "Prosim najprej izvedite korespondenčno analizo na korpusu."
+
+#: R/showCorpusCa.R:361
+msgid "Show Correspondence Analysis"
+msgstr "Prikaži korespondenčno analizo"
+
+#: R/showCorpusCa.R:366
+msgid "Dimensions to plot:"
+msgstr "Dimenzije za prikaz:"
+
+#: R/showCorpusCa.R:381 R/showCorpusCa.R:387 R/showCorpusCa.R:394
+#: R/showCorpusCa.R:400 R/showCorpusCa.R:407 R/showCorpusCa.R:413
+#: R/showCorpusCa.R:382 R/showCorpusCa.R:388 R/showCorpusCa.R:395
+#: R/showCorpusCa.R:401 R/showCorpusCa.R:408 R/showCorpusCa.R:414
+msgid "Terms"
+msgstr "Pojmi"
+
+#: R/showCorpusCa.R:382 R/showCorpusCa.R:395 R/showCorpusCa.R:408
+#: R/showCorpusCa.R:383 R/showCorpusCa.R:396 R/showCorpusCa.R:409
+msgid "Draw labels for:"
+msgstr "Nariši oznake za:"
+
+#: R/showCorpusCa.R:388 R/showCorpusCa.R:401 R/showCorpusCa.R:414
+#: R/showCorpusCa.R:389 R/showCorpusCa.R:402 R/showCorpusCa.R:415
+msgid "Draw point symbols for:"
+msgstr "Nariši točke kot simbole za:"
+
+#: R/showCorpusCa.R:394 R/showCorpusCa.R:400 R/showCorpusCa.R:407
+#: R/showCorpusCa.R:413 R/showCorpusCa.R:395 R/showCorpusCa.R:401
+#: R/showCorpusCa.R:408 R/showCorpusCa.R:414
+msgid "Documents"
+msgstr "Dokumenti"
+
+#: R/showCorpusCa.R:426 R/showCorpusCa.R:427
+msgid "Variables to plot:"
+msgstr "Spremenljivke za prikaz:"
+
+#: R/showCorpusCa.R:431 R/showCorpusCa.R:432
+msgid "Number of items to plot:"
+msgstr "Število postavk za prikaz:"
+
+#: R/showCorpusCa.R:443 R/showCorpusCa.R:445 R/showCorpusCa.R:446
+msgid "Both axes"
+msgstr "Obe osi"
+
+#: R/showCorpusCa.R:444 R/showCorpusCa.R:446 R/showCorpusCa.R:447
+msgid "Horizontal axis"
+msgstr "Horizontalna os"
+
+#: R/showCorpusCa.R:445 R/showCorpusCa.R:447 R/showCorpusCa.R:448
+msgid "Vertical axis"
+msgstr "Vertikalna os"
+
+#: R/showCorpusCa.R:463 R/showCorpusCa.R:465 R/showCorpusCa.R:472
+msgid "Please select something to plot."
+msgstr "Prosim izberite nekaj za prikaz."
+
+#: R/showCorpusCa.R:494 R/showCorpusCa.R:499 R/showCorpusCa.R:506
+msgid ""
+"Plotting documents and variables at the same time currently forces labels to "
+"be drawn for both or none."
+msgstr ""
+"Sočasni prikaz dokumentov in spremenljivk trenutno zahteva, da prikažemo "
+"bodisi oznake obojih ali pa nobene."
+
+#: R/showCorpusCa.R:539 R/showCorpusCa.R:540 R/showCorpusCa.R:544
+#: R/showCorpusCa.R:545 R/showCorpusCa.R:551 R/showCorpusCa.R:552
+#, c-format
+msgid "Dimension %s (%.1f%%)"
+msgstr "Dimenzija %s (%.1f%%)"
+
+#: R/showCorpusCa.R:548 R/showCorpusCa.R:553 R/showCorpusCa.R:560
+msgid "Show"
+msgstr "Prikaži"
+
+#: R/showCorpusCa.R:554 R/time.R:302 R/time.R:568 R/showCorpusCa.R:559
+#: R/time.R:571 R/common.R:160 R/common.R:181
+msgid "Close"
+msgstr "Zapri"
+
+#: R/showCorpusCa.R:566 R/showCorpusCa.R:571 R/showCorpusCa.R:562
+msgid "Horizontal axis:"
+msgstr "Horizontalna os:"
+
+#: R/showCorpusCa.R:567 R/showCorpusCa.R:572 R/showCorpusCa.R:563
+msgid "Vertical axis:"
+msgstr "Vertikalna os:"
+
+#: R/showCorpusCa.R:573 R/showCorpusCa.R:578 R/showCorpusCa.R:569
+msgid "Documents:"
+msgstr "Dokumenti:"
+
+#: R/showCorpusCa.R:576 R/showCorpusCa.R:581 R/showCorpusCa.R:572
+msgid "Most contributive to:"
+msgstr "Najbolj prispevali k:"
+
+#: R/specificTerms.R:65
+msgid "Show Specific Terms"
+msgstr "Prikaži specifične pojme"
+
+#: R/specificTerms.R:69
+msgid "Show terms specific of levels of variable:"
+msgstr "Prikaži specifične pojme glede na ravni spremenljivk:"
+
+#: R/specificTerms.R:94
+msgid "Please choose a variable with at least two levels."
+msgstr "Prosim izberite spremenljivko z vsaj dvema ravnema."
+
+#: R/specificTerms.R:113
+msgid "Specific terms by document"
+msgstr "Specifični pojmi po dokumentih"
+
+#: R/specificTerms.R:115
+#, c-format
+msgid "Specific terms by %s"
+msgstr "Specifični pojmi po %s"
+
+#: R/specificTerms.R:130
+msgid "Maximum number of terms to show per level:"
+msgstr "Največje število prikazanih pojmov po ravneh:"
+
+#: R/startup.R:33
+msgid "This package requires Rcmdr version 1.9-3 or higher."
+msgstr "Ta paket zahteva Rcmdr verzije 1.9.3 ali novejše."
+
+#: R/startup.R:41 R/startup.R:56 R/startup.R:50
+msgid "# Prefer fixed to scientific notation"
+msgstr "# Rajši 'fiksna' kot 'znanstvena' oblika pisanja števil"
+
+#: R/startup.R:45 R/startup.R:60 R/startup.R:54
+msgid "# Print numbers with two significant digits"
+msgstr "# Tiskaj števila z dvema decimalkama"
+
+#: R/startup.R:51 R/startup.R:68 R/startup.R:62
+msgid "# Set a nice color palette for plots"
+msgstr "# Postavi prijetno paleto barv za grafe"
+
+#: R/subsetCorpus.R:9 R/subsetCorpus.R:65
+msgid "Subset Corpus by Variable"
+msgstr "Podmnožica korpusa glede na spremenljivko"
+
+#: R/subsetCorpus.R:41 R/subsetCorpus.R:133 R/subsetCorpus.R:147
+#: R/subsetCorpus.R:97 R/subsetCorpus.R:155
+msgid "Save original corpus to restore it later"
+msgstr "Shrani izvirni korpus za kasnejšo obnovo"
+
+#: R/subsetCorpus.R:110 R/subsetCorpus.R:112 R/subsetCorpus.R:120
+msgid "Select a variable and one or more levels to retain:"
+msgstr "Izberi spremenljivko ter eno ali več ravni za hrambo:"
+
+#: R/subsetCorpus.R:112 R/termFreq.R:73 R/varFreq.R:13 R/vocabulary.R:125
+#: R/subsetCorpus.R:114 R/termFreq.R:71 R/subsetCorpus.R:122
+msgid "Variable:"
+msgstr "Spremenljivka:"
+
+#: R/subsetCorpus.R:114 R/subsetCorpus.R:117 R/subsetCorpus.R:125
+msgid "Levels:"
+msgstr "Ravni:"
+
+#: R/subsetCorpus.R:124 R/subsetCorpus.R:128 R/subsetCorpus.R:136
+msgid "Subset Corpus by Terms"
+msgstr "Podmnožica korpusa glede na pojme"
+
+#: R/subsetCorpus.R:161 R/subsetCorpus.R:180 R/subsetCorpus.R:188
+msgid "Specified conditions would exclude all documents from the corpus."
+msgstr "Opisani pogoji bi izločili vse dokumente iz korpusa."
+
+#: R/subsetCorpus.R:231
+msgid "Keep documents with terms (space-separated):"
+msgstr "Ohranite dokumente s pojmi (ločeni s presledki):"
+
+#: R/subsetCorpus.R:234
+msgid "Exclude documents with terms (space-separated):"
+msgstr "Izločite dokumente s pojmi (ločeni s presledki):"
+
+#: R/subsetCorpus.R:237 R/subsetCorpus.R:267 R/subsetCorpus.R:228
+msgid ""
+"(Only documents matching both conditions will be retained in the new corpus.)"
+msgstr ""
+"(Samo dokumenti, ki ustrezajo obema pogojema, bodo ohranjeni v novem korpusu.)"
+
+#: R/subsetCorpus.R:246 R/subsetCorpus.R:276 R/subsetCorpus.R:237
+msgid "No saved corpus to restore was found."
+msgstr "Nisem naše shranjenega korpusa za obnovo."
+
+#: R/termCooc.R:3
+msgid "'term' is not present in 'dtm'"
+msgstr "'pojem' ni prisoten v 'dtm'"
+
+#: R/termCooc.R:30
+msgid "Terms Co-occurring With Chosen Terms"
+msgstr "Pojmi, ki se sočasno pojavljajo z izbranimi pojmi"
+
+#: R/termCooc.R:89
+#, c-format
+msgid "Terms associated with term \"%s\" according to Chi-squared distance"
+msgid_plural ""
+"Terms associated with terms \"%s\" according to Chi-squared distance"
+msgstr[0] "Pojmi povezani s pojmom \"%s\" glede na razdaljo hi-kvadrat"
+msgstr[1] "Pojmi povezani s pojmoma \"%s\" glede na razdaljo hi-kvadrat"
+msgstr[2] "Pojmi povezani s pojmi \"%s\" glede na razdaljo hi-kvadrat"
+msgstr[3] "Pojmi povezani s pojmi \"%s\" glede na razdaljo hi-kvadrat"
+
+#: R/termCooc.R:92
+msgid "\", \""
+msgstr "\", \""
+
+#: R/termCooc.R:95
+#, c-format
+msgid "(for %s)"
+msgstr "(za %s)"
+
+#: R/termCooc.R:108
+msgid "Reference terms (space-separated):"
+msgstr "Referenčni pojmi (ločeni s presledki):"
+
+#: R/termFreq.R:66 R/termFreq.R:64
+msgid "Term Frequencies"
+msgstr "Frekvence pojmov"
+
+#: R/termFreq.R:78 R/time.R:412 R/termFreq.R:76 R/time.R:415 R/time.R:400
+msgid "Term prevalence in level (\"% Term/Level\")"
+msgstr "Razširjenost pojma na ravni (\"% Pojem/Raven\")"
+
+#: R/termFreq.R:79 R/time.R:413 R/termFreq.R:77 R/time.R:416 R/time.R:401
+msgid "Distribution of occurrences among levels (\"% Level/Term\")"
+msgstr "Distribucija pojavov glede na ravni (\"% Raven/Pojem\")"
+
+#: R/termFreq.R:80 R/termFreq.R:78
+msgid "Absolute number of occurrences in level (\"Level\")"
+msgstr "Absolutno število pojavov pri ravni (\"Raven\")"
+
+#: R/termFreq.R:81 R/termFreq.R:79
+msgid "Measure to plot:"
+msgstr "Merilo slike:"
+
+#: R/termFreq.R:86 R/termFreq.R:84
+msgid "Occurrences of term %T by %V"
+msgstr "Pojavov pojma %T po %V"
+
+#: R/termFreq.R:91 R/termFreq.R:89
+msgid "Group results by term"
+msgstr "Grupiraj rezultate po pojmu"
+
+#: R/termFreq.R:94 R/time.R:296 R/time.R:562 R/varFreq.R:26 R/varFreq.R:126
+#: R/termFreq.R:92 R/time.R:565 R/time.R:297 R/time.R:551
+msgid "Draw plot"
+msgstr "Nariši graf"
+
+#: R/termFreq.R:97 R/varFreq.R:29 R/varFreq.R:129 R/vocabulary.R:176
+#: R/termFreq.R:95
+msgid "Vertical bars"
+msgstr "Vertikalni stolpci"
+
+#: R/termFreq.R:100 R/varFreq.R:132 R/termFreq.R:98
+msgid "Stacked bars"
+msgstr "Sestavljeni stolpci"
+
+#: R/termFreq.R:158 R/time.R:502 R/termFreq.R:156 R/time.R:505 R/time.R:490
+msgid "% of all terms"
+msgstr "% vseh pojmov"
+
+#: R/termFreq.R:160 R/time.R:506 R/termFreq.R:158 R/time.R:509 R/time.R:494
+msgid "% of occurrences"
+msgstr "% pojavov"
+
+#: R/termFreq.R:162 R/time.R:510 R/vocabulary.R:169 R/termFreq.R:160
+#: R/time.R:513 R/time.R:498
+msgid "Number of occurrences"
+msgstr "Število pojavov"
+
+#: R/termFreq.R:194 R/termFreq.R:192
+msgid "(% of all terms)"
+msgstr "(% vseh pojmov)"
+
+#: R/termFreq.R:196 R/termFreq.R:194
+msgid "(% of occurrences)"
+msgstr "(% pojavov)"
+
+#: R/termFreq.R:207 R/time.R:590 R/termFreq.R:205 R/time.R:594 R/time.R:564
+msgid "Terms to show (space-separated):"
+msgstr "Pojmi za prikaz (ločeni s presledki):"
+
+#: R/termFreq.R:211 R/termFreq.R:209
+msgid "Display:"
+msgstr "Prikaz:"
+
+#: R/termFreq.R:212 R/time.R:329 R/time.R:597 R/varFreq.R:85 R/varFreq.R:218
+#: R/termFreq.R:211 R/time.R:331 R/time.R:603 R/time.R:316 R/time.R:573
+msgid "Title:"
+msgstr "Naslov:"
+
+#: R/time.R:9
+msgid "Recode Time Variable"
+msgstr "Prekodiraj časovno spremenljivko"
+
+#: R/time.R:20
+msgid "Existing date/time variable:"
+msgstr "Obstoječa datumsko/časovna spremenljivka:"
+
+#: R/time.R:64
+#, c-format
+msgid ""
+"Incorrect input time format or variable: no values of \"%s\" could be "
+"converted to a time index."
+msgstr ""
+"Napačen vhodni format časa ali spremenljivka: vrednosti \"%s\" ne morem "
+"spremeniti v "
+"časovni indeks."
+
+#: R/time.R:69 R/time.R:221 R/time.R:478 R/time.R:481 R/time.R:466
+#, c-format
+msgid ""
+"Some values of \"%s\" could not be converted to a time index and will be "
+"missing."
+msgstr ""
+"Nekaj vrednosti \"%s\" nisem mogel spremeniti v časovni indeks in bodo "
+"manjkale."
+
+#: R/time.R:86
+msgid "Time format of existing variable:"
+msgstr "Časovni format obstoječe spremenljivke:"
+
+#: R/time.R:90
+msgid "New variable name:"
+msgstr "Ime nove spremenljivke:"
+
+#: R/time.R:93
+msgid "Time format of new variable:"
+msgstr "Časovni format nove spremenljivke:"
+
+#: R/time.R:96
+msgid ""
+"Useful codes:\n"
+"%Y: year - %m: month number - %B: month name\n"
+"%W: week number starting on Mondays - %U: starting on Sundays\n"
+"%d: day number - %A: week day name\n"
+"%H: hour - %M: minute\n"
+"\n"
+"Click the  \"Help\" button for more codes."
+msgstr ""
+"Uporabni formati:\n"
+"%Y: year - %m: month number - %B: month name\n"
+"%W: week number starting on Mondays - %U: starting on Sundays\n"
+"%d: day number - %A: week day name\n"
+"%H: hour - %M: minute\n"
+"\n"
+"Kliknite gumb \"Pomoč\" za več formatov."
+
+#: R/time.R:111
+msgid "Corpus Temporal Evolution"
+msgstr "Začasna evolucija korpusa"
+
+#: R/time.R:122 R/time.R:354 R/time.R:357 R/time.R:342
+msgid "Date/time variable:"
+msgstr "Spremenljivka datuma/časa:"
+
+#: R/time.R:134 R/time.R:366 R/time.R:369 R/time.R:354
+msgid "None (one curve)"
+msgstr "Nobena (ena krivulja)"
+
+#: R/time.R:177
+msgid "Number of documents per time unit"
+msgstr "Število dokumentov v časovni enoti"
+
+#: R/time.R:178
+msgid "% of documents per time unit"
+msgstr "% dokumentov v časovni enoti"
+
+#: R/time.R:179 R/time.R:415 R/varFreq.R:20 R/varFreq.R:120 R/time.R:418
+#: R/time.R:403
+msgid "Measure:"
+msgstr "Merilo:"
+
+#: R/time.R:183 R/time.R:419 R/time.R:422 R/time.R:407
+msgid "Apply rolling mean"
+msgstr "Uporabi drseče sredine"
+
+#: R/time.R:190
+msgid "Temporal evolution of the corpus"
+msgstr "Začasna evolucija korpusa"
+
+#: R/time.R:202
+msgid ""
+"Plotting percents of documents with only one curve does not make sense: all "
+"points would be 100%."
+msgstr ""
+"Risanje odstotkov z eno samo krivuljo nima smisla: vse točke bodo na 100%."
+
+#: R/time.R:216 R/time.R:473 R/time.R:476 R/time.R:461
+#, c-format
+msgid ""
+"Incorrect time format or variable: no values of \"%s\" could be converted to "
+"a time index."
+msgstr ""
+"Napačni format časa ali spremenljivke: nobene vrednosti \"%s\" nisem mogel "
+"spremeniti v "
+"časovni indeks."
+
+#: R/time.R:253 R/time.R:519 R/time.R:522 R/time.R:507
+msgid "per second"
+msgstr "na sekundo"
+
+#: R/time.R:253 R/time.R:519 R/time.R:522 R/time.R:507
+msgid "per minute"
+msgstr "na minuto"
+
+#: R/time.R:253 R/time.R:519 R/time.R:522 R/time.R:507
+msgid "per hour"
+msgstr "na uro"
+
+#: R/time.R:254 R/time.R:520 R/time.R:523 R/time.R:508
+msgid "per day"
+msgstr "na dan"
+
+#: R/time.R:254 R/time.R:520 R/time.R:523 R/time.R:508
+msgid "per week"
+msgstr "na teden"
+
+#: R/time.R:270 R/time.R:536 R/time.R:539 R/time.R:524
+msgid ""
+"Chosen roll mean window is longer than the range of the time variable, "
+"rolling mean was not applied."
+msgstr ""
+"Izbrano okno drseče sredine je daljše od obsega časovne spremenljivke, drseča "
+"sredina ni uporabljena."
+
+#: R/time.R:283 R/time.R:549 R/time.R:552 R/time.R:537
+msgid "Only one time point present, no plot can be drawn."
+msgstr "Obstaja samo ena sama časovna točka, ne morem narisati ničesar."
+
+#: R/time.R:315 R/time.R:581 R/time.R:584 R/time.R:300 R/time.R:554
+msgid "Time format:"
+msgstr "Časovni format:"
+
+#: R/time.R:317 R/time.R:583 R/time.R:586 R/time.R:302 R/time.R:556
+msgid ""
+"%Y: year - %m: month - %d: day\n"
+"%H: hour - %M: minute\n"
+"Click the \"Help\" button for more codes."
+msgstr ""
+"%Y: year - %m: month - %d: day\n"
+"%H: hour - %M: minute\n"
+"Kliknite gumb \"Pomoč\" za več formatov."
+
+#: R/time.R:319 R/time.R:585 R/time.R:588 R/time.R:304 R/time.R:558
+msgid "Group by variable:"
+msgstr "Grupirajte po spremenljivki:"
+
+#: R/time.R:322 R/time.R:588 R/time.R:323 R/time.R:592 R/time.R:308
+#: R/time.R:562
+msgid "Only plot levels:"
+msgstr "Nariši samo ravni:"
+
+#: R/time.R:325 R/time.R:593 R/time.R:326 R/time.R:598 R/time.R:311
+#: R/time.R:568
+msgid "Rolling mean:"
+msgstr "Drseča sredina:"
+
+#: R/time.R:327 R/time.R:595 R/time.R:329 R/time.R:601 R/time.R:314
+#: R/time.R:571
+msgid "Time window for mean (in time units):"
+msgstr "Časovno okno za povprečje (v časovnih enotah):"
+
+#: R/time.R:343 R/time.R:346 R/time.R:331
+msgid "Temporal Evolution of Term Occurrences"
+msgstr "Začasna evolucija pojavov pojmov"
+
+#: R/time.R:414 R/time.R:417 R/time.R:402
+msgid "Number of occurrences in level per time unit"
+msgstr "Število pojavov in ravni na časovno enoto"
+
+#: R/time.R:426 R/time.R:429 R/time.R:414
+msgid "Temporal evolution of occurrences"
+msgstr "Začasna evolucija pojavov"
+
+#: R/time.R:439 R/time.R:442 R/time.R:427
+msgid ""
+"Plotting distribution of occurrences with only one curve does not make "
+"sense: all points would be 100%."
+msgstr ""
+"Risanje distribucije pojavov z eno samo krivuljo nima smisla: vse točke bi "
+"bile na 100%."
+
+#: R/time.R:445 R/time.R:448 R/time.R:433
+msgid "Only one term can be used when a grouping variable is selected."
+msgstr ""
+"Samo en pojem se lahko uporabi, ko je že izbrana spremenljivka za grupiranje."
+
+#: R/varFreq.R:9
+msgid "Variable One-Way Table"
+msgstr "Eno-smerna tabela spremenljivke"
+
+#: R/varFreq.R:18 R/vocabulary.R:167
+msgid "Percent"
+msgstr "Odstotek"
+
+#: R/varFreq.R:19 R/varFreq.R:119
+msgid "Absolute counts"
+msgstr "Absolutna števila"
+
+#: R/varFreq.R:31
+msgid "Distribution of documents by %V"
+msgstr "Distribucija dokumentov po %V"
+
+#: R/varFreq.R:81 R/varFreq.R:213
+msgid "Plot:"
+msgstr "Prikaz:"
+
+#: R/varFreq.R:99
+msgid "Corpus has only one variable."
+msgstr "Korpus ima samo eno spremenljivko."
+
+#: R/varFreq.R:104
+msgid "Variable Two-Way Table"
+msgstr "Dvo-smerna tabela spremenljivke"
+
+#: R/varFreq.R:118
+msgid "Column %"
+msgstr "Stolpec %"
+
+#: R/varFreq.R:134
+msgid "Distribution of documents by %V1 and %V2"
+msgstr "Distribucija dokumentov po %V1 in %V2"
+
+#: R/varFreq.R:167
+msgid "Cannot plot stacked bars when the table has a null margin."
+msgstr "Ne da se narisati sestavljenih stolpcev, če ima tabela prazen rob."
+
+#: R/varFreq.R:198
+msgid "(row %)"
+msgstr "(vrstica %)"
+
+#: R/varFreq.R:200
+msgid "(column %)"
+msgstr "(stolpec %)"
+
+#: R/vocabulary.R:44 R/vocabulary.R:72
+msgid "Corpus mean"
+msgstr "Povprečje korpusa"
+
+#: R/vocabulary.R:44 R/vocabulary.R:98
+msgid "Corpus total"
+msgstr "Vsota po korpusu"
+
+#: R/vocabulary.R:73
+msgid "Per document mean:"
+msgstr "Povprečje po dokumentu:"
+
+#: R/vocabulary.R:99
+msgid "Per category total:"
+msgstr "Skupaj po kategoriji:"
+
+#: R/vocabulary.R:104
+msgid "Number of terms"
+msgstr "Število pojmov"
+
+#: R/vocabulary.R:105
+msgid "Number of unique terms"
+msgstr "Število različnih pojmov"
+
+#: R/vocabulary.R:106
+msgid "Percent of unique terms"
+msgstr "Odstotek različnih pojmov"
+
+#: R/vocabulary.R:107
+msgid "Number of hapax legomena"
+msgstr "Število enkratnic, samo enkrat uporabljenih besed"
+
+#: R/vocabulary.R:108
+msgid "Percent of hapax legomena"
+msgstr "Odstotek enkratnic"
+
+#: R/vocabulary.R:109
+msgid "Number of words"
+msgstr "Število besed"
+
+#: R/vocabulary.R:110
+msgid "Number of long words"
+msgstr "Število dolgih besed"
+
+#: R/vocabulary.R:111
+msgid "Percent of long words"
+msgstr "Odstotek dolgih besed"
+
+#: R/vocabulary.R:112
+msgid "Number of very long words"
+msgstr "Število zelo dolgih besed"
+
+#: R/vocabulary.R:113
+msgid "Percent of very long words"
+msgstr "Odstotek zelo dolgih besed"
+
+#: R/vocabulary.R:114 R/vocabulary.R:146
+msgid "Average word length"
+msgstr "Povprečna dolžina besed"
+
+#: R/vocabulary.R:121
+msgid "Vocabulary Summary"
+msgstr "Izvleček besednjaka"
+
+#: R/vocabulary.R:130
+msgid "Document (mean over individual documents)"
+msgstr "Dokument (povprečje izmed vseh posameznih dokumentov)"
+
+#: R/vocabulary.R:131
+msgid "Level (sum inside levels considered as a whole)"
+msgstr "Raven (vsota znotraj ravni, ki jo štejemo kot celoto)"
+
+#: R/vocabulary.R:132
+msgid "Unit of analysis:"
+msgstr "Enota analize:"
+
+#: R/vocabulary.R:136
+msgid "Draw plot for:"
+msgstr "Prikaz za:"
+
+#: R/vocabulary.R:140
+msgid "All terms"
+msgstr "Vsi pojmi"
+
+#: R/vocabulary.R:141
+msgid "Unique terms"
+msgstr "Različni pojmi"
+
+#: R/vocabulary.R:142
+msgid "Hapax legomena"
+msgstr "Hapax legomena (enkratnice - samo enkrat uporabljene besede)"
+
+#: R/vocabulary.R:143
+msgid "All words"
+msgstr "Vse besede"
+
+#: R/vocabulary.R:144
+msgid "Long words"
+msgstr "Dolge besede"
+
+#: R/vocabulary.R:145
+msgid "Very long words"
+msgstr "Zelo dolge besede"
+
+#: R/vocabulary.R:172
+msgid "Plot global corpus value"
+msgstr "Nariši vrednost globalnega korpusa"
+
+#: R/vocabulary.R:179
+msgid "Vocabulary summary by %V"
+msgstr "Izvleček besednjaka - %V"
+
+#: R/vocabulary.R:257 R/vocabulary.R:265
+msgid "(per-document mean)"
+msgstr "(po povprečju dokumenta)"
+
+#: R/vocabulary.R:259 R/vocabulary.R:267
+msgid "(per-category sum)"
+msgstr "(po vsoti kategorij)"
+
+#: R/vocabulary.R:271 R/vocabulary.R:279
+msgid "Plotting measure:"
+msgstr "Merilo risanja:"
+
+#: R/vocabulary.R:276 R/vocabulary.R:284
+msgid "Plot title:"
+msgstr "Naslov grafa:"
+
+#: R/importCorpus.R:11 R/importCorpus.R:539 R/importCorpus.R:650
+msgid "Type"
+msgstr "Tip"
+
+#: R/importCorpus.R:97 R/importCorpus.R:101 R/importCorpus.R:112
+#: R/importCorpus.R:115 R/tablelist.R:389 R/tablelist.R:391 R/tablelist.R:442
+#: R/tablelist.R:444 R/tablelist.R:458 R/tablelist.R:459 R/tablelist.R:463
+#: R/importCorpus.R:126 R/importCorpus.R:130 R/importCorpus.R:141
+#: R/importCorpus.R:144 R/tablelist.R:409 R/tablelist.R:411 R/tablelist.R:425
+#: R/tablelist.R:426 R/tablelist.R:430
+msgid "Stemmed.Term"
+msgstr "Koren pojma"
+
+#: R/importCorpus.R:157 R/importCorpus.R:186
+msgid "LexisNexis HTML file(s)"
+msgstr "Datoteka(e) LexisNexis HTML"
+
+#: R/importCorpus.R:158 R/importCorpus.R:187
+msgid "Europresse HTML file(s)"
+msgstr "Datoteka(e) Europresse HTML"
+
+#: R/importCorpus.R:159 R/importCorpus.R:188
+msgid "Alceste file(s)"
+msgstr "Datoteka(e) Alceste"
+
+#: R/importCorpus.R:189 R/importCorpus.R:231
+msgid "Edit stemming manually"
+msgstr "Ročno uredi korene besed"
+
+#: R/importCorpus.R:640 R/importCorpus.R:756
+msgid ""
+"The tm.plugin.lexisnexis package is needed to import corpora from Factiva "
+"files.\n"
+"Do you want to install it?"
+msgstr ""
+"Za uvoz datotek Factiva je potreben paket tm.plugin.lexisnexis.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:644 R/importCorpus.R:760
+msgid "LexisNexis HTML files"
+msgstr "Datoteke LexisNexis HTML"
+
+#: R/importCorpus.R:702 R/importCorpus.R:817
+#, c-format
+msgid "LexisNexis file %s"
+msgid_plural "LexisNexis files %s"
+msgstr[0] "Datoteka LexisNexis %s"
+msgstr[1] "Datoteki LexisNexis %s"
+msgstr[2] "Datoteke LexisNexis %s"
+msgstr[3] "Datoteke LexisNexis %s"
+
+#: R/importCorpus.R:709 R/importCorpus.R:824
+msgid ""
+"The tm.plugin.europresse package is needed to import corpora from Europresse "
+"files.\n"
+"Do you want to install it?"
+msgstr ""
+"Za uvoz datotek Europresse je potreben paket tm.plugin.europresse.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:713 R/importCorpus.R:828
+msgid "Europresse HTML files"
+msgstr "Datoteka Europresse HTML"
+
+#: R/importCorpus.R:770 R/importCorpus.R:884
+#, c-format
+msgid "Europresse file %s"
+msgid_plural "Europresse files %s"
+msgstr[0] "Datoteka Europresse %s"
+msgstr[1] "Datoteki Europresse %s"
+msgstr[2] "Datoteke Europresse %s"
+msgstr[3] "Datoteke Europresse %s"
+
+#: R/importCorpus.R:778 R/importCorpus.R:892
+msgid ""
+"The tm.plugin.alceste package is needed to import corpora from Alceste "
+"files.\n"
+"Do you want to install it?"
+msgstr ""
+"Za uvoz datotek Alceste je potreben paket tm.plugin.alceste.\n"
+"Ali ga želite namestiti?"
+
+#: R/importCorpus.R:782 R/importCorpus.R:896
+msgid "Alceste files"
+msgstr "Datoteke Alceste"
+
+#: R/importCorpus.R:840 R/importCorpus.R:956
+#, c-format
+msgid "Alceste file %s"
+msgid_plural "Alceste files %s"
+msgstr[0] "Datoteka Alceste %s"
+msgstr[1] "Datoteki Alceste %s"
+msgstr[2] "Datoteke Alceste %s"
+msgstr[3] "Datoteke Alceste %s"
+
+#: R/startup.R:39 R/startup.R:33
+msgid "This package requires Rcmdr version 2.0-0 or higher."
+msgstr "Ta paket zahteva Rcmdr verzijo 2.0-0 ali novejšo."
+
+#: R/subsetCorpus.R:253 R/subsetCorpus.R:214
+msgid "Keep documents containing one of these terms (space-separated):"
+msgstr ""
+"Ohrani dokumente, ki vsebujejo kakega izmed teh, s presledki ločenih pojmov:"
+
+#: R/subsetCorpus.R:256 R/subsetCorpus.R:263 R/subsetCorpus.R:217
+#: R/subsetCorpus.R:224
+msgid "at least"
+msgstr "vsaj"
+
+#: R/subsetCorpus.R:258 R/subsetCorpus.R:265 R/subsetCorpus.R:219
+#: R/subsetCorpus.R:226
+msgid "time(s)"
+msgstr "čas(i)"
+
+#: R/subsetCorpus.R:260 R/subsetCorpus.R:221
+msgid "Exclude documents containing one of these terms (space-separated):"
+msgstr ""
+"Izloči dokumente, ki vsebujejo kakega izmed teh, s presledki ločenih pojmov:"
+
+#: R/tablelist.R:195 R/tablelist.R:285
+msgid "Tk widget 'tablelist' could not be loaded"
+msgstr "Nalaganje pomagala TK 'tablelist' ni uspelo"
+
+#: R/tablelist.R:288
+msgid "Tk widget 'autoscroll' could not be loaded"
+msgstr "Nalaganje pomagala TK 'autoscrol' ni uspelo"
+
+#: R/tablelist.R:388 R/tablelist.R:391 R/tablelist.R:412 R/tablelist.R:441
+#: R/tablelist.R:444 R/tablelist.R:453 R/tablelist.R:455 R/tablelist.R:461
+#: R/tablelist.R:462 R/tablelist.R:486 R/tablelist.R:375 R/tablelist.R:408
+#: R/tablelist.R:411 R/tablelist.R:420 R/tablelist.R:422 R/tablelist.R:428
+#: R/tablelist.R:429
+msgid "Original.Word"
+msgstr "Izvorna beseda"
+
+#: R/tablelist.R:390 R/tablelist.R:443 R/tablelist.R:410
+#, c-format
+msgid "Data set must contain columns named \"%s\" and \"%s\"."
+msgstr "Podatki morajo vsebovati stolpce z imenoma \"%s\" in \"%s\"."
+
+#: R/tablelist.R:505 R/tablelist.R:472
+msgid "Import stemming dictionary"
+msgstr "Uvoz slovarja korenjenja besed"
+
+#: R/tablelist.R:506 R/tablelist.R:473
+msgid "Export stemming dictionary"
+msgstr "Izvoz slovarja korenjenja besed"
+
+#: R/common.R:127 R/common.R:140
+msgid "Information"
+msgstr "Informacija"
+
+#: R/common.R:128 R/common.R:141
+msgid "Error"
+msgstr "Napaka"
+
+#: R/common.R:129 R/common.R:142
+msgid "Warning"
+msgstr "Opozorilo"
+
+#: R/corpusCa:192 R/corpusClustering:261 R/corpusCa.R:186
+#: R/corpusClustering.R:251
+msgid "Please specify a sparsity value between 0 (excluded) and 100%."
+msgstr "Prosim navedite vrednost redkosti med 0 (izločen) in 100%."
+
+#: R/importCorpus.R:74 R/importCorpus.R:93
+#, c-format
+msgid ""
+"Invalid characters found in document %i. Please check the \"Encoding\" value "
+"defined in the import dialog. Most probable encodings for this language are: "
+"%s.\n"
+"\n"
+"If necessary, use a text editor's \"Save As...\" function to save the corpus "
+"in a known encoding."
+msgstr ""
+"Čudni znaki v dokumentu %i. Prosim preverite nastavitve kodiranja "
+"znakov pri uvažanju. Najverjetneje je za ta jezik uporabljeno kodiranje: %s.\n"
+"\n"
+"Če je potrebno, uporabite primeren urejevalnik besedil in \"Shrani besedilo "
+"kot\", kjer izberite enega od dobro določenih kodiranj."
+
+#: R/importCorpus.R:219 R/importCorpus.R:212 R/importCorpus.R:220
+#, c-format
+msgid ""
+"Most probable encodings for this language:\n"
+"%s"
+msgstr ""
+"Najverjetneje je za ta jezik uporabljeno kodiranje:\n"
+"%s"
+
+#: R/importCorpus.R:557 R/importCorpus.R:577
+msgid "Select Text Variable"
+msgstr "Izberi spremenljivko besedila"
+
+#: R/common.R:60
+msgid "Select All"
+msgstr "Izberi vse"
+
+#: R/common.R:64
+msgid "Copy"
+msgstr "Kopiraj"
+
+#: R/importCorpus.R:581
+msgid "Select the variable containing the text of documents"
+msgstr "Izberi spremenljivko, ki vsebuje besedilo dokumentov"
+
+
+

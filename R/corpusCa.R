@@ -168,7 +168,7 @@ corpusCaDlg <- function() {
     spinSparsity <- tkwidget(top, type="spinbox", from=0, to=100,
                              inc=0.1, textvariable=tclSparsity,
                              validate="all", validatecommand=function(P) .validate.unum(P, fun=updateNDocs))
-    updateNDocs(100 - ceiling(1/nrow(dtm) * 100))
+    updateNDocs(tclvalue(tclSparsity))
 
 
     tclDim <- tclVar(5)
