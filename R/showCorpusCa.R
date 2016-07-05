@@ -190,6 +190,9 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
             colnames(df) <- titles
         }
 
+        # Extracting document IDs is very slow: only do it once
+        ids <- names(corpus)
+
         if(length(negrows) == 0) {
             tkinsert(txt, "end",
                      sprintf(.gettext("None among the %i most contributive documents."), ndocs), "body")
@@ -209,8 +212,10 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
                 mark <- mark + 1
                 tkinsert(listbox, "end", id)
 
-                origin <- meta(corpus[[id]], "origin")
-                date <- meta(corpus[[id]], "datetimestamp")
+                # Indexing document by ID is very slow: compute the index only once
+                doc <- corpus[[match(id, ids)]]
+                origin <- meta(doc, "origin")
+                date <- meta(doc, "datetimestamp")
                 if(length(origin) > 0 && length(date) > 0)
                     tkinsert(txt, "end", paste(origin, " - ", date, "\n", sep=""), "details")
                 else if(length(origin) > 0)
@@ -221,7 +226,7 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
                 if(length(origin) > 0 || length(date) > 0)
                     tkinsert(txt, "end", "\n", "small")
 
-                tkinsert(txt, "end", paste(paste(corpus[[id]], collapse="\n"), "\n"), "body")
+                tkinsert(txt, "end", paste(paste(doc, collapse="\n"), "\n"), "body")
             }
         }
 
@@ -311,8 +316,10 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
                 mark <- mark + 1
                 tkinsert(listbox, "end", id)
 
-                origin <- meta(corpus[[id]], "origin")
-                date <- meta(corpus[[id]], "datetimestamp")
+                # Indexing document by ID is very slow: compute the index only once
+                doc <- corpus[[match(id, ids)]]
+                origin <- meta(doc, "origin")
+                date <- meta(doc, "datetimestamp")
                 if(length(origin) > 0 && length(date) > 0)
                     tkinsert(txt, "end", paste(origin, " - ", date, "\n", sep=""), "details")
                 else if(length(origin) > 0)
@@ -323,7 +330,7 @@ showCorpusCa <- function(corpusCa, dim=1, ndocs=10, nterms=10) {
                 if(length(origin) > 0 || length(date) > 0)
                     tkinsert(txt, "end", "\n", "small")
 
-                tkinsert(txt, "end", paste(paste(corpus[[id]], collapse="\n"), "\n"), "body")
+                tkinsert(txt, "end", paste(paste(doc, collapse="\n"), "\n"), "body")
             }
         }
 
@@ -429,7 +436,7 @@ showCorpusCaDlg <- function() {
     tkbind(varBox$listbox, "<<ListboxSelect>>", function(...) tclvalue(varLabelsVariable) <- 1)
 
     nFrame <- tkframe(top)
-    tkgrid(.titleLabel(nFrame, text=.gettext("Number of items to plot:")),
+    tkgrid(.titleLabel(nFrame, text=.gettext("Number of items to show:")),
            sticky="s")
     tclNDocs <- tclVar(25)
     tclNTerms <- tclVar(25)
@@ -565,8 +572,7 @@ showCorpusCaDlg <- function() {
     tkgrid(labelsFrame, pointsFrame, sticky="w", pady=6, padx=c(0, 6))
     if(!actDocs || length(corpusCa$rowsup) > 0)
         tkgrid(getFrame(varBox), columnspan=2, sticky="we", pady=6)
-    if(actDocs)
-        tkgrid(labelRcmdr(nFrame, text=.gettext("Documents:")), spinDocs, sticky="w")
+    tkgrid(labelRcmdr(nFrame, text=.gettext("Documents:")), spinDocs, sticky="w")
     tkgrid(labelRcmdr(nFrame, text=.gettext("Terms:")), spinTerms, sticky="w")
     tkgrid(nFrame, sticky="w", pady=6, columnspan=2)
     tkgrid(labelRcmdr(ctrDimFrame, text=.gettext("Most contributive to:")), sticky="w", columnspan=2, pady=6)

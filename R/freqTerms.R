@@ -46,7 +46,8 @@ frequentTerms <- function(dtm, variable=NULL, n=25) {
         colnames(ret) <- c(.gettext("% Term/Level"), .gettext("% Level/Term"), .gettext("Global %"),
                            .gettext("Level"), .gettext("Global"),
                            .gettext("t value"), .gettext("Prob."))
-        ret[order(-sign(ret[, 6]), ret[, 7]),]
+
+        ret[order(ret[, 4], decreasing=TRUE),]
     })
 }
 
