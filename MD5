@@ -1,6 +1,6 @@
-953d0d1e1c862bee25b3bc8ffb638520 *DESCRIPTION
+0ea267050a97f99458d482abd4c14daf *DESCRIPTION
 7daeece125cd3dc771b2350eb4b3620c *NAMESPACE
-a4dbad0c6ef66eeab2c51f7428cb82c7 *NEWS
+0d9509df23426f9cbcd17a1d0b5611c6 *NEWS
 99021ee6ac2b4c769825c814fed0e6f9 *R/common.R
 d1b1abaf29e7e0b907af87fa6baa6a79 *R/corpusCa.R
 656f56093e025ebb4989f995bae5bf2a *R/corpusClustering.R
@@ -8,7 +8,7 @@ d986697762670e7fcb27451f7378b616 *R/dictionary.R
 28d1a70a603d7111737302d7ce65ba8b *R/dissimilarity.R
 a7b5aa76479c94659c3aeccfca070862 *R/freqTerms.R
 69a1f911ae854fa8c40b9c17bdbbc930 *R/gettext.R
-7ec1086196a7073f0c6f1e3dca302844 *R/importCorpus.R
+dcdc428211a778c483177b6d583b083d *R/importCorpus.R
 7f88c199441d0f955318aa2753ac4827 *R/inspectCorpus.R
 6108ef1d04a0b56c7cb4ab703c2b5f8c *R/output.R
 a27922061f8767cbf12b8f7761bec716 *R/plotCorpusCa.R
@@ -25,7 +25,7 @@ fd338a58db1b267563c0d77296ae1669 *R/termFreq.R
 dab8ddd96096d0060952fc7f2d3dde44 *R/time.R
 e57957f1d45f485559e4e6c9778f2b0b *R/varFreq.R
 d42e631a812182828f213c8cd0b6fe08 *R/vocabulary.R
-780632f8bb84219c74e1d2b4cb7fb20b *inst/CITATION
+3e4489bcce8c97b169e8774ddfbb4171 *inst/CITATION
 b3a6c5c3b26d51c7379b74a4b0a7a53a *inst/etc/menus.txt
 4fe0c343ba9a1b67069eb06cb8afb4fc *inst/po/fr/LC_MESSAGES/R-RcmdrPlugin.temis.mo
 a5353f7ffbdc300c31082579730f443e *inst/po/sl/LC_MESSAGES/R-RcmdrPlugin.temis.mo
@@ -38,7 +38,7 @@ f932add557e49b4c9227e29110b13a25 *man/corpusDissimilarity.rd
 26347fde840172042a950f94181b4f01 *man/dissimilarityTableDlg.rd
 cb8259261248fa8b8dcbead0117f743a *man/freqTermsDlg.rd
 270b494b97c43c915fc1aca98df59132 *man/frequentTerms.rd
-2a493f8844313ec42b0131a2c21f8e10 *man/importCorpusDlg.rd
+a011920d9d08504e8a198366d35924ad *man/importCorpusDlg.rd
 426b4e3c602d0789d66f5ade1e24a150 *man/inspectCorpus.rd
 afdc5896e464db9b248d9eb55aeb2bd6 *man/output.rd
 8966e14856c7c987fe690e5fb1f4d1e1 *man/plotCorpusCa.rd
