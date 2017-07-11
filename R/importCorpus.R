@@ -66,21 +66,21 @@
 
 .langToEncs <- function(lang) {
     switch(lang,
-           da="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           de="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           en="ASCII, ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           es="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           fi="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           fr="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           hu="ISO-8859-16, ISO-8859-2, Windows-1250, UTF-8, UTF-16",
-           it="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           nl="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           no="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           pt="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           ro="ISO-8859-16, ISO-8859-2, Windows-1250, UTF-8, UTF-16",
-           ru="KOI8-R, Windows-1251, ISO-8859-5, UTF-8, UTF-16",
-           sv="ISO-8859-1, Windows-1252, ISO-8859-15, UTF-8, UTF-16",
-           tr="ISO-8859-9, Windows-1254, UTF-8, UTF-16")
+           da="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           de="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           en="ASCII, ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           es="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           fi="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           fr="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           hu="ISO-8859-16, ISO-8859-2, WINDOWS-1250, UTF-8, UTF-16",
+           it="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           nl="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           no="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           pt="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           ro="ISO-8859-16, ISO-8859-2, WINDOWS-1250, UTF-8, UTF-16",
+           ru="KOI8-R, WINDOWS-1251, ISO-8859-5, UTF-8, UTF-16",
+           sv="ISO-8859-1, WINDOWS-1252, ISO-8859-15, UTF-8, UTF-16",
+           tr="ISO-8859-9, WINDOWS-1254, UTF-8, UTF-16")
 }
 
 # Run all processing steps and extract words list
@@ -433,7 +433,7 @@ importCorpusFromDir <- function(language=NA, encoding="") {
     if(is.null(encoding))
         encoding <- ""
 
-    doItAndPrint(sprintf('corpus <- Corpus(DirSource("%s", encoding="%s"), readerControl=list(language=%s))',
+    doItAndPrint(sprintf('corpus <- VCorpus(DirSource("%s", encoding="%s"), readerControl=list(language=%s))',
                          dir, encoding, language))
 
     list(source=sprintf(.gettext("directory %s"), dir))
@@ -608,8 +608,13 @@ importCorpusFromFile <- function(language=NA, encoding="") {
     if(!is.na(language))
         language <- paste("\"", language, "\"", sep="")
 
-    doItAndPrint(sprintf('corpus <- Corpus(DataframeSource(corpusDataset["%s"]), readerControl=list(language=%s))',
-                         var, language))
+    if(packageVersion("tm") >= "0.7.2")
+        doItAndPrint(sprintf('corpus <- VCorpus(DataframeSource(data.frame(doc_id=rownames(corpusDataset), text=corpusDataset[["%s"]])), readerControl=list(language=%s))',
+                             var, language))
+    else
+        doItAndPrint(sprintf('corpus <- VCorpus(DataframeSource(corpusDataset["%s"]), readerControl=list(language=%s))',
+                             var, language))
+
 
     if(ncol(corpusDataset) > 1)
         doItAndPrint(sprintf('corpusVars <- corpusDataset[!names(corpusDataset) == "%s"]', var))
@@ -716,7 +721,7 @@ importCorpusFromFactiva <- function(language=NA) {
         language <- paste("\"", language, "\"", sep="")
 
     if(length(files) == 1) {
-        doItAndPrint(sprintf("corpus <- Corpus(FactivaSource(\"%s\"), readerControl=list(language=%s))",
+        doItAndPrint(sprintf("corpus <- VCorpus(FactivaSource(\"%s\"), readerControl=list(language=%s))",
                              files[1], language))
 
 		if(!exists("corpus") || length(corpus) == 0) {
@@ -729,7 +734,7 @@ importCorpusFromFactiva <- function(language=NA) {
     else {
         doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
         for(i in seq(length(files))) {
-            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(FactivaSource("%s"), readerControl=list(language=%s))',
+            doItAndPrint(sprintf('corpusList[[%s]] <- VCorpus(FactivaSource("%s"), readerControl=list(language=%s))',
                                  i, files[i], language))
 
 			if(length(corpusList[[i]]) == 0) {
@@ -747,7 +752,9 @@ importCorpusFromFactiva <- function(language=NA) {
 
     # We rely on names/IDs later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
     # In rare cases, duplicated IDs can happen since Factiva plugin truncates them: ensure they are unique
-    doItAndPrint("names(corpus) <- make.unique(names(corpus))")
+    # This only applies to VCorpus, since SimpleCorpus does not support it and cannot be created for Factiva, etc.
+    if("VCorpus" %in% class(corpus))
+        doItAndPrint("names(corpus) <- make.unique(names(corpus))")
 
     doItAndPrint("corpusVars <- extractMetadata(corpus)")
 
@@ -785,7 +792,7 @@ importCorpusFromLexisNexis <- function(language=NA) {
         language <- paste("\"", language, "\"", sep="")
 
     if(length(files) == 1) {
-        doItAndPrint(sprintf("corpus <- Corpus(LexisNexisSource(\"%s\"), readerControl=list(language=%s))",
+        doItAndPrint(sprintf("corpus <- VCorpus(LexisNexisSource(\"%s\"), readerControl=list(language=%s))",
                              files[1], language))
 
 		if(!exists("corpus") || length(corpus) == 0) {
@@ -798,7 +805,7 @@ importCorpusFromLexisNexis <- function(language=NA) {
     else {
         doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
         for(i in seq(length(files))) {
-            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(LexisNexisSource("%s"), readerControl=list(language=%s))',
+            doItAndPrint(sprintf('corpusList[[%s]] <- VCorpus(LexisNexisSource("%s"), readerControl=list(language=%s))',
                                  i, files[i], language))
 
 			if(length(corpusList[[i]]) == 0) {
@@ -814,10 +821,11 @@ importCorpusFromLexisNexis <- function(language=NA) {
         gc()
     }
 
-    # We rely names/IDs this later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
-    # In rare cases, duplicated IDs can happen since LexisNexis does not provide any identifier
-    # this is unlikely, though, since we include in the ID the document number in the corpus
-    doItAndPrint("names(corpus) <- make.unique(names(corpus))")
+    # We rely on names/IDs later e.g. in showCorpusCa() because we cannot use indexes when documents are skipped
+    # In rare cases, duplicated IDs can happen since Factiva plugin truncates them: ensure they are unique
+    # This only applies to VCorpus, since SimpleCorpus does not support it and cannot be created for Factiva, etc.
+    if("VCorpus" %in% class(corpus))
+        doItAndPrint("names(corpus) <- make.unique(names(corpus))")
 
     doItAndPrint("corpusVars <- extractMetadata(corpus)")
 
@@ -855,7 +863,7 @@ importCorpusFromEuropresse <- function(language=NA) {
         language <- paste("\"", language, "\"", sep="")
 
     if(length(files) == 1) {
-        doItAndPrint(sprintf("corpus <- Corpus(EuropresseSource(\"%s\"), readerControl=list(language=%s))",
+        doItAndPrint(sprintf("corpus <- VCorpus(EuropresseSource(\"%s\"), readerControl=list(language=%s))",
                              files[1], language))
 
 		if(!exists("corpus") || length(corpus) == 0) {
@@ -868,7 +876,7 @@ importCorpusFromEuropresse <- function(language=NA) {
     else {
         doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
         for(i in seq(length(files))) {
-            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(EuropresseSource("%s"), readerControl=list(language=%s))',
+            doItAndPrint(sprintf('corpusList[[%s]] <- VCorpus(EuropresseSource("%s"), readerControl=list(language=%s))',
                                  i, files[i], language))
 
 			if(length(corpusList[[i]]) == 0) {
@@ -928,7 +936,7 @@ importCorpusFromAlceste <- function(language=NA, encoding="") {
         encoding <- "auto"
 
     if(length(files) == 1) {
-        doItAndPrint(sprintf('corpus <- Corpus(AlcesteSource("%s", "%s"), readerControl=list(language=%s))',
+        doItAndPrint(sprintf('corpus <- VCorpus(AlcesteSource("%s", "%s"), readerControl=list(language=%s))',
                              files[1], encoding, language))
 
 		if(!exists("corpus") || length(corpus) == 0) {
@@ -941,7 +949,7 @@ importCorpusFromAlceste <- function(language=NA, encoding="") {
     else {
         doItAndPrint(sprintf('corpusList <- vector(%s, mode="list")', length(files)))
         for(i in seq(length(files))) {
-            doItAndPrint(sprintf('corpusList[[%s]] <- Corpus(AlcesteSource("%s"), readerControl=list(language=%s))',
+            doItAndPrint(sprintf('corpusList[[%s]] <- VCorpus(AlcesteSource("%s"), readerControl=list(language=%s))',
                                  i, files[i], language))
 
 			if(length(corpusList[[i]]) == 0) {
@@ -1074,7 +1082,7 @@ importCorpusFromTwitter <- function(language=NA) {
 
         doItAndPrint(sprintf('rownames(corpusDataset) <- make.unique(paste(abbreviate(corpusDataset$screenName, 10), strftime(corpusDataset$created, "%s")))', fmt))
 
-        doItAndPrint(sprintf('corpus <- Corpus(DataframeSource(corpusDataset[1]), readerControl=list(language=%s))',
+        doItAndPrint(sprintf('corpus <- VCorpus(DataframeSource(corpusDataset[1]), readerControl=list(language=%s))',
                              language))
         doItAndPrint("rm(messages)")
 
@@ -1145,27 +1153,31 @@ splitTexts <- function (corpus, chunksize, preserveMetadata=TRUE)
 {
     chunks <- list(length(corpus))
     origins <- list(length(corpus))
+    seqnum <- list(length(names))
 
     for (k in seq_along(corpus)) {
-        chunks_k <- tapply(content(corpus[[k]]),
-                           rep(seq(1, length(content(corpus[[k]]))),
-                               each=chunksize, length.out=length(content(corpus[[k]]))), c)
+        paragraphs <- unlist(strsplit(content(corpus[[k]]), "\r\n|\n|\r"))
+        chunks_k <- tapply(paragraphs,
+                           rep(seq_along(paragraphs),
+                               each=chunksize, length.out=length(paragraphs)), c)
 
         # Skeep empty chunks
         keep <- nchar(gsub("[\n[:space:][:punct:]]+", "", sapply(chunks_k, paste, collapse=""))) > 0
 
         chunks[[k]] <- chunks_k[keep]
         origins[[k]] <- rep(k, sum(keep))
+        seqnum[[k]] <- seq(sum(keep))
     }
 
     # Merge only the per-document lists of chunks at the end to reduce the number of copies
     chunks <- do.call(c, chunks)
     origins <- do.call(c, origins)
+    seqnum <- do.call(c, seqnum)
 
-    newCorpus <- Corpus(VectorSource(chunks))
-
-    names1 <- names(corpus)
-    names2 <- make.unique(names1[origins])
+    ids <- names(corpus)
+    newCorpus <- VCorpus(VectorSource(chunks))
+    # Note: does not work for SimpleCorpus
+    names(newCorpus) <- paste(ids[origins], seqnum)
 
     # Copy meta data from old documents
     if(preserveMetadata) {
@@ -1177,16 +1189,16 @@ splitTexts <- function (corpus, chunksize, preserveMetadata=TRUE)
             for(j in which(origins == i)) {
                 doc <- newCorpus[[j]]
                 doc$meta <- attrs
-                meta(doc, "id") <- names2[j]
-                meta(doc, "document") <- names1[i]
+                # Note: does not work for SimpleCorpus
+                meta(doc, "id") <- paste(ids[i], seqnum[j])
+                meta(doc, "document") <- ids[i]
                 newCorpus[[j]] <- doc
             }
         }
     }
 
-    meta(newCorpus, .gettext("Doc ID")) <- names1[origins]
+    meta(newCorpus, .gettext("Doc ID")) <- ids[origins]
     meta(newCorpus, .gettext("Doc N")) <- origins
-    names(newCorpus) <- names2
 
     newCorpus
 }

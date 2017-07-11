@@ -1,6 +1,6 @@
-0ea267050a97f99458d482abd4c14daf *DESCRIPTION
+6a2bde22bd94a464ea58c69da026b901 *DESCRIPTION
 7daeece125cd3dc771b2350eb4b3620c *NAMESPACE
-0d9509df23426f9cbcd17a1d0b5611c6 *NEWS
+7e1bbdb596d0459524774b90433f7e6e *NEWS
 99021ee6ac2b4c769825c814fed0e6f9 *R/common.R
 d1b1abaf29e7e0b907af87fa6baa6a79 *R/corpusCa.R
 656f56093e025ebb4989f995bae5bf2a *R/corpusClustering.R
@@ -8,14 +8,14 @@ d986697762670e7fcb27451f7378b616 *R/dictionary.R
 28d1a70a603d7111737302d7ce65ba8b *R/dissimilarity.R
 a7b5aa76479c94659c3aeccfca070862 *R/freqTerms.R
 69a1f911ae854fa8c40b9c17bdbbc930 *R/gettext.R
-dcdc428211a778c483177b6d583b083d *R/importCorpus.R
+df8e1b929b7a016822a8f50e09d3db10 *R/importCorpus.R
 7f88c199441d0f955318aa2753ac4827 *R/inspectCorpus.R
 6108ef1d04a0b56c7cb4ab703c2b5f8c *R/output.R
 a27922061f8767cbf12b8f7761bec716 *R/plotCorpusCa.R
 7140a8e959871c702841c6359b0fec1f *R/restrictTerms.R
-07a3369eaa8b598a382ede871c820482 *R/setCorpusVariables.R
+4ca7a5c75428634b1a02d420accf6aa6 *R/setCorpusVariables.R
 2742db4cb5dae9289a8e862acde27fdc *R/showCorpusCa.R
-b5c541bea1001ec7da814735ed2f94ad *R/specificTerms.R
+3ba911079a3031db0768dcf62057ef9d *R/specificTerms.R
 452191019c78d2332abd06b33d71d779 *R/startup.R
 0d65ab80ce2b6b50fd3c50f434ed75c2 *R/subsetCorpus.R
 c5be3faab14490da581969e360c522f6 *R/summary.ca.R
