@@ -14,8 +14,8 @@ if (getRversion() >= '2.15.1') globalVariables(c(
     "globalButton", "unitVariable", "totaltVariable", "uniqueVariable",
     "hapaxVariable", "totalwVariable", "longVariable", "vlongVariable",
     "longavgVariable", "voc", "unitFrame", "digitsVariable",
-    "exclRetweetsVariable", "removeNamesVariable", "removeHashtagsVariable",
-    "optionsFrame", "twitCred", "odbcDataSources", "sqlTables"
+    "removeNamesVariable", "removeHashtagsVariable",
+    "optionsFrame", "odbcDataSources", "sqlTables"
     ))
 
 .titleLabel <- function(...) labelRcmdr(..., font="RcmdrTitleFont",

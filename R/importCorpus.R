@@ -5,12 +5,11 @@
 
     vars <- c(.gettext("No variables"), colnames(corpusVars))
 
-    if(source %in% c("factiva", "lexisnexis", "europresse", "twitter"))
+    if(source %in% c("factiva", "lexisnexis", "europresse"))
         # Keep in sync with import functions
         initialSelection <- which(vars %in% c(.gettext("Origin"), .gettext("Date"), .gettext("Author"),
                                               .gettext("Section"), .gettext("Type"),
-                                              .gettext("Time"), .gettext("Truncated"),
-                                              .gettext("StatusSource"), .gettext("Retweet"))) - 1
+                                              .gettext("Time"))) - 1
     else
         initialSelection <- seq.int(1, length(vars) - 1)
 
@@ -98,13 +97,6 @@
 
         doItAndPrint("dtmCorpus <- corpus")
 
-        if(options["twitter"])
-            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub("http(s?)://[[:alnum:]/\\\\.\\\\-\\\\?=&#_;,]*|\\\\bRT\\\\b", "", x)))')
-        if(options["twitter"] && options["removeNames"])
-            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub("@.+?\\\\b", "", x)))')
-        if(options["twitter"] && options["removeHashtags"])
-            doItAndPrint('dtmCorpus <- tm_map(dtmCorpus, content_transformer(function(x) gsub("#.+?\\\\b", "", x)))')
-
         if(options["lowercase"])
             doItAndPrint("dtmCorpus <- tm_map(dtmCorpus, content_transformer(tolower))")
 
@@ -181,14 +173,13 @@ importCorpusDlg <- function() {
     }
 
     radioButtons(name="source",
-                 buttons=c("dir", "file", "factiva", "lexisnexis", "europresse", "alceste", "twitter"),
+                 buttons=c("dir", "file", "factiva", "lexisnexis", "europresse", "alceste"),
                  labels=c(.gettext("Directory containing plain text files"),
                           .gettext("Spreadsheet file (CSV, XLS, ODS...)"),
                           .gettext("Factiva XML or HTML file(s)"),
                           .gettext("LexisNexis HTML file(s)"),
                           .gettext("Europresse HTML file(s)"),
-                          .gettext("Alceste file(s)"),
-                          .gettext("Twitter search")),
+                          .gettext("Alceste file(s)")),
                  title=.gettext("Load corpus from:"),
                  right.buttons=FALSE,
                  command=setState)
@@ -249,7 +240,6 @@ importCorpusDlg <- function() {
 
     onOK <- function() {
         source <- tclvalue(sourceVariable)
-        twitter <- source == "twitter"
         lowercase <- tclvalue(lowercaseVariable) == 1
         punctuation <- tclvalue(punctuationVariable) == 1
         digits <- tclvalue(digitsVariable) == 1
@@ -317,8 +307,7 @@ importCorpusDlg <- function() {
                       factiva=importCorpusFromFactiva(lang),
                       lexisnexis=importCorpusFromLexisNexis(lang),
                       europresse=importCorpusFromEuropresse(lang),
-                      alceste=importCorpusFromAlceste(lang, enc),
-                      twitter=importCorpusFromTwitter(lang))
+                      alceste=importCorpusFromAlceste(lang, enc))
 
         # If loading failed, do not add errors to errors
         if(!(isTRUE(res) || is.list(res)) || length(corpus) == 0)
@@ -348,7 +337,7 @@ importCorpusDlg <- function() {
         }
 
         # Process texts
-        if(!.processTexts(c(twitter=twitter, lowercase=lowercase, punctuation=punctuation,
+        if(!.processTexts(c(lowercase=lowercase, punctuation=punctuation,
                             digits=digits, stopwords=stopwords,
                             stemming=stemming, customStemming=customStemming,
                             removeHashtags=res$removeHashtags, removeNames=res$removeNames),
@@ -379,9 +368,9 @@ importCorpusDlg <- function() {
         # when splitting commands when more than one pair of quotes is present)
         justDoIt(sprintf('meta(corpus, type="corpus", tag="source") <- "%s"', res$source))
 
-        doItAndPrint(sprintf('meta(corpus, type="corpus", tag="processing") <- attr(dtm, "processing") <- c(lowercase=%s, punctuation=%s, digits=%s, stopwords=%s, stemming=%s, customStemming=%s, twitter=%s, removeHashtags=%s, removeNames=%s)',
+        doItAndPrint(sprintf('meta(corpus, type="corpus", tag="processing") <- attr(dtm, "processing") <- c(lowercase=%s, punctuation=%s, digits=%s, stopwords=%s, stemming=%s, customStemming=%s)',
                              lowercase, punctuation,
-                             digits, stopwords, stemming, customStemming, twitter,
+                             digits, stopwords, stemming, customStemming,
                              ifelse(is.null(res$removeHashtags), NA, res$removeHashtags),
                              ifelse(is.null(res$removeNames), NA, res$removeNames)))
 
@@ -650,7 +639,6 @@ extractMetadata <- function(corpus, date=TRUE) {
         vars[[tag]] <- unlist(var)
     }
 
-    # Keep in sync with importCorpusFromTwitter()
     colnames(vars)[colnames(vars) == "origin"] <- .gettext("Origin")
     colnames(vars)[colnames(vars) == "date"] <- .gettext("Date")
     colnames(vars)[colnames(vars) == "author"] <- .gettext("Author")
@@ -974,175 +962,6 @@ importCorpusFromAlceste <- function(language=NA, encoding="") {
 
     list(source=sprintf(.ngettext(length(files), "Alceste file %s", "Alceste files %s"),
                         paste(files, collapse=", ")))
-}
-
-# Choose a Twitter hashtag to search for messages
-importCorpusFromTwitter <- function(language=NA) {
-    if(!.checkAndInstall("twitteR",
-                         .gettext("The twitteR package is needed to import corpora from Twitter.\nDo you want to install it?")))
-        return(FALSE)
-
-    if(!is.na(language))
-        language <- paste("\"", language, "\"", sep="")
-
-    initializeDialog(title=.gettext("Import Corpus From Twitter"))
-
-    tclReqURL <- tclVar("https://api.twitter.com/oauth/request_token")
-    entryReqURL <- ttkentry(top, width=37, textvariable=tclReqURL)
-
-    tclAuthURL <- tclVar("https://api.twitter.com/oauth/authorize")
-    entryAuthURL <- ttkentry(top, width=37, textvariable=tclAuthURL)
-
-    tclAccessURL <- tclVar("https://api.twitter.com/oauth/access_token")
-    entryAccessURL <- ttkentry(top, width=37, textvariable=tclAccessURL)
-
-    tclConsumerKey <- tclVar("")
-    entryConsumerKey <- ttkentry(top, width=37, textvariable=tclConsumerKey)
-
-    tclConsumerSecret <- tclVar("")
-    entryConsumerSecret <- ttkentry(top, width=37, textvariable=tclConsumerSecret)
-
-    # TRANSLATORS: replace 'en' with your language's ISO 639 two-letter code
-    tclText <- tclVar("")
-    entryText <- ttkentry(top, width=37, textvariable=tclText)
-
-    tclNMess <- tclVar(100)
-    tclNSlider <- tkscale(top, from=1, to=1500,
-                          showvalue=TRUE, variable=tclNMess,
-                          resolution=1, orient="horizontal")
-
-    checkBoxes(frame="optionsFrame",
-               boxes=c("removeNames", "removeHashtags", "exclRetweets"),
-               initialValues=c(1, 1, 0),
-               labels=c(.gettext("Remove user names"), .gettext("Remove hashtags"),
-                        .gettext("Exclude retweets")),
-               title=.gettext("Options:"))
-
-    result <- tclVar()
-
-    onOK <- function() {
-        reqURL <- tclvalue(tclReqURL)
-        authURL <- tclvalue(tclAuthURL)
-        accessURL <- tclvalue(tclAccessURL)
-        consumerKey <- tclvalue(tclConsumerKey)
-        consumerSecret <- tclvalue(tclConsumerSecret)
-        text <- tclvalue(tclText)
-        nmess <- tclvalue(tclNMess)
-        exclRetweets <- tclvalue(exclRetweetsVariable) == 1
-
-        if(reqURL == "" || authURL == "" || accessURL == "" ||
-           consumerKey == "" || consumerSecret == "") {
-            .Message(.gettext("Please enter valid authentication settings."), type="error", parent=top)
-            return(FALSE)
-        }
-        if(text == "") {
-            .Message(.gettext("Please enter valid text to search for."), type="error", parent=top)
-            return(FALSE)
-        }
-
-        closeDialog()
-
-        setBusyCursor()
-        on.exit(setIdleCursor())
-
-        # In case something goes wrong
-        tclvalue(result) <- "error"
-
-        doItAndPrint("library(twitteR)")
-
-        doItAndPrint(sprintf('twitCred <- OAuthFactory$new(consumerKey="%s", consumerSecret="%s", requestURL="%s", accessURL="%s", authURL="%s")', consumerKey, consumerSecret, reqURL, accessURL, authURL))
-        doItAndPrint("twitCred$handshake()")
-
-        if(!isTRUE(twitCred$handshakeComplete)) {
-            .Message(.gettext("TwitteR authentication failed. Please check the entered credentials or PIN code."),
-                     type="error", parent=top)
-            return(FALSE)
-        }
-
-        doItAndPrint("registerTwitterOAuth(twitCred)")
-
-        doItAndPrint(sprintf('messages <- searchTwitter("%s", %s, %s)', text, nmess, language))
-
-        if(length(messages) == 0) {
-            .Message(sprintf(.gettext("No recent tweets match the specified search criteria in the chosen language (%s)."), language),
-                     type="error", parent=top)
-            return(FALSE)
-        }
-
-        doItAndPrint("corpusDataset <- twListToDF(messages)")
-
-        if(length(unique(strftime(corpusDataset$created, "%y-%m-%d"))) == 1)
-            fmt <- "%H:%M"
-        else if(length(unique(strftime(corpusDataset$created, "%y-%m"))) == 1)
-            fmt <- "%d %H:%M"
-        else if(length(unique(strftime(corpusDataset$created, "%y"))) == 1)
-            ftm <- "%m-%d %H:%M"
-        else
-            fmt <- "%y-%m-%d %H:%M"
-
-        doItAndPrint(sprintf('rownames(corpusDataset) <- make.unique(paste(abbreviate(corpusDataset$screenName, 10), strftime(corpusDataset$created, "%s")))', fmt))
-
-        doItAndPrint(sprintf('corpus <- VCorpus(DataframeSource(corpusDataset[1]), readerControl=list(language=%s))',
-                             language))
-        doItAndPrint("rm(messages)")
-
-        if(!exists("corpus") || length(corpus) == 0) {
-            .Message(.gettext("Retrieving messages from Twitter failed."),
-                     type="error", parent=top)
-            return(FALSE)
-        }
-
-        doItAndPrint('corpusVars <- corpusDataset[c("screenName", "created", "truncated", "statusSource")]')
-        doItAndPrint("rm(corpusDataset)")
-        doItAndPrint(sprintf('colnames(corpusVars) <- c("%s", "%s", "%s", "%s")',
-                             # Keep in sync with extractMetadata()
-                             .gettext("Author"), .gettext("Time"), .gettext("Truncated"), .gettext("StatusSource")))
-
-        doItAndPrint(sprintf('corpusVars[["%s"]] <- grepl("\\\\bRT\\\\b", corpus)', .gettext("Retweet")))
-
-        if(exclRetweets) {
-            doItAndPrint(sprintf('corpus <- corpus[!corpusVars[["%s"]]]', .gettext("Retweet")))
-            doItAndPrint(sprintf('corpusVars <- subset(corpusVars, !%s)', .gettext("Retweet")))
-        }
-
-        tclvalue(result) <- "success"
-
-        return(FALSE)
-    }
-
-    onCancel <- function() {
-        if (GrabFocus()) tkgrab.release(top)
-        tkdestroy(top)
-        tkfocus(CommanderWindow())
-        tclvalue(result) <- "cancel"
-    }
-
-    OKCancelHelp(helpSubject="importCorpusDlg")
-    tkgrid(labelRcmdr(top, text=.gettext("Note: Twitter requires you to register a custom application and fill in\nthe details below. See vignette(\"twitteR\") and https://dev.twitter.com/apps/new/.\nYou will need to switch manually to the R console and copy the PIN\ncode you get from the URL printed there.")), sticky="w", pady=6, columnspan=2)
-    tkgrid(labelRcmdr(top, text=.gettext("Request token URL:")),
-           entryReqURL, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Authorize URL:")),
-           entryAuthURL, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Access token URL:")),
-           entryAccessURL, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Consumer key:")),
-           entryConsumerKey, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Consumer secret:")),
-           entryConsumerSecret, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Text to search for:")),
-           entryText, sticky="w", pady=6)
-    tkgrid(labelRcmdr(top, text=.gettext("Maximum number of tweets to download:")),
-           tclNSlider, sticky="w", pady=6)
-    tkgrid(optionsFrame, sticky="w", pady=6, columnspan=2)
-    tkgrid(buttonsFrame, columnspan=2, sticky="ew", pady=6)
-    dialogSuffix(focus=entryText, force.wait=TRUE)
-
-    if(tclvalue(result) == "success")
-        return(list(source=sprintf(.gettext("Twitter search for %s"), tclvalue(tclText)),
-                    removeNames=tclvalue(removeNamesVariable) == 1,
-                    removeHashtags=tclvalue(removeHashtagsVariable) == 1))
-    else
-        return(FALSE)
 }
 
 # Adapted version of tm's makeChunks() remembering which chunk comes from which document,

@@ -676,19 +676,6 @@ msgstr "Type"
 msgid "Time"
 msgstr "Temps"
 
-#: R/importCorpus.R:12 R/importCorpus.R:1091
-msgid "Truncated"
-msgstr "Tronqué"
-
-#: R/importCorpus.R:13 R/importCorpus.R:1091
-msgid "StatusSource"
-msgstr "Source"
-
-#: R/importCorpus.R:13 R/importCorpus.R:1093 R/importCorpus.R:1096
-#: R/importCorpus.R:1097
-msgid "Retweet"
-msgstr "Retweet"
-
 #: R/importCorpus.R:19
 msgid "Select the corpus variables that should be imported:"
 msgstr "Sélectionnez les variables du corpus à importer :"
@@ -749,10 +736,6 @@ msgstr "Fichier(s) HTML Europresse"
 #: R/importCorpus.R:190
 msgid "Alceste file(s)"
 msgstr "Fichier(s) Alceste"
-
-#: R/importCorpus.R:191
-msgid "Twitter search"
-msgstr "Recherche sur Twitter"
 
 #: R/importCorpus.R:192
 msgid "Load corpus from:"
@@ -1077,111 +1060,6 @@ msgid "Alceste file %s"
 msgid_plural "Alceste files %s"
 msgstr[0] "Fichier Alceste %s"
 msgstr[1] "Fichiers Alceste %s"
-
-#: R/importCorpus.R:974
-msgid ""
-"The twitteR package is needed to import corpora from Twitter.\n"
-"Do you want to install it?"
-msgstr ""
-"Le paquet twitteR est nécessaire pour importer des corpus à partir de "
-"Twitter.\n"
-"Voulez-vous l'installer ?"
-
-#: R/importCorpus.R:980
-msgid "Import Corpus From Twitter"
-msgstr "Importer un corpus à partir de Twitter"
-
-#: R/importCorpus.R:1009
-msgid "Remove user names"
-msgstr "Supprimer les noms d'utilisateur"
-
-#: R/importCorpus.R:1009
-msgid "Remove hashtags"
-msgstr "Supprimer les hashtags"
-
-#: R/importCorpus.R:1010
-msgid "Exclude retweets"
-msgstr "Exclure les retweets"
-
-#: R/importCorpus.R:1011
-msgid "Options:"
-msgstr "Options :"
-
-#: R/importCorpus.R:1027
-msgid "Please enter valid authentication settings."
-msgstr "Veuillez entrer des informations d'authentification valides."
-
-#: R/importCorpus.R:1031
-msgid "Please enter valid text to search for."
-msgstr "Veuillez saisir une texte de recherche valide."
-
-#: R/importCorpus.R:1049
-msgid ""
-"TwitteR authentication failed. Please check the entered credentials or PIN "
-"code."
-msgstr ""
-"L'authentification auprès de Twitter a échoué. Veuillez vérifier les "
-"informations et le code PIN que vous avez entré."
-
-#: R/importCorpus.R:1059
-#, c-format
-msgid ""
-"No recent tweets match the specified search criteria in the chosen language "
-"(%s)."
-msgstr ""
-"Aucun tweet récent ne correspond aux critères de recherche spécifiés dans la "
-"langue choisie (%s)."
-
-#: R/importCorpus.R:1082
-msgid "Retrieving messages from Twitter failed."
-msgstr "La récupération des messages à partir de Twitter a échoué."
-
-#: R/importCorpus.R:1113
-msgid ""
-"Note: Twitter requires you to register a custom application and fill in\n"
-"the details below. See vignette(\"twitteR\") and https://dev.twitter.com/"
-"apps/new/.\n"
-"You will need to switch manually to the R console and copy the PIN\n"
-"code you get from the URL printed there."
-msgstr ""
-"Note: Twitter requiert que vous enregistriez une application personnalisée\n"
-"et que vous remplissiez les informations ci-dessous. Référez-vous à\n"
-"vignette(\"twitteR\") et à https://dev.twitter.com/apps/new/.\n"
-"Vous devrez passer manuellement à la console R et copier le code PIN\n"
-"que vous obtiendrez à partir de l'URL qui y sera affichée."
-
-#: R/importCorpus.R:1114
-msgid "Request token URL:"
-msgstr "Request token URL :"
-
-#: R/importCorpus.R:1116
-msgid "Authorize URL:"
-msgstr "Authorize URL :"
-
-#: R/importCorpus.R:1118
-msgid "Access token URL:"
-msgstr "Access token URL :"
-
-#: R/importCorpus.R:1120
-msgid "Consumer key:"
-msgstr "Consumer key :"
-
-#: R/importCorpus.R:1122
-msgid "Consumer secret:"
-msgstr "Consumer secret :"
-
-#: R/importCorpus.R:1124
-msgid "Text to search for:"
-msgstr "Texte à rechercher :"
-
-#: R/importCorpus.R:1126
-msgid "Maximum number of tweets to download:"
-msgstr "Nombre de tweets à télécharger :"
-
-#: R/importCorpus.R:1133
-#, c-format
-msgid "Twitter search for %s"
-msgstr "Recherche de %s sur Twitter"
 
 #: R/importCorpus.R:1187 R/setCorpusVariables.R:35 R/setCorpusVariables.R:55
 #: R/setCorpusVariables.R:60

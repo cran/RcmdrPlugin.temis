@@ -6,7 +6,6 @@
 \alias{importCorpusFromLexisNexis}
 \alias{importCorpusFromEuropresse}
 \alias{importCorpusFromAlceste}
-\alias{importCorpusFromTwitter}
 \alias{editDictionary}
 \alias{splitTexts}
 \alias{extractMetadata}
@@ -46,24 +45,6 @@
          The sixth source, \dQuote{Alceste file(s)}, loads texts and variables from a single file
          in the Alceste format, which uses asterisks to separate texts and code variables.
 
-         The seventh source, \dQuote{Twitter search}, retrieves most recent tweets matching the search
-         query and written in the specified language, up to the chosen maximum number of messages.
-         Please note that you need to register a custom application and fill in the needed information
-         to authenticate with the Twitter API (see \code{vignette("twitteR")} about OAuth authentication
-         and \url{https://apps.twitter.com} to register a new application).
-         Due to limitations imposed by Twitter, only tweets published up to 6 or 9 days ago can be
-         downloaded, and up to a maximum number of 1500 tweets. Search queries can notably include
-         one or more terms that must be present together for a tweet to match the query, and/or of
-         hashtags  starting with \dQuote{#}; see \url{https://developer.twitter.com/en/docs/tweets/search/overview/premium}
-         if you need more complex search strings. User names, hashtags, URLs and \dQuote{RT} (re-tweet)
-         mentions are automatically removed from the corpus when computing the document-term matrix
-         as they generally disturb the analysis. If the option to remove user names and hashtags is
-         disabled, they will be included as standard text, i.e. \dQuote{#} and \dQuote{@} will be
-         removed if the punctuation removal processing option has been enabled. The \dQuote{Exclude
-         retweets} option works by identifying tweets that contain \dQuote{RT} as a separate expression;
-         this operation can also be carried out manually later by using the \dQuote{Retweet} corpus
-         variable that is created automatically at import time.
-
          The original texts can optionally be split into smaller chunks, which will then be
          considered as the real unit (called \sQuote{documents}) for all analyses. In order
          to get meaningful chunks, texts are only splitted into paragraphs. These are defined
@@ -102,7 +83,7 @@
 \references{Ingo Feinerer, Kurt Hornik, and David Meyer. Text mining infrastructure in R. Journal of Statistical Software, 25(5):1-54, March 2008. Available at \url{https://www.jstatsoft.org/v25/i05}.\cr\cr
             Ingo Feinerer. An introduction to text mining in R. R News, 8(2):19-22, October 2008. Available at \url{https://cran.r-project.org/doc/Rnews/Rnews_2008-2.pdf}}
 
-\seealso{\code{\link{Corpus}}, \code{\link{DocumentTermMatrix}}, \code{\link{restrictTermsDlg}},
-         \code{\link{setCorpusVariables}}, \code{\link{tolower}}, \code{\link{removePunctuation}},
-         \code{\link{removeNumbers}}, \code{\link{stopwords}},  \code{\link{stemDocument}},
-         \code{\link{tm_map}} }
+\seealso{\code{\link[tm]{Corpus}}, \code{\link[tm]{DocumentTermMatrix}}, \code{\link{restrictTermsDlg}},
+         \code{\link{setCorpusVariables}}, \code{\link{tolower}}, \code{\link[tm]{removePunctuation}},
+         \code{\link[tm]{removeNumbers}}, \code{link[tm]{stopwords}},  \code{link[tm]{stemDocument}},
+         \code{link[tm]{tm_map}} }

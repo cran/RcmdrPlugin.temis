@@ -29,5 +29,5 @@ colCtr(obj, dim)
          contributions to each axis.
 }
 
-\seealso{\code{\link{showCorpusCaDlg}}, \code{\link{plotCorpusCa}}, \code{\link{plot.ca}},
-         \code{\link{ca}}}
+\seealso{\code{\link{showCorpusCaDlg}}, \code{\link{plotCorpusCa}}, \code{\link[ca]{plot.ca}},
+         \code{\link[ca]{ca}}}

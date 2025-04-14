@@ -100,7 +100,7 @@ rm(dictionary)
 meta(corpus, type="corpus", tag="language") <- attr(dtm, "language") <- "en"
 meta(corpus, type="corpus", tag="processing") <- attr(dtm, "processing") <- 
   c(lowercase=TRUE, punctuation=TRUE, digits=TRUE, stopwords=TRUE, stemming=TRUE, 
-  customStemming=FALSE, twitter=FALSE, removeHashtags=NA, removeNames=NA)
+  customStemming=FALSE, removeHashtags=NA, removeNames=NA)
 corpus
 dtm
 

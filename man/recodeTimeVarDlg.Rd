@@ -7,7 +7,7 @@
          a new time format in which the values of the new variable will be expressed.
 
          Typical use cases include:
-         \itemize{
+         \describe{
              \item{Create a month variable from a full date: }{Use format \dQuote{\%Y-\%m} to get
                    four-digit year and two-digit month; or \dQuote{\%y \%B} to get two-digits
                    year and full month name.}
@@ -86,6 +86,6 @@
          of occurrences are plotted, time units with no occurrence in the corpus are not plotted, since they
          have no defined value (0/0, reported as \code{NaN}); when a rolling mean is applied, the values
          are simply ignored, i.e. the mean is computed over the chosen window without the missing points.}
-\seealso{\code{\link{setCorpusVariables}}, \code{\link{meta}}, \code{\link{zoo}}, \code{\link{xyplot}},
+\seealso{\code{\link{setCorpusVariables}}, \code{\link[tm]{meta}}, \code{link[zoo]{zoo}}, \code{link[lattice]{xyplot}},
          \code{\link{varTimeSeriesDlg}}, \code{\link{recodeTimeVarDlg}} }
 

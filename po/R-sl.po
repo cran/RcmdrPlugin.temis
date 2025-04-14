@@ -643,10 +643,6 @@ msgstr "Preglednice (CSV, XLS, ODS...) "
 msgid "Factiva XML or HTML file(s)"
 msgstr "Factiva XML ali datoteke HTML"
 
-#: R/importCorpus.R:125 R/importCorpus.R:160 R/importCorpus.R:189
-msgid "Twitter search"
-msgstr "Iskanje po Twitterju"
-
 #: R/importCorpus.R:126 R/importCorpus.R:161 R/importCorpus.R:190
 msgid "Load corpus from:"
 msgstr "Naloži korpus iz:"
@@ -913,133 +909,11 @@ msgstr[1] "Datoteki Factiva %s"
 msgstr[2] "Datoteke Factiva %s"
 msgstr[3] "Datoteke Factiva %s"
 
-#: R/importCorpus.R:563 R/importCorpus.R:847 R/importCorpus.R:963
-msgid ""
-"The twitteR package is needed to import corpora from Twitter.\n"
-"Do you want to install it?"
-msgstr ""
-"Za uvoz korpusov iz Twitterja je potreben paket twitteR.\n"
-"Ali ga želite namestiti?"
-
-#: R/importCorpus.R:569 R/importCorpus.R:853 R/importCorpus.R:969
-msgid "Import Corpus From Twitter"
-msgstr "Uvoz korpusa iz Twitterja"
-
-#: R/importCorpus.R:598 R/importCorpus.R:882 R/importCorpus.R:998
-msgid "Remove user names"
-msgstr "Odstrani uporabniška imena"
-
-#: R/importCorpus.R:598 R/importCorpus.R:882 R/importCorpus.R:998
-msgid "Remove hashtags"
-msgstr "Odstrani značke"
-
-#: R/importCorpus.R:599 R/importCorpus.R:883 R/importCorpus.R:999
-msgid "Exclude retweets"
-msgstr "Izloči ponovne čivke"
-
-#: R/importCorpus.R:600 R/importCorpus.R:884 R/importCorpus.R:1000
-msgid "Options:"
-msgstr "Možnosti:"
-
-#: R/importCorpus.R:616 R/importCorpus.R:900 R/importCorpus.R:1016
-msgid "Please enter valid authentication settings."
-msgstr "Prosim vnesite veljavne nastavitve avtentikacije."
-
-#: R/importCorpus.R:620 R/importCorpus.R:904 R/importCorpus.R:1020
-msgid "Please enter valid text to search for."
-msgstr "Prosim vnesite veljavno besedilo, ki ga iščete."
-
-#: R/importCorpus.R:638 R/importCorpus.R:922 R/importCorpus.R:1038
-msgid ""
-"TwitteR authentication failed. Please check the entered credentials or PIN "
-"code."
-msgstr ""
-"Avtentikacija na Twitterju je spodletela. Prosim preverite vnesene podatke "
-"oz. PIN kode."
-
-#: R/importCorpus.R:648 R/importCorpus.R:932 R/importCorpus.R:1048
-#, c-format
-msgid ""
-"No recent tweets match the specified search criteria in the chosen language "
-"(%s)."
-msgstr ""
-"Ni nobenih nedavnih čivkov, ki bi ustrezali postavljenim kriterijem v "
-"izbranem jeziku "
-"(%s)."
-
-#: R/importCorpus.R:671 R/importCorpus.R:955 R/importCorpus.R:1071
-msgid "Retrieving messages from Twitter failed."
-msgstr "Pobiranje sporočil s Twitterja je spodletelo."
-
 #: R/importCorpus.R:679 R/time.R:14 R/time.R:116 R/time.R:151 R/time.R:348
 #: R/time.R:383 R/importCorpus.R:12 R/importCorpus.R:964 R/time.R:351
 #: R/time.R:386 R/importCorpus.R:1080 R/time.R:336 R/time.R:371
 msgid "Time"
 msgstr "Čas"
-
-#: R/importCorpus.R:679 R/importCorpus.R:12 R/importCorpus.R:964
-#: R/importCorpus.R:1080
-msgid "Truncated"
-msgstr "Krnjeno"
-
-#: R/importCorpus.R:679 R/importCorpus.R:13 R/importCorpus.R:964
-#: R/importCorpus.R:1080
-msgid "StatusSource"
-msgstr "Status vira"
-
-#: R/importCorpus.R:681 R/importCorpus.R:684 R/importCorpus.R:685
-#: R/importCorpus.R:13 R/importCorpus.R:966 R/importCorpus.R:969
-#: R/importCorpus.R:970 R/importCorpus.R:1082 R/importCorpus.R:1085
-#: R/importCorpus.R:1086
-msgid "Retweet"
-msgstr "Ponovni čivk"
-
-#: R/importCorpus.R:701 R/importCorpus.R:986 R/importCorpus.R:1102
-msgid ""
-"Note: Twitter requires you to register a custom application and fill in\n"
-"the details below. See vignette(\"twitteR\") and https://dev.twitter.com/"
-"apps/new/.\n"
-"You will need to switch manually to the R console and copy the PIN\n"
-"code you get from the URL printed there."
-msgstr ""
-"Pazite: Twitter zahteva registracijo v aplikacijo in vnos podrobnosti "
-"spodaj.\n"
-"Oglejte si vignette(\"twitteR\") in https://dev.twitter.com/apps/new/.\n"
-"Ročno boste morali preklopiti v R konzolo in vnesti PIC kodo,\n"
-"ki jo dobite na tam navedenem spletnem naslovu."
-
-#: R/importCorpus.R:702 R/importCorpus.R:987 R/importCorpus.R:1103
-msgid "Request token URL:"
-msgstr "Zahtevek za obisk spletnega naslova:"
-
-#: R/importCorpus.R:704 R/importCorpus.R:989 R/importCorpus.R:1105
-msgid "Authorize URL:"
-msgstr "Spletni naslov za avtorizacijo:"
-
-#: R/importCorpus.R:706 R/importCorpus.R:991 R/importCorpus.R:1107
-msgid "Access token URL:"
-msgstr "Spletni naslov za dostop:"
-
-#: R/importCorpus.R:708 R/importCorpus.R:993 R/importCorpus.R:1109
-msgid "Consumer key:"
-msgstr "Ključ uporabnika:"
-
-#: R/importCorpus.R:710 R/importCorpus.R:995 R/importCorpus.R:1111
-msgid "Consumer secret:"
-msgstr "Skrivnost uporabnika:"
-
-#: R/importCorpus.R:712 R/importCorpus.R:997 R/importCorpus.R:1113
-msgid "Text to search for:"
-msgstr "Iskano besedilo:"
-
-#: R/importCorpus.R:714 R/importCorpus.R:999 R/importCorpus.R:1115
-msgid "Maximum number of tweets to download:"
-msgstr "Največje število naloženih čivkov:"
-
-#: R/importCorpus.R:721 R/importCorpus.R:1006 R/importCorpus.R:1122
-#, c-format
-msgid "Twitter search for %s"
-msgstr "Iskanje po Twitterju za %s"
 
 #: R/importCorpus.R:785 R/setCorpusVariables.R:35 R/setCorpusVariables.R:55
 #: R/setCorpusVariables.R:60 R/importCorpus.R:1070 R/importCorpus.R:1176

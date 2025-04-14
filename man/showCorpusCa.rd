@@ -24,4 +24,4 @@
          to the size of the symbols) and relative contributions (corresponding to the color intensities). See
          the \code{contrib} argument to \code{\link{plotCorpusCa}} for details.
         }
-\seealso{\code{\link{corpusCaDlg}}, \code{\link{plotCorpusCa}}, \code{\link{runCorpusCa}}, \code{\link{ca}} }
+\seealso{\code{\link{corpusCaDlg}}, \code{\link{plotCorpusCa}}, \code{\link{runCorpusCa}}, \code{\link[ca]{ca}} }

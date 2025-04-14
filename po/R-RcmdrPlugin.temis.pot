@@ -642,19 +642,6 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-#: R/importCorpus.R:12 R/importCorpus.R:1091
-msgid "Truncated"
-msgstr ""
-
-#: R/importCorpus.R:13 R/importCorpus.R:1091
-msgid "StatusSource"
-msgstr ""
-
-#: R/importCorpus.R:13 R/importCorpus.R:1093 R/importCorpus.R:1096
-#: R/importCorpus.R:1097
-msgid "Retweet"
-msgstr ""
-
 #: R/importCorpus.R:19
 msgid "Select the corpus variables that should be imported:"
 msgstr ""
@@ -707,10 +694,6 @@ msgstr ""
 
 #: R/importCorpus.R:190
 msgid "Alceste file(s)"
-msgstr ""
-
-#: R/importCorpus.R:191
-msgid "Twitter search"
 msgstr ""
 
 #: R/importCorpus.R:192
@@ -998,99 +981,6 @@ msgid "Alceste file %s"
 msgid_plural "Alceste files %s"
 msgstr[0] ""
 msgstr[1] ""
-
-#: R/importCorpus.R:974
-msgid ""
-"The twitteR package is needed to import corpora from Twitter.\n"
-"Do you want to install it?"
-msgstr ""
-
-#: R/importCorpus.R:980
-msgid "Import Corpus From Twitter"
-msgstr ""
-
-#: R/importCorpus.R:1009
-msgid "Remove user names"
-msgstr ""
-
-#: R/importCorpus.R:1009
-msgid "Remove hashtags"
-msgstr ""
-
-#: R/importCorpus.R:1010
-msgid "Exclude retweets"
-msgstr ""
-
-#: R/importCorpus.R:1011
-msgid "Options:"
-msgstr ""
-
-#: R/importCorpus.R:1027
-msgid "Please enter valid authentication settings."
-msgstr ""
-
-#: R/importCorpus.R:1031
-msgid "Please enter valid text to search for."
-msgstr ""
-
-#: R/importCorpus.R:1049
-msgid ""
-"TwitteR authentication failed. Please check the entered credentials or PIN "
-"code."
-msgstr ""
-
-#: R/importCorpus.R:1059
-#, c-format
-msgid ""
-"No recent tweets match the specified search criteria in the chosen language "
-"(%s)."
-msgstr ""
-
-#: R/importCorpus.R:1082
-msgid "Retrieving messages from Twitter failed."
-msgstr ""
-
-#: R/importCorpus.R:1113
-msgid ""
-"Note: Twitter requires you to register a custom application and fill in\n"
-"the details below. See vignette(\"twitteR\") and https://dev.twitter.com/"
-"apps/new/.\n"
-"You will need to switch manually to the R console and copy the PIN\n"
-"code you get from the URL printed there."
-msgstr ""
-
-#: R/importCorpus.R:1114
-msgid "Request token URL:"
-msgstr ""
-
-#: R/importCorpus.R:1116
-msgid "Authorize URL:"
-msgstr ""
-
-#: R/importCorpus.R:1118
-msgid "Access token URL:"
-msgstr ""
-
-#: R/importCorpus.R:1120
-msgid "Consumer key:"
-msgstr ""
-
-#: R/importCorpus.R:1122
-msgid "Consumer secret:"
-msgstr ""
-
-#: R/importCorpus.R:1124
-msgid "Text to search for:"
-msgstr ""
-
-#: R/importCorpus.R:1126
-msgid "Maximum number of tweets to download:"
-msgstr ""
-
-#: R/importCorpus.R:1133
-#, c-format
-msgid "Twitter search for %s"
-msgstr ""
 
 #: R/importCorpus.R:1187 R/setCorpusVariables.R:35 R/setCorpusVariables.R:55
 #: R/setCorpusVariables.R:60
